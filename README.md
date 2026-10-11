@@ -63,3 +63,5 @@ Move the data model to a database with authenticated wedding workspaces, members
 Part VII adds wedding website, guests/RSVPs, stationery and seating tools. See PART-VII.md for workflows and current integration boundaries.
 
 Part VIII adds universal registry records, gifts, fund pledges, inventory integration and public website embedding. See PART-VIII.md for the production boundaries.
+
+Part IX adds optional Beauty & Self-care and Marriage & Home Preparation spaces. See PART-IX.md for local privacy, scheduling and integration boundaries.
