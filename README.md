@@ -37,13 +37,17 @@ Import `Astercodes/Furbrides` into Vercel and select the `main` branch. The chec
 - Celebration calendar file export (no invitation is sent)
 - Guest attendance, shopping wishlist and purchase status
 - Searchable 30-module product roadmap
+- Interactive landing demos: vendor shortlist, wishlist, budget calculator and date-driven countdown
+- Multi-currency budgets, expense forecasts, allocations, savings and alternative scenarios
+- Cash/in-kind contributions, sponsorships, installment schedules and manual reconciliation
+- Financial CSV reports and existing hosted payment link handoffs
 - Browser-local persistence and JSON export
 
 The initial profile, tasks and inspiration cards are demonstration content. Other directories start empty. Reset and export controls are in My bridal profile.
 
 ## Prototype boundaries
 
-This is a single-user, browser-local prototype, not a production service. There is no authentication, server database, shared access, delivered messaging/reminders, payment processing, vendor marketplace, cloud file storage, AI integration or RSVP delivery. Task attachments are limited to three files of 200 KB each and remain in browser storage. Approvals and discussion are self-recorded; local history is not an immutable audit log. Roadmap modules distinguish interactive screens from planned features. Shopping records do not automatically become budget expenses. Currency is USD. Clearing browser storage removes records; exports are manual backups without an import flow. See `PART-II.md` for scheduling and allocation behavior and `PART-III.md` for collaboration workflows and access-plan boundaries.
+This is a single-user, browser-local prototype, not a production service. There is no authentication, server database, shared access, delivered messaging/reminders, payment processing, vendor marketplace, cloud file storage, AI integration or RSVP delivery. Task attachments are limited to three files of 200 KB each and remain in browser storage. Approvals and discussion are self-recorded; local history is not an immutable audit log. Roadmap modules distinguish interactive screens from planned features. Shopping records do not automatically become budget expenses. Project base currencies and manually entered exchange-rate snapshots are supported. Clearing browser storage removes records; exports are manual backups without an import flow. See `PART-IV.md` for financial calculations and provider boundaries, `PART-II.md` for scheduling and allocation behavior and `PART-III.md` for collaboration workflows and access-plan boundaries.
 
 Google Fonts enhance typography when a network connection is available; local fallback fonts are provided. All application behavior and the palette image are local.
 
