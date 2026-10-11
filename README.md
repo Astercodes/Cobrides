@@ -1,6 +1,6 @@
 # FURBRIDES
 
-A responsive bridal ecosystem prototype built around a persistent Aspiring → Expecting → Engaged journey. The public landing page is `index.html`; the personal workspace is `journey.html`, with its dashboard named Central. Saturated magenta, orange, teal and violet come from the supplied palette reference. The landing page includes generated campaign imagery, a scalable petal-heart logo, scroll reveals, subtle floating animations and reduced-motion support. See `assets/GENERATION.md` for visual provenance and the generation prompt.
+A responsive bridal ecosystem prototype built around a persistent Aspiring → Expecting → Engaged journey. The public landing page is `index.html`; the personal workspace is `journey.html`, with its dashboard named Central. Saturated magenta, orange, teal and violet come from the supplied palette reference. The landing page includes five supplied editorial photographs, generated campaign imagery, an original F/B ribbon monogram, scroll reveals, subtle floating animations and reduced-motion support. See `assets/GENERATION.md` for visual provenance and the generation prompt.
 
 ## Run locally
 
@@ -29,7 +29,13 @@ Import `Astercodes/Furbrides` into Vercel and select the `main` branch. The chec
 - Decision, issue, approval and change-request register with local activity history
 - In-app reminders and configurable confirmation/payment/purchase follow-up rules
 - Expense records with remaining-budget calculations
-- Contact directory, guest attendance, shopping wishlist and purchase status
+- Stakeholder relationships, responsibilities, access plans, event assignments, commitments and contributions
+- Conversation spaces with local messages, announcements, file/audio attachments, pinning, search, polls and manual acknowledgements
+- Message-to-task, message-to-decision and message-to-expense conversion
+- Named decision approvers, quote comparisons, votes, comments, supporting documents, final selections and resulting tasks/purchases
+- Custom role templates and temporary/revoked access-plan previews
+- Celebration calendar file export (no invitation is sent)
+- Guest attendance, shopping wishlist and purchase status
 - Searchable 30-module product roadmap
 - Browser-local persistence and JSON export
 
@@ -37,7 +43,7 @@ The initial profile, tasks and inspiration cards are demonstration content. Othe
 
 ## Prototype boundaries
 
-This is a single-user, browser-local prototype, not a production service. There is no authentication, server database, shared access, delivered messaging/reminders, payment processing, vendor marketplace, cloud file storage, AI integration or RSVP delivery. Task attachments are limited to three files of 200 KB each and remain in browser storage. Approvals and discussion are self-recorded; local history is not an immutable audit log. Roadmap modules distinguish interactive screens from planned features. Shopping records do not automatically become budget expenses. Currency is USD. Clearing browser storage removes records; exports are manual backups without an import flow. See `PART-II.md` for scheduling and allocation behavior.
+This is a single-user, browser-local prototype, not a production service. There is no authentication, server database, shared access, delivered messaging/reminders, payment processing, vendor marketplace, cloud file storage, AI integration or RSVP delivery. Task attachments are limited to three files of 200 KB each and remain in browser storage. Approvals and discussion are self-recorded; local history is not an immutable audit log. Roadmap modules distinguish interactive screens from planned features. Shopping records do not automatically become budget expenses. Currency is USD. Clearing browser storage removes records; exports are manual backups without an import flow. See `PART-II.md` for scheduling and allocation behavior and `PART-III.md` for collaboration workflows and access-plan boundaries.
 
 Google Fonts enhance typography when a network connection is available; local fallback fonts are provided. All application behavior and the palette image are local.
 
