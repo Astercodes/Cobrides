@@ -10,7 +10,7 @@ Requires Node.js 18 or later. No dependencies are required.
 npm run dev
 ```
 
-Open http://localhost:4173. Run `npm run check` for JavaScript syntax checks.
+Open http://localhost:4173. Run `npm run check` for JavaScript syntax checks and `npm test` for planning-model regression tests.
 
 ## Vercel deployment
 
@@ -21,7 +21,13 @@ Import `Astercodes/Furbrides` into Vercel and select the `main` branch. The chec
 - Central with live summaries and fluid chapter switching
 - Bridal profile, date, location, budget, style and traditions
 - Inspiration concept collections
-- Tasks with completion and filters
+- Multiple wedding projects from blank, classic and Nigerian multi-ceremony templates
+- Independent celebration budgets, details and shared resource links
+- Confirmed, tentative and projected dates; candidate-date scenarios; live countdowns and downloadable countdown cards
+- Reverse preparation schedules, dependency checks, critical dependency chains and recorded vendor-unavailability constraints
+- Tasks, milestones, custom phases/workstreams, owners, due dates, priority, approval records, subtasks, recurrence, local discussion and small file attachments
+- Decision, issue, approval and change-request register with local activity history
+- In-app reminders and configurable confirmation/payment/purchase follow-up rules
 - Expense records with remaining-budget calculations
 - Contact directory, guest attendance, shopping wishlist and purchase status
 - Searchable 30-module product roadmap
@@ -31,10 +37,10 @@ The initial profile, tasks and inspiration cards are demonstration content. Othe
 
 ## Prototype boundaries
 
-This is a single-user, browser-local prototype, not a production service. There is no authentication, server database, collaboration, messaging, payment processing, vendor marketplace, image upload, AI integration or RSVP delivery. Roadmap modules clearly distinguish interactive prototype screens from planned features. Shopping records do not automatically become budget expenses. Currency is USD. Clearing browser storage removes records; exports can be retained as a manual backup, but import is not implemented.
+This is a single-user, browser-local prototype, not a production service. There is no authentication, server database, shared access, delivered messaging/reminders, payment processing, vendor marketplace, cloud file storage, AI integration or RSVP delivery. Task attachments are limited to three files of 200 KB each and remain in browser storage. Approvals and discussion are self-recorded; local history is not an immutable audit log. Roadmap modules distinguish interactive screens from planned features. Shopping records do not automatically become budget expenses. Currency is USD. Clearing browser storage removes records; exports are manual backups without an import flow. See `PART-II.md` for scheduling and allocation behavior.
 
 Google Fonts enhance typography when a network connection is available; local fallback fonts are provided. All application behavior and the palette image are local.
 
 ## Suggested next implementation
 
-Move the data model to a database with authenticated wedding workspaces, membership roles and access enforcement. Add image storage, invite flows and activity history before connecting payment providers or vendor integrations. Keep the bridal identity independent of wedding projects so pre-engagement preparation survives project activation.
+Move the data model to a database with authenticated wedding workspaces, membership roles, access enforcement and server-authenticated activity records. Add cloud file storage, collaborator invitations and durable reminder jobs before connecting payment providers or live vendor calendars. Keep the bridal identity independent of wedding projects so pre-engagement preparation survives project activation.
