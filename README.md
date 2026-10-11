@@ -65,3 +65,5 @@ Part VII adds wedding website, guests/RSVPs, stationery and seating tools. See P
 Part VIII adds universal registry records, gifts, fund pledges, inventory integration and public website embedding. See PART-VIII.md for the production boundaries.
 
 Part IX adds optional Beauty & Self-care and Marriage & Home Preparation spaces. See PART-IX.md for local privacy, scheduling and integration boundaries.
+
+Part X adds Wedding-Day Control Room and Memories & Closeout. See PART-X.md for workflows and explicit live-service boundaries.

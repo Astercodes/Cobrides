@@ -6,8 +6,8 @@
     "dev": "node server.cjs",
     "start": "node server.cjs",
     "build": "node build.cjs",
-    "test": "node planning.test.cjs && node collaboration.test.cjs && node finance.test.cjs && node vendor.test.cjs && node commerce.test.cjs && node guest.test.cjs && node registry.test.cjs && node preparation.test.cjs",
-    "check": "node --check app.js && node --check landing.js && node --check planning-core.js && node --check planning.js && node --check server.cjs && node --check build.cjs && node --check collaboration-core.js && node --check collaboration.js && node --check finance-core.js && node --check finance.js && node --check landing-world.js && node --check vendor-core.js && node --check vendors.js && node --check commerce-core.js && node --check commerce.js && node --check guest-core.js && node --check guest-experience.js && node --check registry-core.js && node --check registry.js && node --check preparation-core.js && node --check preparation.js"
+    "test": "node planning.test.cjs && node collaboration.test.cjs && node finance.test.cjs && node vendor.test.cjs && node commerce.test.cjs && node guest.test.cjs && node registry.test.cjs && node preparation.test.cjs && node operations.test.cjs",
+    "check": "node --check app.js && node --check landing.js && node --check planning-core.js && node --check planning.js && node --check server.cjs && node --check build.cjs && node --check collaboration-core.js && node --check collaboration.js && node --check finance-core.js && node --check finance.js && node --check landing-world.js && node --check vendor-core.js && node --check vendors.js && node --check commerce-core.js && node --check commerce.js && node --check guest-core.js && node --check guest-experience.js && node --check registry-core.js && node --check registry.js && node --check preparation-core.js && node --check preparation.js && node --check operations-core.js && node --check operations.js && node --check memories.js"
   },
   "engines": {
     "node": ">=18"
