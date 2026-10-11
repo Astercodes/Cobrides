@@ -1,0 +1,9 @@
+# Part VII — Wedding websites and guest experience
+
+Implemented browser-local modules 21–24: editable mini website with story, public event allowlist, date-based countdown, announcements, dress/cultural/travel guidance, FAQs, registry URL, inspiration gallery or uploaded couple photos, English/French headings and self-contained HTML download. Website exports exclude guest records, contact details, private notes and unselected ceremonies.
+
+Guest directory supports households, controlled additional guest allowance with separate named companions, invitation/reminder status, event eligibility, independent RSVP responses and meal selections. Seating supports event-scoped tables, capacity guards, confirmed-only assignment, synchronized catering totals, private dietary/accessibility/travel notes, arrivals and a catering CSV. Stationery offers six document types, three gradient palettes, recipient personalization, animation respecting reduced-motion preferences, saved drafts and printable HTML downloads (browser print to PDF).
+
+Still planned: hosted personalized URLs/domain provisioning, authenticated guest codes, public RSVP collection, automated invitation/reminder sending, QR codes, professional print production, guest photo submissions, post-wedding shared memories, spatial drag-and-drop seating, dedicated shuttle/accommodation inventory and capacity allocation. Travel and lodging are private notes in this version. No collaboration/security is implied by local records. Share catering exports only with intended recipients.
+
+Validation: full existing core suites plus guest migration, project/event isolation, capacity and attendance guards, public allowlist and unsafe registry tests; static build; browser checks of creation, RSVP, table assignment, arrivals, synchronized meals, website customization, stationery and responsive layout.

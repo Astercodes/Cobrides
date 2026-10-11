@@ -59,3 +59,5 @@ Google Fonts enhance typography when a network connection is available; local fa
 ## Suggested next implementation
 
 Move the data model to a database with authenticated wedding workspaces, membership roles, access enforcement and server-authenticated activity records. Add cloud file storage, collaborator invitations and durable reminder jobs before connecting payment providers or live vendor calendars. Keep the bridal identity independent of wedding projects so pre-engagement preparation survives project activation.
+
+Part VII adds wedding website, guests/RSVPs, stationery and seating tools. See PART-VII.md for workflows and current integration boundaries.

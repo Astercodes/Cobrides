@@ -1,0 +1,7 @@
+const GuestCore={
+ migrate(s){s.households??=[];s.weddingSites??=[];s.guestTables??=[];s.stationery??=[];for(const g of s.guests){g.eventIds??=[];g.responses??={};for(const id of g.eventIds)g.responses[id]??={status:g.status==='Confirmed'?'Confirmed':g.status==='Declined'?'Declined':'Awaiting',meal:'',tableId:'',arrived:false};}},
+ eligible(s,p,e){return s.guests.filter(g=>g.projectId===p&&g.eventIds.includes(e));},
+ confirmed(s,p,e){return this.eligible(s,p,e).filter(g=>g.responses[e]?.status==='Confirmed');},
+ assign(s,gid,e,tid){const g=s.guests.find(g=>g.id===gid),t=s.guestTables.find(t=>t.id===tid);if(!g||!g.eventIds.includes(e)||g.responses[e]?.status!=='Confirmed')throw Error('Confirm this guest for the selected celebration first.');if(tid&&(!t||t.eventId!==e||t.projectId!==g.projectId))throw Error('Choose a table in this celebration.');if(tid&&s.guests.filter(x=>x.id!==gid&&x.projectId===g.projectId&&x.eventIds.includes(e)&&x.responses[e]?.status==='Confirmed'&&x.responses[e]?.tableId===tid).length>=t.capacity)throw Error('This table is full.');g.responses[e].tableId=tid;},
+ publicData(site,events){return {names:site.names||'Our celebration',story:site.story||'',dress:site.dress||'',travel:site.travel||'',faq:site.faq||'',registry:/^https:\/\//.test(site.registry||'')?site.registry:'',events:events.filter(e=>(site.eventIds||[]).includes(e.id)).map(e=>({title:e.title,date:e.date||'',time:e.time||'',venue:e.venue||''}))};}
+};if(typeof module!=='undefined')module.exports=GuestCore;
