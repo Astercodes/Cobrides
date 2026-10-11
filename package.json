@@ -1,1 +1,1 @@
-{"name":"furbrides","version":"0.1.0","private":true,"scripts":{"dev":"node server.cjs","start":"node server.cjs","check":"node --check app.js && node --check server.cjs"}}
+{"name":"furbrides","version":"0.1.0","private":true,"scripts":{"dev":"node server.cjs","start":"node server.cjs","build":"node build.cjs","check":"node --check app.js && node --check server.cjs && node --check build.cjs"},"engines":{"node":">=18"}}

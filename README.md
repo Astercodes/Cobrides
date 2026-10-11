@@ -12,7 +12,11 @@ npm run dev
 
 Open http://localhost:4173. Run `npm run check` for JavaScript syntax checks.
 
-## Included
+## Vercel deployment
+
+Import `Astercodes/Furbrides` into Vercel and select the `main` branch. The checked-in `vercel.json` configures the static build and `dist` output automatically. No environment variables or dependencies are required. Existing Vercel Git integrations deploy when `main` is pushed.
+
+## Included features
 
 - Command Center with live summaries and fluid chapter switching
 - Bridal profile, date, location, budget, style and traditions
