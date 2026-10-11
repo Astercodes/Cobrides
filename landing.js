@@ -1,0 +1,3 @@
+const revealObserver=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target)}}},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+document.querySelectorAll('[data-chapter]').forEach(link=>link.addEventListener('click',()=>{try{const saved=JSON.parse(localStorage.getItem('furbrides-v1'));if(saved?.profile){saved.profile.stage=link.dataset.chapter;localStorage.setItem('furbrides-v1',JSON.stringify(saved))}else{sessionStorage.setItem('furbrides-entry-stage',link.dataset.chapter)}}catch{}}));

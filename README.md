@@ -1,6 +1,6 @@
 # FURBRIDES
 
-A responsive bridal ecosystem prototype built around a persistent Aspiring → Expecting → Engaged journey. Brand colors and the featured leaf image come from the supplied palette reference.
+A responsive bridal ecosystem prototype built around a persistent Aspiring → Expecting → Engaged journey. The public landing page is `index.html`; the personal workspace is `journey.html`, with its dashboard named Central. Saturated magenta, orange, teal and violet come from the supplied palette reference. The landing page includes generated campaign imagery, a scalable petal-heart logo, scroll reveals, subtle floating animations and reduced-motion support. See `assets/GENERATION.md` for visual provenance and the generation prompt.
 
 ## Run locally
 
@@ -18,7 +18,7 @@ Import `Astercodes/Furbrides` into Vercel and select the `main` branch. The chec
 
 ## Included features
 
-- Command Center with live summaries and fluid chapter switching
+- Central with live summaries and fluid chapter switching
 - Bridal profile, date, location, budget, style and traditions
 - Inspiration concept collections
 - Tasks with completion and filters
