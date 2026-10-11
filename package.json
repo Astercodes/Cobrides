@@ -1,1 +1,15 @@
-{"name":"furbrides","version":"0.2.0","private":true,"scripts":{"dev":"node server.cjs","start":"node server.cjs","build":"node build.cjs","test":"node planning.test.cjs && node collaboration.test.cjs && node finance.test.cjs","check":"node --check app.js && node --check landing.js && node --check planning-core.js && node --check planning.js && node --check server.cjs && node --check build.cjs && node --check collaboration-core.js && node --check collaboration.js && node --check finance-core.js && node --check finance.js && node --check landing-world.js"},"engines":{"node":">=18"}}
+{
+  "name": "furbrides",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.cjs",
+    "start": "node server.cjs",
+    "build": "node build.cjs",
+    "test": "node planning.test.cjs && node collaboration.test.cjs && node finance.test.cjs && node vendor.test.cjs",
+    "check": "node --check app.js && node --check landing.js && node --check planning-core.js && node --check planning.js && node --check server.cjs && node --check build.cjs && node --check collaboration-core.js && node --check collaboration.js && node --check finance-core.js && node --check finance.js && node --check landing-world.js && node --check vendor-core.js && node --check vendors.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
