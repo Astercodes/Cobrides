@@ -1,0 +1,6 @@
+# Spiritual preparation & faith journey
+Module 33, separate optional segment, disabled by default per wedding project. Free-text faith tradition, preferences and goals. Nine categories cover prayer/devotional rhythms; scripture/reading and saved HTTPS sermons; prayer/gratitude journals; requests/answered acknowledgments; counseling/classes; ceremony/vows; mentor/group records; voluntary disciplines; marriage reflections. Editable starter prompts impose no faith tradition, scripture selection or fasting practice.
+
+Schedules support one-time, daily, weekly and custom day intervals. Scheduled check-ins deduplicate, advance the next due date, and stop while paused or complete. Checklists preserve completed items when edited. Mentor names, couple schedules and group plans are records only: no invitations, private communication, account sharing or delivered notifications.
+
+Faith profiles and records are deliberately excluded from global indexes, activity, notifications, shared calendars, public websites and day packs. They stay in browser-local state and are included in complete journey JSON backups. This is not encryption or account-level privacy; anyone with access to the browser profile can access local data. Disabling hides the space and retains records. Never claim authenticated confidential counseling storage.
