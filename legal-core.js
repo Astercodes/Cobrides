@@ -1,0 +1,8 @@
+(function(root){'use strict';
+const kinds=['Marriage registration','Identity & supporting documents','Appointments & witnesses','Name & account updates','International documentation','Legal consultations','Post-wedding administration'];
+function migrate(s){s.legalPlans ||= [];s.legalRecords ||= [];}
+function scope(s,pid){return (s.legalRecords||[]).filter(r=>r.projectId===pid);}
+function validate(r,today){if(!r.title?.trim())throw Error('Add a checklist title.');if(!kinds.includes(r.kind))throw Error('Choose a valid category.');if(!Number.isFinite(r.fee)||r.fee<0)throw Error('Enter a nonnegative fee.');for(const key of ['due','expires','verified'])if(r[key]&&(!/^\d{4}-\d{2}-\d{2}$/.test(r[key])||new Date(r[key]+'T12:00:00Z').toISOString().slice(0,10)!==r[key]))throw Error('Use valid calendar dates.');if(r.verified&&!r.source)throw Error('Add an official-source URL before recording its verification date.');if(r.verified&&r.verified>today)throw Error('Verification date cannot be in the future.');if(r.source&&new URL(r.source).protocol!=='https:')throw Error('Use an HTTPS official-source URL.');if(r.status==='Complete'&&(r.checklist||[]).some(c=>!c.done))throw Error('Finish checklist items before marking complete.');}
+function summary(s,pid,today){const rows=scope(s,pid);return {total:rows.length,complete:rows.filter(r=>r.status==='Complete').length,overdue:rows.filter(r=>r.due&&r.due<today&&r.status!=='Complete').length,expiring:rows.filter(r=>r.expires&&r.expires<=new Date(Date.parse(today+'T12:00:00Z')+30*86400000).toISOString().slice(0,10)).length};}
+const api={kinds,migrate,scope,validate,summary};if(typeof module==='object'&&module.exports)module.exports=api;else root.LegalCore=api;
+})(typeof window==='object'?window:globalThis);
