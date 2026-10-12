@@ -1,0 +1,51 @@
+const assert=require('node:assert/strict'),crypto=require('node:crypto'),{Readable}=require('node:stream');
+const {createHandler,seal,unseal}=require('./api/integrations');
+const env={APP_ORIGIN:'https://cobrides.test',UPSTASH_REDIS_REST_URL:'https://redis.test',UPSTASH_REDIS_REST_TOKEN:'redis-secret',INTEGRATION_ENCRYPTION_KEY:'a'.repeat(40),GOOGLE_CLIENT_ID:'google-id',GOOGLE_CLIENT_SECRET:'google-secret',GOOGLE_PLACES_API_KEY:'places-secret',STRIPE_SECRET_KEY:'stripe-secret',STRIPE_REGISTRY_PRICE_ID:'price_fixed',STRIPE_WEBHOOK_SECRET:'webhook-secret'};
+const values=new Map(),calls=[];
+async function store(cmd,key,value,...args){if(cmd==='GET')return values.get(key)||null;if(cmd==='SET'){if(args.includes('NX')&&values.has(key))return null;values.set(key,value);return 'OK';}if(cmd==='DEL')return values.delete(key)?1:0;if(cmd==='INCR'){const n=Number(values.get(key)||0)+1;values.set(key,n);return n;}if(cmd==='EXPIRE')return 1;throw Error(cmd);}
+const saved=(key,value)=>values.set('cobrides:integrations:'+key,seal(value,env.INTEGRATION_ENCRYPTION_KEY));
+let events={items:[{id:'event1',summary:'Fitting',start:{dateTime:'2026-10-20T10:00:00+01:00',timeZone:'Europe/London'},end:{dateTime:'2026-10-20T11:00:00+01:00'},status:'confirmed',htmlLink:'https://www.google.com/calendar/event?eid=1',updated:'2026-10-12'}],nextSyncToken:'cursor1'},calendarStatus=200;
+async function fetcher(url,options={}){calls.push({url:String(url),options});let data={};
+ if(String(url).includes('commons.wikimedia'))data={query:{pages:{1:{pageid:1,title:'File:Wedding flowers.jpg',imageinfo:[{descriptionurl:'https://commons.wikimedia.org/wiki/File:Wedding_flowers.jpg',thumburl:'https://upload.wikimedia.org/wikipedia/commons/test.jpg',extmetadata:{Artist:{value:'<a>A creator</a>'},LicenseShortName:{value:'CC BY-SA'}}}]}}}};
+ if(String(url).includes('oauth2.googleapis.com/token'))data={access_token:'new-access',refresh_token:'new-refresh',expires_in:3600,scope:'openid email https://www.googleapis.com/auth/calendar.events.readonly'};
+ if(String(url).includes('openidconnect'))data={sub:'user1',email:'bride@example.com',email_verified:true};
+ if(String(url).includes('/calendar/'))return {ok:calendarStatus===200,status:calendarStatus,json:async()=>events};
+ if(String(url).includes('gmail.googleapis'))data={id:'mail1'};
+ if(String(url).includes('stripe.com'))data=String(url).endsWith('cs_test_123')?{id:'cs_test_123',metadata:{owner:'user1'},payment_status:'paid',amount_total:1000,currency:'usd'}:{url:'https://checkout.stripe.com/c/pay/test'};
+ return {ok:true,status:200,json:async()=>data};}
+const handler=createHandler({env,store,fetcher});
+async function request(action,{method='GET',body,cookie='',csrf='',origin=env.APP_ORIGIN,extra={},raw}={}){const req=Readable.from(raw?[raw]:[]);Object.assign(req,{url:'/api/integrations?action='+action,method,body,headers:{cookie,origin,'content-type':'application/json','x-cobrides-csrf':csrf,...extra}});const headers={};let text='';const res={statusCode:200,setHeader(k,v){headers[k.toLowerCase()]=v;},end(s=''){text=s;}};await handler(req,res);return {status:res.statusCode,headers,data:text?JSON.parse(text):null};}
+(async()=>{
+ const encrypted=seal({refresh:'secret'},env.INTEGRATION_ENCRYPTION_KEY);assert(!encrypted.includes('secret'));assert.equal(unseal(encrypted,env.INTEGRATION_ENCRYPTION_KEY).refresh,'secret');assert.throws(()=>unseal(encrypted,'wrong-key'));
+ let r=await request('discover&q=wedding');assert.equal(r.status,200);assert.equal(r.data.items[0].notes,'A creator · CC BY-SA');
+ r=await request('sync',{method:'POST',body:{},origin:'https://evil.test'});assert.equal(r.status,403);
+ r=await request('sync',{method:'POST',body:{}});assert.equal(r.status,401);
+ r=await request('connect',{method:'POST',body:{purpose:'calendar'}});const auth=new URL(r.data.url),flow=auth.searchParams.get('state');assert(auth.searchParams.get('code_challenge'));assert(!r.data.url.includes('google-secret'));
+ const binding=r.headers['set-cookie'].split(';')[0];
+ r=await request('callback&state='+flow+'&code=test',{cookie:'cobrides_oauth=wrong'});assert.equal(r.status,403);
+ r=await request('callback&state='+flow+'&code=test',{cookie:binding});assert.equal(r.status,303);const cookie=r.headers['set-cookie'][0].split(';')[0];
+ assert(!JSON.stringify(r).includes('new-refresh'));
+ r=await request('callback&state='+flow+'&code=test',{cookie:binding});assert.equal(r.status,403);
+ r=await request('status',{cookie});const csrf=r.data.csrf;assert(r.data.account.calendar);assert(!r.data.account.mail);assert(!JSON.stringify(r.data).includes('new-access'));
+ r=await request('sync',{method:'POST',body:{},cookie,csrf:'bad'});assert.equal(r.status,403);
+ r=await request('sync',{method:'POST',body:{},cookie,csrf});assert.equal(r.data.items.length,1);
+ events={items:[{id:'event1',status:'cancelled'}],nextSyncToken:'cursor2'};
+ r=await request('sync',{method:'POST',body:{},cookie,csrf});assert.equal(r.data.items[0].status,'cancelled');assert(calls.at(-1).url.includes('syncToken=cursor1'));
+ calendarStatus=410;r=await request('sync',{method:'POST',body:{},cookie,csrf});assert.equal(r.status,409);assert(!values.has('cobrides:integrations:calendar:user1'));calendarStatus=200;
+ r=await request('send',{method:'POST',body:{},cookie,csrf});assert.equal(r.status,403);
+ saved('account:user1',{access:'access',refresh:'refresh',expires:0,email:'bride@example.com',scopes:['https://www.googleapis.com/auth/gmail.send']});
+ const mail={to:'planner@example.com',subject:'Wedding schedule',message:'Please review our schedule.',confirm:true,requestId:'requestid123456789'};
+ r=await request('send',{method:'POST',body:{...mail,subject:'Bad\r\nBcc: attacker@example.com'},cookie,csrf});assert.equal(r.status,400);
+ r=await request('send',{method:'POST',body:mail,cookie,csrf});assert.equal(r.data.status,'Accepted by Gmail');assert(calls.some(c=>c.url.includes('oauth2.googleapis.com/token')&&String(c.options.body).includes('refresh_token')));
+ r=await request('send',{method:'POST',body:mail,cookie,csrf});assert.equal(r.status,409);assert.equal(calls.filter(c=>c.url.includes('gmail.googleapis')).length,1);
+ r=await request('checkout',{method:'POST',body:{confirm:true,requestId:'checkout123456789'},cookie,csrf});assert(r.data.url.startsWith('https://checkout.stripe.com/'));assert(String(calls.at(-1).options.body).includes('price_fixed'));assert(calls.at(-1).options.headers['Idempotency-Key']);
+ r=await request('checkout-status&id=cs_test_123',{cookie});assert.equal(r.data.status,'paid');
+ saved('session:other',{sub:'other',csrf:'other'});saved('account:other',{email:'other@example.com'});
+ r=await request('checkout-status&id=cs_test_123',{cookie:'cobrides_session=other'});assert.equal(r.status,403);
+ const raw=JSON.stringify({id:'evt_1',type:'checkout.session.completed',created:123,data:{object:{id:'cs_test_123',metadata:{owner:'user1'},payment_status:'paid'}}}),t=Math.floor(Date.now()/1000),signature=crypto.createHmac('sha256',env.STRIPE_WEBHOOK_SECRET).update(t+'.'+raw).digest('hex');
+ r=await request('stripe-webhook',{method:'POST',raw,origin:'https://stripe.com',extra:{'stripe-signature':'t='+t+',v1='+signature}});assert.equal(r.status,200);assert(values.has('cobrides:integrations:stripe-event:evt_1'));
+ r=await request('stripe-webhook',{method:'POST',raw:raw+' ',extra:{'stripe-signature':'t='+t+',v1='+signature}});assert.equal(r.status,400);
+ r=await request('disconnect',{method:'POST',body:{},cookie,csrf});assert.equal(r.status,200);assert(!values.has('cobrides:integrations:account:user1'));
+ r=await request('sync',{method:'POST',body:{},cookie,csrf});assert.equal(r.status,401);
+ console.log('Integration tests passed: OAuth binding/replay, encrypted storage, scoped access, refresh, sync/cancellation/reset, CSRF, email idempotency, checkout ownership and webhook signatures.');
+})().catch(e=>{console.error(e);process.exitCode=1;});

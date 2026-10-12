@@ -4,3 +4,8 @@ dist/
 *.log
 
 offline-manifest.json
+
+.env
+.env.*
+!.env.example
+.vercel/

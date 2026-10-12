@@ -26,5 +26,10 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/integrations.js": {
+      "maxDuration": 60
+    }
+  }
 }
