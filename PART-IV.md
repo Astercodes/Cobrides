@@ -20,7 +20,7 @@ Sponsor-filtered views show commitments and receipts. Private/anonymous settings
 
 Expense-linked deposits, installments, balances, cancellation penalties and reimbursements have amounts, currency snapshots, due dates and requested/scheduled/cancelled states. Penalties use a separate Cancellation expense. Reimbursements affect fund cash flow without adding the original cost twice. Record actual movements only on or before today. Refunds reference the original payment and retain its currency, rate and payer; their total cannot exceed that payment. Entries can be voided and restored. Payments with active refunds cannot be voided first. Reconciliation is a manual check against proof, not provider confirmation.
 
-Existing Stripe, Paystack, Flutterwave, PayPal or other HTTPS hosted checkout URLs can be stored and opened externally. The destination host is displayed. Provider labels do not verify merchant identity. This is a link handoff, not an API integration: authenticated backend endpoints, provider SDKs, signed webhooks and server-side authorization are still required for production payments. FURBRIDES never collects card details.
+Existing Stripe, Paystack, Flutterwave, PayPal or other HTTPS hosted checkout URLs can be stored and opened externally. The destination host is displayed. Provider labels do not verify merchant identity. This is a link handoff, not an API integration: authenticated backend endpoints, provider SDKs, signed webhooks and server-side authorization are still required for production payments. CoBrides never collects card details.
 
 ## Migration, files and exports
 

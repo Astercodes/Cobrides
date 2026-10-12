@@ -7,7 +7,7 @@ for (const file of staticFiles) {
   fs.copyFileSync(path.join(__dirname, file), path.join(output, file));
 }
 fs.cpSync(path.join(__dirname, 'assets'), path.join(output, 'assets'), { recursive: true });
-console.log('FURBRIDES static build ready in dist/');
+console.log('CoBrides static build ready in dist/');
 
 const crypto = require('node:crypto');
 function offlineFiles(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.isDirectory()?offlineFiles(path.join(dir,entry.name)):[path.join(dir,entry.name)]);}

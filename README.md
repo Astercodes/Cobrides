@@ -1,4 +1,4 @@
-# FURBRIDES
+# CoBrides
 
 A responsive bridal ecosystem prototype built around a persistent Aspiring → Expecting → Engaged journey. The public landing page is `index.html`; the personal workspace is `journey.html`, with its dashboard named Central. Saturated magenta, orange, teal and violet come from the supplied palette reference. The landing page includes five supplied editorial photographs, generated campaign imagery, an original F/B ribbon monogram, scroll reveals, subtle floating animations and reduced-motion support. See `assets/GENERATION.md` for visual provenance and the generation prompt.
 
@@ -14,7 +14,7 @@ Open http://localhost:4173. Run `npm run check` for JavaScript syntax checks and
 
 ## Vercel deployment
 
-Import `Astercodes/Furbrides` into Vercel and select the `main` branch. The checked-in `vercel.json` configures the static build and `dist` output automatically. No environment variables or dependencies are required. Existing Vercel Git integrations deploy when `main` is pushed.
+Import `Astercodes/CoBrides` into Vercel and select the `main` branch. The checked-in `vercel.json` configures the static build and `dist` output automatically. No environment variables or dependencies are required. Existing Vercel Git integrations deploy when `main` is pushed.
 
 ## Included features
 
