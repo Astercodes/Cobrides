@@ -1,0 +1,6 @@
+# Honeymoon planning & travel
+Dedicated segment and module 31. Browser-local trip preferences, travel dates, countdown, savings estimate, destination comparison records, itinerary, reservations, document/departure checklists, packing and contingency contacts/notes. Currency costs use recorded rates. Destination comparisons are excluded from totals. Cancelled records are excluded. Budget links are explicit and created once; linked amounts are edited through finance to preserve payment history. No money is moved.
+
+Links to existing purchases, wardrobe, contributions, registry funds and payment reconciliation; an idempotent honeymoon album action creates a memory album. Search and activity index honeymoon records. Calendar export uses all-day itinerary dates with local time/timezone in descriptions, avoiding accidental timezone conversion. Preparation and packing starters deduplicate by title.
+
+No live destination discovery, weather, advisory/visa lookup, airline booking, reservation verification, insurance purchase, external calendar synchronization, automatic reminder delivery, or partner account sync. Do not store passport scans/numbers. Current official travel requirements must be checked separately. Guest website exports do not include honeymoon records.
