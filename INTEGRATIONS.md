@@ -1,0 +1,12 @@
+# External integration architecture
+## Capability boundaries
+Import: manual source-linked record intake and review is implemented. Discover: provider search adapters planned. Synchronize: scoped OAuth, server token storage and conflict-aware change ingestion planned. Transact: hosted provider checkout and reconciled webhooks planned. Communicate: explicit-recipient send and delivery adapters planned. No tokens or external accounts are connected in the browser prototype.
+
+## Intake workflow
+Single links or JSON lists of at most 50 records enter a project-specific review inbox. Validation is atomic, canonical URLs remove tracking fields, duplicate active source/type pairs are rejected. Review accepts each record once into its canonical module: Vision Studio, Shopping, Vendors, Calendar, private conversation reference or document metadata. Provenance records source URL, provider hostname, import ID and timestamps. Prices are manually recorded base-currency values. Purchase references never imply owned items, orders or payment. Appointments require a date. Imported references do not fetch, scrape, execute or send content.
+
+## Adapter contract for future backend
+Each provider adapter should declare supported capabilities, provider policy/version, permitted scopes, field mappings, provenance, rate limits, webhook verification and revocation. OAuth tokens belong in an encrypted server credential store, never browser-local state. Import batches need idempotency keys, tenant/project authorization, content-type and size validation, malware scanning for files, consent receipts and reviewable errors. Sync needs cursors, retries, origin versions, field-level conflict review and disconnect cleanup. Transactions need explicit confirmation, provider idempotency and reconciled events. Communication needs authorization per recipient and audited delivery state.
+
+## Initial discovery families
+Catalog lists the user's candidate identity, social, video, visual discovery, editorial, portfolio, mood board, cloud photo, personal file, retailer, image analysis, palette, maps, calendar, savings, browser extension and native share families. These are candidate integrations, not claims of available APIs or permitted scraping. Provider-specific documentation and approval must be reviewed during implementation. Browser/mobile extensions are not installed. File/photo import reuses existing user-selected Documents and Memories workflows. No remote file downloads or cloud photo access is performed.
