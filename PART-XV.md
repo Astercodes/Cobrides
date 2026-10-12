@@ -1,0 +1,6 @@
+# Premarital relationship & marriage readiness
+Module 34, separate optional segment disabled by default per project. Couple goals and vision, counseling appointments, course/enrollment records and unit progress, guided discussions across 13 topics, vision/experience lists, counselor-assigned action lists, milestones/vows, and separate personal journals. Editable prompts do not prescribe a family, cultural, spiritual or parenting model. Progress records are not a readiness/compatibility score.
+
+Counselor feedback can be saved only with the operator's explicit acknowledgment that the counselor shared it for inclusion. This is an unverified local provenance record, not counselor authentication or legal consent. Completion is blocked until checklist actions and recorded course units are complete. Sessions and milestones appear in the local upcoming list; no external reminders or enrollment are sent.
+
+All readiness records and profile fields are excluded from global indexes, activity, shared calendars, public sites and day packs. Full journey backups include them. Local storage is not encrypted or access-controlled. No partner accounts, counselor messaging, discovery feeds or live collaboration are connected. Disabling retains records. Finance, home setup and spiritual preparation link to their original separate segments without copying private notes.
