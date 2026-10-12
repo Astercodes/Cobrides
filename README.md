@@ -67,3 +67,5 @@ Part VIII adds universal registry records, gifts, fund pledges, inventory integr
 Part IX adds optional Beauty & Self-care and Marriage & Home Preparation spaces. See PART-IX.md for local privacy, scheduling and integration boundaries.
 
 Part X adds Wedding-Day Control Room and Memories & Closeout. See PART-X.md for workflows and explicit live-service boundaries.
+
+The shared integration layer connects all modules through search, canonical relationships, activity, versioned files, calendars, offline day packs and regional preferences. See CROSS-PLATFORM.md for behavior and remaining backend integrations.

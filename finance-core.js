@@ -3,7 +3,7 @@
 const currencies=['USD','NGN','GBP','EUR','CAD','AUD','GHS','KES','ZAR','AED','INR'];
 const categories=['Venue','Clothing','Catering','Photography','Transportation','Decor','Beauty','Entertainment','Stationery','Accommodation','Cancellation','Other'];
 const round=n=>Math.round((Number(n)+Number.EPSILON)*100)/100;
-const format=(n,c='USD')=>new Intl.NumberFormat('en-US',{style:'currency',currency:c,maximumFractionDigits:2}).format(Number(n)||0);
+const format=(n,c='USD',locale='en-US')=>new Intl.NumberFormat(locale,{style:'currency',currency:c,maximumFractionDigits:2}).format(Number(n)||0);
 function nativeTotal(e,estimated=false){const subtotal=Number(estimated?e.estimateNative:e.originalAmount)||0;return round(subtotal*(1+(Number(e.taxRate)||0)/100+(Number(e.serviceRate)||0)/100)+(Number(e.deliveryNative)||0));}
 const toBase=(amount,rate)=>round(Number(amount)*Number(rate));
 const expenseTotal=e=>toBase(nativeTotal(e),e.rateToBase||1);

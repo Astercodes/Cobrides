@@ -2,7 +2,7 @@
 const FC=FinanceCore;
 let financeEditing=null,financeGroup='Category',financeExpenseQuery='',financeSponsor='',financeRevealNames=false;
 const financeCurrency=()=>activeProject().finance.baseCurrency;
-const fm=(amount,currency=financeCurrency())=>FC.format(amount,currency);
+const fm=(amount,currency=financeCurrency())=>FC.format(amount,currency,state.platformSettings?.locale||'en-US');
 const financeExpenses=()=>state.expenses.filter(e=>e.projectId===activeProject().id);
 const financeContributions=()=>state.contributions.filter(c=>c.projectId===activeProject().id);
 const financeObligations=()=>state.obligations.filter(o=>o.projectId===activeProject().id);

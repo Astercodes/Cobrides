@@ -9,7 +9,7 @@ const projectEvents=()=>state.events.filter(e=>e.projectId===activeProject().id)
 const projectDecisions=()=>state.decisions.filter(d=>d.projectId===activeProject().id);
 const projectExpenses=()=>state.expenses.filter(e=>e.projectId===activeProject().id);
 const dateToday=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
-const formatDate=date=>date?new Date(date+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}):'Date to be decided';
+const formatDate=date=>date?new Date(date+'T12:00:00').toLocaleDateString(state.platformSettings?.locale||undefined,{month:'short',day:'numeric',year:'numeric'}):'Date to be decided';
 const eventTitle=id=>state.events.find(e=>e.id===id)?.title||'Whole project';
 const taskSchedule=(override)=>PC.schedule(activeProject(),projectTasks(),projectEvents(),override,state.contacts);
 function audit(action,detail='',projectId=activeProject().id){state.activity.unshift({id:uid(),projectId,action,detail,at:new Date().toISOString(),actor:state.profile.name||'You'});state.activity=state.activity.slice(0,500);}
