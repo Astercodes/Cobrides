@@ -1,4 +1,7 @@
-# Participant portals
-Ten browser-local role previews share canonical wedding records. Select a participant to see explicit assignments; unassigned records are omitted from participant panels. Bride and Partner previews summarize the current project. Planner roster preferences select existing independent wedding projects without copying them or changing ownership. Admin preview exposes local aggregate counts only.
+# Separate participant workflows
 
-These are owner-operated previews, not authenticated accounts or security boundaries. Links deliberately open the owner workspace. Guest RSVP submission, merchant fulfillment, business accounts, moderation, verification, secure invitations and couple-controlled grants need backend services. No messages, invitations, access grants or payments are sent by these previews.
+The bride workspace has no participant switcher or participant navigation. Public welcome.html directs each participant to a dedicated page. Platform administration lives separately at admin.html and is omitted from public onboarding.
+
+Partner, planner, bridal party, family, vendor, merchant, guest and venue each have a dedicated onboarding form, navigation and manually maintained workflow records. Each stores data under a separate furbrides-participant-v1:<role> key. They do not read or write furbrides-v1, import bride records, or link to bride tools. Planner client engagements remain independent records in the planner workspace, without transferring wedding ownership.
+
+These separate workflows are browser-local prototypes. They are not authenticated accounts or enforceable security boundaries. Invitation redemption, couple-approved record sharing, cross-account synchronization, professional teams, external messages, RSVP submission, order fulfillment, verification and moderation services require backend implementation. Manually recorded status changes do not perform these actions.
