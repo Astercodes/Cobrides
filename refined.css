@@ -46,3 +46,21 @@ body .stat-icon{display:none}body .monogram,body .profile-button{background:#eae
 .workspace-app .text-link{background:transparent!important;box-shadow:none!important;color:#000!important;border:0!important;border-radius:0!important;text-decoration:underline;text-underline-offset:4px;padding:4px 0!important}
 .workspace-app .project-switcher .button{background:#fff!important;border:1px solid #d6d6da!important}
 body :is(.stat-value,.planning-mini-stats strong,.finance-stats strong,.gx-stats strong){font-family:inherit!important;font-weight:600!important;letter-spacing:-.04em}
+/* Restore the jewel-tone palette without changing black typography or navigation. */
+:root{--cobrides-action:linear-gradient(115deg,#ff972e 0%,#ff755c 45%,#fa65ad 100%);--cobrides-banner:linear-gradient(110deg,#fff1e4 0%,#ffd6dd 42%,#ff8ac0 74%,#c59aff 100%)}
+body .primary,body button.primary,body .action{background:var(--cobrides-action)!important;border:1px solid #f16d72!important;color:#000!important;box-shadow:0 4px 14px #ef4e8318!important}
+body .primary:hover,body button.primary:hover,body .action:hover{background:linear-gradient(115deg,#ffad39,#ff8162,#ff7cbb)!important}
+.workspace-app nav a.active,body[data-participant] aside nav .selected{background:linear-gradient(110deg,#ffb4d8,#d3b4ff)!important;border:1px solid #e59bce;color:#000!important}
+.workspace-app .sidebar::before{display:block;height:4px;background:linear-gradient(90deg,#f20078,#ff791e,#00b9a7,#973fde)}
+.workspace-app :is(.countdown-banner,.finance-overview,.cross-hero,.ops-hero,.registry-lead),body :is(.home-hero,.faith-hero,.readiness-hero,.legal-hero,.newlywed-hero){background:var(--cobrides-banner)!important;border:1px solid #efb6cc!important}
+.workspace-app :is(.project-switcher,.event-detail-banner,.vendor-coordination-banner,.wardrobe-hero){background:linear-gradient(110deg,#e5fff5,#8ee5cf 58%,#c6b1ff)!important;border:1px solid #a4d7cb!important}
+.workspace-app .shop-editorial{background:linear-gradient(110deg,#fff2df,#ffc4a0,#ff9dce)!important}
+.workspace-app :is(.planning-mini-stats,.finance-stats,.gx-stats)>div:nth-child(4n+1),body .stats .stat:nth-child(4n+1){background:linear-gradient(130deg,#ffd6eb,#ff92c2)!important;border-color:#f2a0c8!important}
+.workspace-app :is(.planning-mini-stats,.finance-stats,.gx-stats)>div:nth-child(4n+2),body .stats .stat:nth-child(4n+2){background:linear-gradient(130deg,#ffe2a0,#ffab63)!important;border-color:#edb67e!important}
+.workspace-app :is(.planning-mini-stats,.finance-stats,.gx-stats)>div:nth-child(4n+3),body .stats .stat:nth-child(4n+3){background:linear-gradient(130deg,#bdf4e0,#55d6c4)!important;border-color:#8acfc1!important}
+.workspace-app :is(.planning-mini-stats,.finance-stats,.gx-stats)>div:nth-child(4n),body .stats .stat:nth-child(4n){background:linear-gradient(130deg,#e7ceff,#c19cf6)!important;border-color:#c4a5e4!important}
+body[data-participant] .workspace-hero{background:var(--cobrides-banner)!important;border:1px solid #efb6cc;border-radius:20px;padding:32px 36px;margin-bottom:30px}
+body[data-participant] .onboarding>form{border-top:4px solid #ef5e9e}
+body :is(.home-tabs,.faith-tabs,.readiness-tabs,.legal-tabs,.newlywed-tabs,.hm-tabs) .primary{background:var(--cobrides-action)!important}
+body .entry-grid a:nth-child(4n+1){border-top:3px solid #ef4096}body .entry-grid a:nth-child(4n+2){border-top:3px solid #ff852d}body .entry-grid a:nth-child(4n+3){border-top:3px solid #00b9a7}body .entry-grid a:nth-child(4n){border-top:3px solid #a35ae4}
+@media(max-width:760px){body[data-participant] .workspace-hero{padding:24px}.workspace-app .sidebar::before{position:static;margin:-24px -24px 24px;height:4px}}
