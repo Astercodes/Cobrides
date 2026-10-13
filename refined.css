@@ -64,3 +64,25 @@ body[data-participant] .onboarding>form{border-top:4px solid #ef5e9e}
 body :is(.home-tabs,.faith-tabs,.readiness-tabs,.legal-tabs,.newlywed-tabs,.hm-tabs) .primary{background:var(--cobrides-action)!important}
 body .entry-grid a:nth-child(4n+1){border-top:3px solid #ef4096}body .entry-grid a:nth-child(4n+2){border-top:3px solid #ff852d}body .entry-grid a:nth-child(4n+3){border-top:3px solid #00b9a7}body .entry-grid a:nth-child(4n){border-top:3px solid #a35ae4}
 @media(max-width:760px){body[data-participant] .workspace-hero{padding:24px}.workspace-app .sidebar::before{position:static;margin:-24px -24px 24px;height:4px}}
+
+/* The supplied leaf palette: saturated details, black text, spacious white surfaces. */
+:root{--brand-magenta:#ed007e;--brand-orange:#ff7900;--brand-teal:#00af9d;--brand-violet:#9822d4;--cobrides-action:linear-gradient(110deg,#ff9a1f,#ff766a 45%,#fa55af);--cobrides-banner:linear-gradient(115deg,#ffcf80,#ff9ac9 48%,#ce9bff)}
+.workspace-app{background:linear-gradient(130deg,#fff5ef 0%,#fff 42%,#effcf8 100%)}
+.workspace-app .sidebar{background:linear-gradient(180deg,#fff 15%,#fff3f8 65%,#edfff9)}
+.workspace-app .sidebar::before{height:7px;background:linear-gradient(90deg,var(--brand-magenta),var(--brand-orange),var(--brand-teal),var(--brand-violet))}
+.workspace-app .nav-group h2{border-left:3px solid var(--brand-magenta);padding-left:10px}
+.workspace-app .nav-group:nth-child(4n+2) h2{border-color:var(--brand-orange)}
+.workspace-app .nav-group:nth-child(4n+3) h2{border-color:var(--brand-teal)}
+.workspace-app .nav-group:nth-child(4n) h2{border-color:var(--brand-violet)}
+.workspace-app nav a.active{background:linear-gradient(105deg,#ff96c6,#d8a8ff)!important;border-color:#ed60aa}
+.workspace-app main>header{background:#ffffffed;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,#ed007e,#ff7900,#00af9d,#9822d4) 1;gap:16px}
+.workspace-app .profile-button{width:46px;height:46px;flex:0 0 46px;padding:3px;background:linear-gradient(135deg,#ed007e,#ff7900,#00af9d,#9822d4)!important;overflow:hidden;box-shadow:0 0 0 3px #fff}
+.workspace-app .profile-button img{width:100%;height:100%;object-fit:cover;object-position:50% 27%;border-radius:50%;border:2px solid #fff}
+.workspace-app .profile-button[aria-current=page]{outline:2px solid #ed007e;outline-offset:4px}
+.bridal-profile-hero{position:relative;display:grid;grid-template-columns:160px 1fr;gap:32px;align-items:center;padding:40px;margin:24px 0 30px;border-radius:24px;overflow:hidden;background:linear-gradient(110deg,#ffdb97 0%,#ffa2cd 48%,#c8aff5 80%,#81dece);border:1px solid #e6a1c2}
+.bridal-profile-hero::after{content:'';position:absolute;inset:0 0 0 auto;width:22%;background:linear-gradient(90deg,transparent,#ffffff33),url('assets/brand-palette.png') center/cover;opacity:.18;pointer-events:none;mask-image:linear-gradient(90deg,transparent,#000)}
+.bridal-profile-hero>div{position:relative;z-index:1;max-width:620px}.bridal-profile-hero h2{font-size:clamp(32px,4vw,48px);margin:12px 0;letter-spacing:-.05em}.bridal-profile-portrait{width:160px;height:190px;object-fit:cover;object-position:center 25%;border:5px solid #ffffffd9;border-radius:80px 80px 24px 24px;box-shadow:0 12px 32px #4a0e3d18}
+.bridal-color-swatches{display:flex;gap:9px;margin-top:20px}.bridal-color-swatches span{width:28px;height:9px;border-radius:6px;background:var(--brand-magenta)}.bridal-color-swatches span:nth-child(2){background:var(--brand-orange)}.bridal-color-swatches span:nth-child(3){background:var(--brand-teal)}.bridal-color-swatches span:nth-child(4){background:var(--brand-violet)}
+.workspace-app .profile-form{border-top:4px solid #ed007e}.workspace-app .stage.selected{background:linear-gradient(110deg,#ffc5df,#ddaaff)!important;border-color:#d84c9a!important}
+.workspace-app .panel{border-top-color:#ef9dc4}.workspace-app .imports-hero{background:var(--cobrides-banner)}
+@media(max-width:760px){.bridal-profile-hero{grid-template-columns:90px 1fr;padding:24px;gap:18px}.bridal-profile-portrait{width:90px;height:125px;border-width:3px}.bridal-profile-hero h2{font-size:30px}.bridal-profile-hero p{font-size:12px}.workspace-app main>header{height:auto;min-height:76px;flex-wrap:wrap;padding:16px 20px}.workspace-app .breadcrumb{flex:1}.workspace-app .platform-header{order:3;width:100%;justify-content:space-between}.workspace-app .profile-button{margin-left:auto}.workspace-app .sidebar::before{height:7px}}
