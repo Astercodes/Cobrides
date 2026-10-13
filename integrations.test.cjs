@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict'),crypto=require('node:crypto'),{Readable}=require('node:stream');
 const {createHandler,seal,unseal}=require('./api/integrations');
-const env={APP_ORIGIN:'https://cobrides.test',UPSTASH_REDIS_REST_URL:'https://redis.test',UPSTASH_REDIS_REST_TOKEN:'redis-secret',INTEGRATION_ENCRYPTION_KEY:'a'.repeat(40),GOOGLE_CLIENT_ID:'google-id',GOOGLE_CLIENT_SECRET:'google-secret',GOOGLE_PLACES_API_KEY:'places-secret',STRIPE_SECRET_KEY:'stripe-secret',STRIPE_REGISTRY_PRICE_ID:'price_fixed',STRIPE_WEBHOOK_SECRET:'webhook-secret'};
+const env={APP_ORIGIN:'https://cobrides.test',UPSTASH_REDIS_REST_URL:'https://redis.test',UPSTASH_REDIS_REST_TOKEN:'redis-secret',INTEGRATION_ENCRYPTION_KEY:'a'.repeat(40),GOOGLE_CLIENT_ID:'google-id',GOOGLE_CLIENT_SECRET:'google-secret',GOOGLE_PLACES_API_KEY:'places-secret',STRIPE_SECRET_KEY:'stripe-secret',STRIPE_REGISTRY_PRICE_ID:'price_fixed',STRIPE_WEBHOOK_SECRET:'webhook-secret',OPENAI_API_KEY:'ai-secret',OPENAI_MODEL:'configured-test-model'};
 const values=new Map(),calls=[];
 async function store(cmd,key,value,...args){if(cmd==='GET')return values.get(key)||null;if(cmd==='SET'){if(args.includes('NX')&&values.has(key))return null;values.set(key,value);return 'OK';}if(cmd==='DEL')return values.delete(key)?1:0;if(cmd==='INCR'){const n=Number(values.get(key)||0)+1;values.set(key,n);return n;}if(cmd==='EXPIRE')return 1;throw Error(cmd);}
 const saved=(key,value)=>values.set('cobrides:integrations:'+key,seal(value,env.INTEGRATION_ENCRYPTION_KEY));
@@ -10,7 +10,7 @@ async function fetcher(url,options={}){calls.push({url:String(url),options});let
  if(String(url).includes('oauth2.googleapis.com/token'))data={access_token:'new-access',refresh_token:'new-refresh',expires_in:3600,scope:'openid email https://www.googleapis.com/auth/calendar.events.readonly'};
  if(String(url).includes('openidconnect'))data={sub:'user1',email:'bride@example.com',email_verified:true};
  if(String(url).includes('/calendar/'))return {ok:calendarStatus===200,status:calendarStatus,json:async()=>events};
- if(String(url).includes('gmail.googleapis'))data={id:'mail1'};
+ if(String(url).includes('gmail.googleapis'))data={id:'mail1'};if(String(url).includes('api.openai.com'))data={output:[{content:[{type:'output_text',text:'AI-generated: consider a jewel garden palette.'}]}]};
  if(String(url).includes('stripe.com'))data=String(url).endsWith('cs_test_123')?{id:'cs_test_123',metadata:{owner:'user1'},payment_status:'paid',amount_total:1000,currency:'usd'}:{url:'https://checkout.stripe.com/c/pay/test'};
  return {ok:true,status:200,json:async()=>data};}
 const handler=createHandler({env,store,fetcher});
@@ -45,6 +45,7 @@ async function request(action,{method='GET',body,cookie='',csrf='',origin=env.AP
  const raw=JSON.stringify({id:'evt_1',type:'checkout.session.completed',created:123,data:{object:{id:'cs_test_123',metadata:{owner:'user1'},payment_status:'paid'}}}),t=Math.floor(Date.now()/1000),signature=crypto.createHmac('sha256',env.STRIPE_WEBHOOK_SECRET).update(t+'.'+raw).digest('hex');
  r=await request('stripe-webhook',{method:'POST',raw,origin:'https://stripe.com',extra:{'stripe-signature':'t='+t+',v1='+signature}});assert.equal(r.status,200);assert(values.has('cobrides:integrations:stripe-event:evt_1'));
  r=await request('stripe-webhook',{method:'POST',raw:raw+' ',extra:{'stripe-signature':'t='+t+',v1='+signature}});assert.equal(r.status,400);
+ r=await request('vision-assist',{method:'POST',body:{prompt:'Suggest a cohesive theme',ideas:[{title:'Garden',note:'Magenta blooms',privateJournal:'DO NOT SEND'}],confirm:true},cookie,csrf});assert(r.data.generated);const aiCall=calls.find(c=>c.url.includes('api.openai.com'));assert(!aiCall.options.body.includes('DO NOT SEND'));assert.equal(JSON.parse(aiCall.options.body).store,false);
  r=await request('disconnect',{method:'POST',body:{},cookie,csrf});assert.equal(r.status,200);assert(!values.has('cobrides:integrations:account:user1'));
  r=await request('sync',{method:'POST',body:{},cookie,csrf});assert.equal(r.status,401);
  console.log('Integration tests passed: OAuth binding/replay, encrypted storage, scoped access, refresh, sync/cancellation/reset, CSRF, email idempotency, checkout ownership and webhook signatures.');

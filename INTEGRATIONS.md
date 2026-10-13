@@ -36,3 +36,6 @@ integrations.test.cjs uses an injected fake provider transport and store: encryp
 - https://docs.stripe.com/webhooks/signatures
 - https://www.mediawiki.org/wiki/API:Search
 - https://upstash.com/docs/redis/features/restapi
+
+## Vision Studio assistant
+The authenticated vision-assist action uses OpenAI Responses with an allowlist of selected inspiration titles, notes and HEX colors, plus the user’s prompt. Set OPENAI_API_KEY and OPENAI_MODEL in Vercel. It does not read unrelated journey records. Responses are suggestions, not verified matches or actions. See VISION-STUDIO.md for the module and its boundaries.
