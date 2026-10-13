@@ -23,3 +23,12 @@ Cross-device board synchronization, secure invited collaborators, live partner v
 
 ## Verification
 vision.test.cjs checks board/project isolation, nesting and merge cycles, source deduplication, HTTPS/color validation, approved locks, conversion idempotence, canonical expense/inventory relationships, registry privacy, no inferred transactions and private brief exclusions. Integration tests cover AI request field allowlisting/store:false with fake transport, alongside OAuth, calendar, email, Stripe and webhook guards. All existing module regressions and classic-script compatibility checks pass. Browser checks cover creating a board, approving a priced concept, Budget/Task conversion, palette application, creative brief snapshot creation and a 375-pixel viewport without overflow.
+
+## Link capture and collection update
+Discover now uses paste-link → choose collection → pull and save, plus direct uploads with a collection picker. The former utility footer, category editor, AI prompt, export-current-collection control, activity-history display and implementation notices have been removed from the studio UI at the user's request. Existing private records and server AI adapter remain untouched.
+
+/api/link-preview retrieves only public HTTPS HTML, uses DNS validation with a pinned public IPv4 destination, revalidates redirects, caps responses and timeouts, and never executes page scripts. Public Open Graph/Twitter/title/description/author metadata is used where available. A blocked or unsupported page saves as an original source link rather than fabricating metadata. Remote previews stay linked media, not images claimed as owned or copied with permission. Source links are deduplicated and can belong to multiple collections.
+
+Eight labeled sample collections are seeded once per wedding project with 24 illustrative ideas: Bridal Fashion, Flowers in Full Color, Dream Venues, Traditional Celebration, The Reception Edit, Invitations & Little Details, Honeymoon Daydreams, Our First Home. Seeding preserves existing boards/records and creates no budget, purchase, booking or payment records. Archiving a sample does not cause it to reappear.
+
+Additional checks: link-preview.test.cjs verifies metadata parsing, relative previews, origin validation, reserved/private addresses, DNS pinning and redirect validation. Browser testing verified real title/description capture into a chosen collection and absence of the removed utility footer.

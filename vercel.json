@@ -30,6 +30,9 @@
   "functions": {
     "api/integrations.js": {
       "maxDuration": 60
+    },
+    "api/link-preview.js": {
+      "maxDuration": 60
     }
   }
 }
