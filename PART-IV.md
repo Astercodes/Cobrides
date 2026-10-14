@@ -33,3 +33,12 @@ The Professionals section has category selection and shortlisting; Finishing Tou
 ## Validation
 
 Pure-model tests cover idempotent legacy migration, currency/charge snapshots, deposits and refunds, over-refund rejection, private labels, cash versus in-kind funds, shared allocations, scenarios, cancellation costs, unsafe checkout URLs and spreadsheet formula protection. Browser checks cover actual forms, persistence and responsive previews.
+
+## Real-use financial simulations
+FinanceSamples adds a connected fictional ledger to the existing labeled sample wedding projects once. Real projects, existing financial records and private user profile data are preserved. The Lagos sample includes 18 expenses with vendor/stakeholder/event links, tax/service/delivery calculations, category allocations, savings goals, three budget scenarios and manual GBP/NGN rate snapshots. Shared expenses allocate across events without duplicating total spend.
+
+Eight contribution records demonstrate partial cash receipts, a family NGN pledge, private and anonymous cash gifts, cake item sponsorship, received in-kind favors, an overdue pledge and a cancelled commitment. Sponsor-specific views, named acknowledgments and clearly labeled sample supporting notes are populated. Cash and in-kind assessed value remain separate.
+
+Sixteen scheduled obligations and 19 ledger entries demonstrate deposits, partially paid installments, an overdue venue installment, final balances, a third-party-funded shuttle deposit with partial reimbursement, a fully refunded cancelled rental with a separate cancellation fee, and a voided duplicate. Amounts are derived using the existing finance core. These are sample ledger records, not real payment confirmations. No provider URL, actual payment, checkout, bank connection or funds transfer is created.
+
+The smaller coastal project has its own dinner deposit/balance, photography deposit, costs and two contribution examples. Sample seeding preserves edits across reloads and does not duplicate ledger entries. Tests verify scoped links, currencies, refunds, reimbursements, void isolation, privacy labels, category/event totals, one-time seeding and preservation of real records.
