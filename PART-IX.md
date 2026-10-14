@@ -15,3 +15,6 @@ Privacy boundary: entries are excluded from public wedding website/registry expo
 The thirty-module inventory places these at 26–27. Travel planning remains in guest guidance/logistics, and post-wedding preparation is included in module 27. The remaining roadmap modules are traditions, wedding-day operations and memories.
 
 Validation: static build and all existing suites plus preparation tests for opt-in task links, note isolation, event date changes, routine interval/check-in guards, goal/checklist completion, budget idempotence and calendar privacy. Browser checks cover relative appointment creation, budget connection, routine check-in, emergency kit completion guard, household checklist, module count and mobile overflow.
+
+
+Personal preparation samples seed once per sample wedding: ten beauty/self-care categories and eleven optional marriage/household categories. Examples include appointments, private routine check-ins, goals, partly finished checklists, completed steps and a cancelled appointment. Only explicitly shared sample steps create generic Planning tasks. The existing beauty cost is reused; other personal estimates do not create payments. Private notes remain outside public wedding exports and general task details. Sample spaces start visible without changing personal projects.
