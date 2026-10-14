@@ -47,3 +47,6 @@ All existing model suites and static builds pass. New tests cover inferred/manua
 The downloaded day pack was inspected for self-contained assets and financial exclusion. Its actual exported revisions reconciled against the downloaded QA project snapshot. Automatic external calendar synchronization, secure sharing, authenticated permissions and shared server synchronization remain backend work.
 
 Technical references: [MDN: using service workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers), [MDN: Cache.addAll](https://developer.mozilla.org/en-US/docs/Web/API/Cache/addAll).
+
+
+Workspace samples seed once per sample wedding: all seven import-reference types, eight document records with sample text files and version history, eight explicitly simulated activity examples, three calendar holds including a reviewable conflict, offline-preparation examples and a project-specific regional preference preview. Existing provider/device status and global preferences are preserved. Accepted sample imports retain sample flags. Existing records power search, reminders, exports and day packs; no sync, transaction, message or permission is fabricated.
