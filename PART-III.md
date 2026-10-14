@@ -24,3 +24,10 @@ Approvals are explicitly self-recorded by the local user. The history is browser
 
 ## Validation
 `npm test` runs both scheduling and collaboration model tests. Browser checks cover stakeholder saving, role financial restrictions, commitments, conversations, pinning, polls, message conversion, two-approver gating, resulting-task synchronization, approval invalidation and reload persistence. Test interaction uses a separate loopback origin to preserve the user's localhost planning data.
+
+## Connected collaboration samples
+CollaborationSamples seeds the two fictional planning projects once, preserving existing real projects and records. Each sample project receives 11 conversation spaces and 34 authored message records, with pinned updates, announcements, a bridal styling poll, manual acknowledgment examples, fictional quote negotiation, a coordination brief, private notes and contextual links into tasks, shopping and budgets. No send, delivery, read receipt or verified identity is inferred.
+
+The directory covers the bride, partner, parents/family, bridesmaids, planner, vendors, sponsor, guest, merchant and venue, plus a delegated logistics lead and a revoked former consultant. Responsibilities, event assignments, commitments, custom roles and temporary access dates depict intended scope. Sponsor access previews show own commitments; vendor/planner previews exclude full finances. These are planning records, not actual account permissions or a participant portal switcher.
+
+Five additional proposals per sample project demonstrate a three-option floral comparison with partial approvals, unanimous shuttle approval, invitation wording changes, an overdue supplier-access issue, and a resolved accessory choice linked to a shopping record. Supporting files, votes, comments, histories and resulting-task links are included. The sample proposal opens automatically and access preview defaults to the planner. Edits persist; the seed marker prevents duplication. Tests check memberships, project/event/context scope, roles, polls, acknowledgments, approvals, preserved data and zero transmitted messages or payments.
