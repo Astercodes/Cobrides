@@ -29,3 +29,6 @@ Change requests and issue escalations include a responsible owner, priority, dea
 All records remain browser-local. There is no vendor login, shared database, notification delivery, actual booking, contract acceptance or authenticated approval. Supporting documents use the existing three-files / 200 KB-per-file limit and full JSON export. No new external integrations or paid services were added.
 
 Model checks cover migration, availability semantics, safe portfolio URLs, linked currency/charge calculations, duplicate/expired/sample booking guards, participant validation, acknowledgement deduplication, version history, cyclic dependencies and downstream invalidation. Browser checks cover discovery filters, vendor creation, proposal comparison and booking, finance handoffs, canonical deliverables, logistics completion/revision/persistence, escalation-task deduplication, and desktop/mobile layout.
+
+
+Sample journeys now include all 15 professional categories, fictional portfolios and proposals, finance-linked service records, consultation journals, completed-service reflections, vendor deliverables, approval issues and versioned cross-vendor setup instructions. Samples seed once per sample project and preserve personal records. No vendor is booked or contacted.
