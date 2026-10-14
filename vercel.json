@@ -33,6 +33,9 @@
     },
     "api/link-preview.js": {
       "maxDuration": 60
+    },
+    "api/social.js": {
+      "maxDuration": 60
     }
   }
 }
