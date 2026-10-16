@@ -9,9 +9,10 @@
       .replace(/\s*[·—-]?\s*\b(?:simulated|fictional)\b\s*$/gi, '')
       .replace(/\bsample (?=project|journey|record|service plan|inspection|team|data|workspace|celebration)/gi, '')
       .replace(/\bsample (?=venue team|florist|caterer|photographer|designer|transport|beauty team|stationer|supplier|entertainment|accommodation|fee record)/gi, '')
-      .replace(/\bsample (?=fitting studio|deliverable|handoff|planner|father|bridesmaid|sponsor|merchant|guest|logistics lead|consultant|videographer|decorator|stylist)/gi, '')
+      .replace(/\bsample (?=comparison|family review|styling discussion|fitting studio|deliverable|handoff|planner|father|bridesmaid|sponsor|merchant|guest|logistics lead|consultant|videographer|decorator|stylist)/gi, '')
       .replace(/\b(?:saved|stored) (?:in|on) this (?:browser|device)\b/gi, 'Saved')
       .replace(/Offline · saved on this device/g, 'Offline')
+      .replace(/\bsample-(?=floral-concept-comparison|coordination-brief)/gi, '')
       .replace(/\bLocal discussion\b/g, 'Discussion');
   }
   if (typeof module === 'object' && module.exports) { module.exports = cleanLabel; return; }
