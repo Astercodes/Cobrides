@@ -1,5 +1,5 @@
 (function(root){'use strict';
-const categories=['My Dream Wedding','Engagement & Proposal','Traditional Wedding','Civil Ceremony','Religious Ceremony','Wedding Reception','Bridal Fashion',"Groom’s Style",'Beauty & Hair','Venue & Decor','Flowers & Styling','Photography & Video','Invitations & Stationery','Food & Cake','Honeymoon','Our Future Home','Spiritual Preparation','Newlywed Life'];
+const categories=['My Dream Wedding','Engagement & Proposal','Traditional Wedding','Civil Ceremony','Religious Ceremony','Wedding Reception','Bridal Fashion',"Groom’s Style",'Beauty & Hair','Venue & Decor','Flowers & Styling','Photography & Video','Invitations & Stationery','Food & Cake','Honeymoon','Our Future Home','Spiritual Preparation'];
 const statuses=['Saved','Shortlisted','Approved','Rejected','Implemented'];
 const targets={Shopping:['purchases','shopping'],Budget:['expenses','budget'],Task:['tasks','tasks'],Decision:['decisions','decisions'],Wardrobe:['wardrobeLooks','wardrobe'],Honeymoon:['honeymoonRecords','honeymoon'],Home:['homeRecords','home-setup'],Registry:['registryItems','registry'],Operations:['operationRuns','operations']};
 const clean=(v,max=1000)=>String(v||'').trim().slice(0,max);
