@@ -9,6 +9,7 @@
       .replace(/\s*[·—-]?\s*\b(?:simulated|fictional)\b\s*$/gi, '')
       .replace(/\bsample (?=project|journey|record|service plan|inspection|team|data|workspace|celebration)/gi, '')
       .replace(/\bsample (?=venue team|florist|caterer|photographer|designer|transport|beauty team|stationer|supplier|entertainment|accommodation|fee record)/gi, '')
+      .replace(/\bsample (?=fitting studio|deliverable|handoff|planner|father|bridesmaid|sponsor|merchant|guest|logistics lead|consultant|videographer|decorator|stylist)/gi, '')
       .replace(/\b(?:saved|stored) (?:in|on) this (?:browser|device)\b/gi, 'Saved')
       .replace(/Offline · saved on this device/g, 'Offline')
       .replace(/\bLocal discussion\b/g, 'Discussion');

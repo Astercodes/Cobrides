@@ -1,0 +1,102 @@
+body .task-studio{--studio-pink:#ed007e;--studio-teal:#008b80;min-width:0;margin-top:25px}
+body .task-overview{position:relative;display:grid;grid-template-columns:1fr 240px;gap:32px;padding:38px 42px;background:linear-gradient(115deg,#fff4fa 0%,#fff8f1 42%,#edf9f7 100%);border:1px solid #eddfeb;border-radius:25px;overflow:hidden}
+body .task-overview:before{content:'';position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#ed007e,#ff7900,#00af9d,#9822d4)}
+body .task-overview-copy>.eyebrow{letter-spacing:.16em;font-size:10px}
+body .task-overview-copy h2{font-size:43px;line-height:1.08;letter-spacing:-.05em;margin:16px 0}
+body .task-overview-copy>p{font-size:12px;line-height:1.7;margin-bottom:25px;max-width:380px}
+body .task-overview-metrics{display:flex;gap:0}
+body .task-overview-metrics button{background:transparent;border:0;border-radius:0;padding:0 24px;text-align:left;border-left:1px solid #ded7de;cursor:pointer;min-height:54px}
+body .task-overview-metrics button:first-child{padding-left:0;border:0}
+body .task-overview-metrics strong{display:block;font-size:27px;font-weight:600;letter-spacing:-.04em}
+body .task-overview-metrics span{display:block;font-size:10px;margin-top:6px}
+body .task-overview-metrics button:hover strong{text-decoration:underline;text-underline-offset:5px}
+body .task-overview-progress{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+body .task-progress-ring{display:grid;place-items:center;width:174px;height:174px;border-radius:50%;background:conic-gradient(from -90deg,#ed007e 0%,#ff7900 calc(var(--task-progress)/2),#00af9d var(--task-progress),#e5e8eb var(--task-progress));padding:9px;box-shadow:0 10px 30px #d0006610}
+body .task-progress-ring>div{width:100%;height:100%;background:#fff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+body .task-progress-ring strong{font-size:48px;letter-spacing:-.07em;font-weight:600;line-height:1}
+body .task-progress-ring strong span{font-size:21px;letter-spacing:-.03em;margin-left:3px}
+body .task-progress-ring small{font-size:10px;margin-top:10px}
+body .task-progress-caption{font-size:8px;letter-spacing:.15em;font-weight:600}
+body .task-next{display:flex;align-items:center;gap:20px;width:100%;text-align:left;background:#fff;border:1px solid #e6e3eb;border-radius:16px;padding:18px 22px;margin:14px 0 30px;box-shadow:0 3px 12px #1c112304}
+body .task-next-label{font-size:8px;letter-spacing:.1em;white-space:nowrap;border-radius:7px;background:#f9e6f1;padding:8px 10px;font-weight:600}
+body .task-next strong{font-size:12px;flex:1;line-height:1.4}
+body .task-next>span:not(.task-next-label){font-size:10px}
+body .task-next-open{white-space:nowrap;text-decoration:underline;text-underline-offset:4px}
+body .task-workspace{margin-top:30px}
+body .task-workspace-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:22px}
+body .task-workspace-heading h2{font-size:24px;letter-spacing:-.04em;margin:8px 0 0}
+body .task-workspace-heading .eyebrow{font-size:9px}
+body .task-view-switch{display:flex;gap:3px;padding:4px;border-radius:12px;background:#e9e9ee;flex:none}
+body .task-view-switch button{background:transparent;border:0;padding:9px 19px;border-radius:9px;font-size:11px;min-height:36px}
+body .task-view-switch button[aria-pressed=true]{background:white;box-shadow:0 2px 5px #0000000b}
+body .task-workspace>.planning-toolbar{background:#fff;border:1px solid #e7e5ec;border-radius:15px;padding:12px;display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}
+body .task-workspace .search{background:#f7f7fa;border:0;border-radius:10px;padding:12px 14px;font-size:12px;flex:1;min-width:150px;width:auto}
+body .task-workspace .planning-toolbar select{background:#fff;border:1px solid #e6e4ec;padding:10px 12px;border-radius:10px;font-size:11px;max-width:220px}
+body .task-workspace .planning-toolbar .button{background:#fff;border:1px solid #e6e4ec;padding:10px 12px;font-size:11px}
+body .task-workspace>.filters{display:flex;gap:7px;margin:0 0 22px;flex-wrap:wrap}
+body .task-workspace .filter{background:#fff;border:1px solid #e3e1e8;border-radius:22px;font-size:11px;padding:9px 17px;min-height:35px}
+body .task-workspace .filter.active{background:linear-gradient(110deg,#ffe1f0,#ffe8d3);border-color:#efbbd2}
+body .studio-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;align-items:start}
+body .studio-lane{min-width:0;background:#eeedf2;border-radius:18px;padding:13px 10px 10px;border:1px solid #e6e3ec}
+body .studio-lane-heading{padding:8px 6px 17px}
+body .studio-lane-heading h3{display:flex;align-items:center;gap:8px;margin:0;font-size:13px;letter-spacing:-.02em}
+body .studio-lane-heading h3>span{width:7px;height:7px;background:#9822d4;border-radius:50%}
+body .lane-1 .studio-lane-heading h3>span{background:#ff7900}
+body .lane-2 .studio-lane-heading h3>span{background:#00af9d}
+body .studio-lane-heading b{font-size:10px;background:#fff;border:1px solid #dedce4;border-radius:6px;padding:3px 6px;font-weight:500;margin-left:auto}
+body .studio-lane-heading p{font-size:9px;margin:7px 0 0}
+body .studio-lane-tasks{display:flex;flex-direction:column;gap:11px;max-height:720px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#c7c0d1 transparent;overscroll-behavior:contain;padding:0 2px 3px}
+body .studio-task{min-width:0;padding:17px 16px 12px;background:white;border:1px solid #e4e0e9;border-radius:14px;box-shadow:0 3px 8px #1d102a04;transition:box-shadow .18s,border-color .18s}
+body .studio-task:hover{border-color:#d2bacd;box-shadow:0 6px 16px #3313350c}
+body .studio-task-top{display:flex;align-items:center;gap:7px;margin-bottom:13px;flex-wrap:wrap}
+body .studio-category{font-size:8px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;background:#f2edf9;padding:5px 7px;border-radius:5px;max-width:100%;overflow-wrap:anywhere}
+body .studio-priority{font-size:8px;border:1px solid #f3d5b8;background:#fff3e8;border-radius:5px;padding:4px 6px}
+body .studio-priority.urgent{background:#ffe9f1;border-color:#f8c2d5}
+body .studio-task-top input{margin-left:auto;width:17px;height:17px;accent-color:#008d81;cursor:pointer;flex:none}
+body .studio-task-title{display:block;text-align:left;width:100%;font-size:13px;line-height:1.5;letter-spacing:-.02em;font-weight:600;padding:0;background:none;border:0;border-radius:0;white-space:normal;overflow-wrap:anywhere}
+body .studio-task-title:hover{text-decoration:underline;text-underline-offset:3px}
+body .studio-event{font-size:9px;margin:7px 0 12px;line-height:1.5}
+body .studio-task-note{font-size:10px;line-height:1.6;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+body .studio-subtasks{display:flex;gap:10px;align-items:center;margin-bottom:13px}
+body .studio-subtasks>span{font-size:8px;white-space:nowrap}
+body .studio-subtasks>div{height:4px;background:#eee9f0;border-radius:5px;flex:1;overflow:hidden}
+body .studio-subtasks i{display:block;height:100%;background:linear-gradient(90deg,#ed007e,#ff7900);border-radius:5px}
+body .studio-signals{display:flex;gap:4px;flex-wrap:wrap;margin:0 0 12px}
+body .studio-signals:empty{display:none}
+body .signal{font-size:8px;padding:4px 6px;border-radius:5px;background:#f0edf8}
+body .signal.overdue{background:#ffe5ed}.signal.blocked{background:#fff0dd}.signal.approval{background:#eee6fc}.signal.milestone{background:#ddf5ef}
+body .studio-task-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #f0edf3;padding-top:12px}
+body .studio-owner{display:flex;align-items:center;gap:6px;min-width:0;font-size:9px}
+body .studio-owner>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
+body .studio-owner-avatar{width:23px;height:23px;border-radius:50%;background:linear-gradient(135deg,#f8d8eb,#e8d7f9);font-size:8px;font-weight:600;display:grid;place-items:center;flex:none}
+body .studio-task-footer time{font-size:9px;white-space:nowrap;font-variant-numeric:tabular-nums}
+body .studio-task-footer time.late{text-decoration:underline;text-decoration-color:#ed007e;text-underline-offset:4px}
+body .studio-task-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+body .studio-task-actions button{border:1px solid #e9e4ec;background:#faf9fc;border-radius:7px;font-size:8px;padding:6px 8px;min-height:28px}
+body .studio-task.is-done .studio-task-title{text-decoration:line-through;text-decoration-color:#b8c8c4}
+body .studio-task.is-done .studio-category{background:#e1f3ee}
+body .studio-lane-empty{padding:35px 10px;text-align:center;font-size:11px;border:1px dashed #d6d1df;border-radius:13px;background:#f5f4f7}
+body .studio-no-tasks{text-align:center;padding:50px 20px;background:#fff;border:1px solid #e6e1eb;border-radius:18px}
+body .studio-no-tasks h3{font-size:24px}.studio-no-tasks p{font-size:13px}
+body .studio-task-list{display:grid;grid-template-columns:1fr;gap:10px}
+body .studio-task-list .studio-task{display:grid;grid-template-columns:125px minmax(0,1fr) 190px;column-gap:22px;align-items:start;padding:20px}
+body .studio-task-list .studio-task-top{grid-column:1;grid-row:1/4;margin:0;align-content:start}
+body .studio-task-list .studio-task-title{grid-column:2;grid-row:1}
+body .studio-task-list .studio-event{grid-column:2;grid-row:2}
+body .studio-task-list .studio-task-note{grid-column:2;grid-row:3}
+body .studio-task-list .studio-signals{grid-column:2;grid-row:4}
+body .studio-task-list .studio-subtasks{grid-column:2;grid-row:5;max-width:250px}
+body .studio-task-list .studio-task-footer{grid-column:3;grid-row:1;border:0;padding:0}
+body .studio-task-list .studio-task-actions{grid-column:3;grid-row:2/5}
+body .task-studio #progress-breakdown{margin:28px 0 0;padding:22px;border-radius:18px;border:1px solid #e4e0e9;box-shadow:none}
+body .task-studio #progress-breakdown summary{font-size:12px}
+body .task-studio .phase-progress{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+body .task-studio .phase-progress .progress i{background:linear-gradient(90deg,#ed007e,#ff7900,#00af9d)}
+body #planning-detail-dialog{border:1px solid #e7dfea;border-radius:24px;box-shadow:0 25px 90px #21152e35;padding:30px;max-width:600px;width:calc(100% - 32px)}
+body #planning-detail-dialog::backdrop{background:#1d122b55;backdrop-filter:blur(5px)}
+body #planning-detail-dialog h2{font-size:25px;line-height:1.25}body #planning-detail-dialog h3{font-size:13px;margin-top:25px}
+body #planning-detail-dialog .check-option{padding:12px;background:#f8f6fa;border-radius:10px;margin-bottom:7px;font-size:12px}
+@media(max-width:1200px){body .task-overview{padding:30px;grid-template-columns:1fr 180px;gap:15px}body .task-overview-copy h2{font-size:38px}body .task-overview-metrics button{padding:0 15px}body .studio-board{gap:10px}body .studio-task{padding:14px 12px}body .studio-task-actions{gap:5px}body .task-next{flex-wrap:wrap;gap:12px}body .task-next strong{flex-basis:50%}}
+@media(max-width:760px){body .task-overview{grid-template-columns:1fr;padding:27px 23px;gap:24px;border-radius:20px}body .task-overview-copy h2{font-size:37px}body .task-overview-progress{flex-direction:row;justify-content:flex-start;gap:16px}body .task-progress-ring{width:100px;height:100px;padding:6px}body .task-progress-ring strong{font-size:30px}body .task-progress-ring strong span{font-size:16px}body .task-progress-ring small{font-size:8px;margin-top:5px}body .task-progress-caption{max-width:110px;line-height:1.9}body .task-overview-metrics button{padding:0 13px}body .task-overview-metrics span{font-size:9px}body .task-overview-metrics strong{font-size:25px}body .task-next{padding:16px;gap:10px}body .task-next-label{font-size:7px}body .task-next strong{flex-basis:100%;order:2}body .task-next>span:not(.task-next-label){font-size:9px;order:3}body .task-workspace-heading{align-items:flex-start;flex-wrap:wrap}body .task-workspace-heading h2{font-size:22px}body .task-view-switch button{padding:8px 20px;min-height:38px}body .task-workspace>.planning-toolbar{padding:10px}body .task-workspace .search{flex-basis:100%;font-size:16px}body .task-workspace .planning-toolbar select{flex:1;max-width:100%;font-size:16px;min-width:0;width:100px}body .task-workspace .planning-toolbar .button{width:100%;min-height:40px}body .task-workspace .filter{padding:9px 13px;min-height:40px}body .studio-board{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding:0 0 14px;overscroll-behavior-x:contain}body .studio-lane{width:85%;min-width:260px;flex:none;scroll-snap-align:start}body .studio-lane-tasks{max-height:650px}body .studio-task{padding:18px 16px}body .studio-task-title{font-size:14px}body .studio-task-actions button{min-height:36px;font-size:10px}body .studio-task-top input{width:22px;height:22px}body .studio-task-list{grid-template-columns:1fr}body .task-studio .phase-progress{grid-template-columns:1fr}body #planning-detail-dialog{padding:24px 20px}}
+@media(prefers-reduced-motion:reduce){body .studio-task{transition:none}}
+@media(max-width:1000px){body .studio-task-list .studio-task{display:block}body .studio-task-list .studio-task-top{margin-bottom:13px}body .studio-task-list .studio-task-footer{border-top:1px solid #f0edf3;padding-top:12px}}
