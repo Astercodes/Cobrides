@@ -59,3 +59,12 @@ body .compose-options>summary{font-size:10px;cursor:pointer;padding:7px 0;width:
 body .compose-options .form-grid{margin-top:15px}.compose-options input[type=file]{font-size:11px}
 @media(max-width:1100px){body .communication-layout{grid-template-columns:200px minmax(0,1fr)}body .conversation>.planning-toolbar{flex-wrap:wrap}body .conversation .search{flex-basis:100%}}
 @media(max-width:760px){body .communication-layout{display:block;border-radius:19px}body .channel-list{display:flex;gap:8px;overflow-x:auto;padding:12px;border-right:0;border-bottom:1px solid #e7ecf3}body .channel-list>.eyebrow{display:none}body .channel-button{width:170px;flex:none;margin:0;padding:13px}body .channel-button.selected{box-shadow:inset 0 -3px #1670f8}body .conversation-head{padding:20px 16px;align-items:flex-start}body .conversation-head h2{font-size:21px}body .conversation-head>.button{font-size:10px;min-height:36px;padding:7px 9px}body .conversation>.planning-toolbar{padding:12px 16px}body .messages{padding:20px 12px;max-height:560px;gap:18px}body .message-stack{max-width:85%}body .chat-avatar{width:25px;height:25px;font-size:9px}body .message{gap:6px}body .message-bubble{padding:12px 13px 8px}body #message-compose{padding:17px 16px}body #message-compose textarea{font-size:16px}body .compose-caption{font-size:9px}body .message-actions .button{min-height:36px}body .message .poll{padding:10px}}
+
+/* Conversations sit above the chat on every screen size. */
+body .communication-layout{display:flex!important;flex-direction:column;min-width:0}
+body .communication-layout>.channel-list{display:flex!important;flex-wrap:nowrap!important;gap:10px;width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;border-right:0;border-bottom:1px solid #e7ecf3;padding:14px 16px;scrollbar-width:thin;box-sizing:border-box}
+body .communication-layout>.channel-list>.eyebrow{display:none}
+body .communication-layout .channel-button{flex:0 0 200px;width:200px;min-width:0;max-width:200px;margin:0;padding:14px 16px;text-align:left}
+body .communication-layout .channel-button.selected{box-shadow:inset 0 -3px #1670f8}
+body .communication-layout>.conversation{width:100%;min-width:0}
+@media(max-width:760px){body .communication-layout>.channel-list{padding:12px;gap:8px}body .communication-layout .channel-button{flex-basis:170px;width:170px;max-width:170px;padding:12px}}
