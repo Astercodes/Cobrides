@@ -1,5 +1,7 @@
 # CoBrides pricing and regional preferences
 
+The public pricing menu opens `pricing.html`, with 100 individual feature entries across 16 categories, feature search, Free/Complete labels, and links into the corresponding workspaces. Categories are displayed openly. The landing page links to this dedicated page instead of repeating the full plan grid.
+
 Free: Vision Studio, Planning & Tasks, Timeline & Countdowns, and Guest List.
 
 Paid plan totals in NGN: one month 6,000; three months 15,000; six months 27,000; twelve months 50,000.
