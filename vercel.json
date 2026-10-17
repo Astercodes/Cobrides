@@ -36,6 +36,9 @@
     },
     "api/social.js": {
       "maxDuration": 60
+    },
+    "api/board-import.js": {
+      "maxDuration": 60
     }
   }
 }
