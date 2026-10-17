@@ -1,6 +1,6 @@
 # CoBrides pricing and regional preferences
 
-The public pricing menu opens `pricing.html`, with 100 individual feature entries across 16 categories, feature search, Free/Complete labels, and links into the corresponding workspaces. Categories are displayed openly. The landing page links to this dedicated page instead of repeating the full plan grid.
+The public Pricing menu opens `pricing.html` for plan prices. The separate Features menu opens `features.html`, with 93 individual feature entries across 15 categories, feature search, Free/Premium labels, and links into the corresponding workspaces. Home, Features, Pricing and People use the same persistent header. Categories are displayed openly. The landing page links to this dedicated page instead of repeating the full plan grid.
 
 Free: Vision Studio, Planning & Tasks, Timeline & Countdowns, and Guest List.
 
