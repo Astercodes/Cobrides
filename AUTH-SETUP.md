@@ -1,3 +1,5 @@
+> Temporary public workspace access is enabled at the owner’s request. Signup/login forward visitors into local workspaces. Admin and shared database collaboration still require verified accounts. Restore the auth-core temporaryAccess flag to false and remove the public auth-entry bypass when authentication is configured.
+
 # CoBrides account access
 
 ## Implemented
