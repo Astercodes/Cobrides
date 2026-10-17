@@ -17,3 +17,15 @@ Connections belong to a secure, HttpOnly browser session with encrypted server s
 Current account connection does not automatically import content, sync saved posts, publish media or send messages. Those actions require separate capability-specific adapters and permissions. Existing source-link capture remains independently available.
 
 Official references: [TikTok Login Kit](https://developers.tiktok.com/docs/en/login-kit-web), [Pinterest authorization](https://developer.pinterest.com/docs/getting-started/set-up-authentication-and-authorization/), [Google server OAuth](https://developers.google.com/identity/protocols/oauth2/web-server), [Instagram Login](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/business-login/), [WhatsApp business onboarding](https://developers.facebook.com/docs/whatsapp/embedded-signup/).
+
+## Activation checklist for furbrides.vercel.app
+
+1. Create the provider developer apps using the official links above. These are platform-owner applications; brides do not create developer apps.
+2. Register this exact callback in each provider application: `https://furbrides.vercel.app/api/social`.
+3. Configure the shared encrypted session store and the five shared environment variables listed above in Vercel. Use `APP_ORIGIN=https://furbrides.vercel.app` with no trailing slash. Keep tokens and secrets out of chat and source control.
+4. Add the selected provider's client/app ID and secret using its exact environment variable names above. For Google/YouTube, enable YouTube Data API and configure the web OAuth consent/client. Request only the scopes implemented by the adapter.
+5. Complete each provider's testing, review and public-access requirements. A development/test app is not necessarily available to arbitrary brides.
+6. Redeploy Vercel. Open Settings → Social accounts → Refresh connection status. The selected provider should show Ready to connect and its Connect button should be enabled.
+7. Test authorization with an eligible account, provider cancellation, reconnect and disconnect. Verify the account label appears only after the provider callback succeeds.
+
+Without configured provider apps and session storage, Connect actions remain disabled and clearly unavailable. Status-loading errors can be retried. Errors from an available provider appear beside that provider, rather than being hidden above the account grid. This fixes misleading controls; it cannot replace provider registration or approval.

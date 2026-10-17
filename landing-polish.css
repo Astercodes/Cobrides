@@ -5,3 +5,6 @@
 @media(max-width:760px){.topbar{height:auto;min-height:105px;gap:12px 8px;padding-top:12px;padding-bottom:12px}.topbar .nav-middle{display:flex!important;order:4;flex-basis:100%;justify-content:center;gap:19px;font-size:10px;white-space:nowrap}.topbar .wordmark{margin-right:auto}.topbar .nav-cta{padding:9px 11px}.topbar .region-trigger{margin-left:0}.hero{padding-top:35px}html{scroll-padding-top:125px}.topbar .wordmark{letter-spacing:1px;font-size:14px}}
 
 .pricing-section p{color:#000}.pricing-section .eyebrow{color:#a9005b}.pricing-section .price-card .price{letter-spacing:-1px}.pricing-section .price-card ul{color:#000}
+
+/* Paint the typed text itself so mobile WebKit does not lose its gradient. */
+.hero .typing-wrap{background:none;color:inherit;-webkit-text-fill-color:initial;display:inline-block;max-width:100%;min-height:1.15em}.hero #hero-typed{background:linear-gradient(110deg,#ff86bc,#ff6529 85%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;min-height:1.15em;vertical-align:bottom}.hero .typing-caret{vertical-align:baseline;flex-shrink:0}@media(max-width:760px){.hero #hero-typed{font-size:inherit}.hero .typing-wrap{white-space:nowrap}.hero h1{line-height:1.1}}
