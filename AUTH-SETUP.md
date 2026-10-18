@@ -39,3 +39,7 @@ The verified owner account receives the populated Amara and Tobi journey on its 
 A live two-device sign-in test requires running the cloud migration and configuring email delivery. Automated tests cover cross-device rehydration, account isolation, persisted outbox recovery, and stale-revision conflicts; SQL permission checks also need exercising in the deployed Supabase project.
 
 Email links now explicitly target `/auth-callback.html`. A small early return handler on public/account pages also recovers default-Site-URL redirects, removes authentication fragments from the original URL, and forwards them to the callback. Callback tokens are verified with Supabase before any profile or workspace is opened. Links opened in another tab can recover signup profile details from verified user metadata.
+
+## Sign-out behavior
+
+Sign-out immediately clears the current browser tab’s Supabase session, pending invitation and in-progress authentication data, stops cloud autosave, and invalidates other tabs through a shared logout epoch. Late verification or refresh requests cannot persist an older session after that epoch changes. Planning records and the cloud outbox are retained. Supabase session revocation and integration-cookie cleanup run after local removal; if network cleanup fails, login still remains signed out locally and displays the limitation. A fresh explicit email/Google login establishes a new session epoch. Other devices remain signed in unless their sessions are separately revoked.
