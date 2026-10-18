@@ -1,5 +1,3 @@
-> Temporary public workspace access is enabled at the owner’s request. Signup/login forward visitors into local workspaces. Admin and shared database collaboration still require verified accounts. Restore the auth-core temporaryAccess flag to false and remove the public auth-entry bypass when authentication is configured.
-
 # CoBrides account access
 
 ## Implemented
@@ -16,7 +14,7 @@
 1. Create the Supabase project and run `supabase/collaboration.sql`, followed by `supabase/accounts.sql`, once in the SQL editor. If the collaboration migration was already applied, run only accounts.sql.
 2. Set Vercel `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY`. Use a publishable or legacy anon key, never a service-role/secret key in public configuration.
 3. Enable Supabase email authentication and configure production SMTP. Both signup confirmation and magic-link email templates must include `{{ .Token }}` because CoBrides asks users to enter their emailed code.
-4. Set the Supabase Site URL to `https://furbrides.vercel.app`. Allow `https://furbrides.vercel.app/auth-callback.html` as an application redirect URL. Add exact localhost callback URLs only for local development.
+4. Set the Supabase Site URL to `https://cobrides.vercel.app`. Allow `https://cobrides.vercel.app/auth-callback.html` as an application redirect URL. Add exact localhost callback URLs only for local development.
 5. Create a Google web OAuth client and enable the Google provider in Supabase. Put the Google client ID and secret in Supabase's provider settings. The Google Console authorized redirect URI is the callback shown by Supabase, normally `https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback`. This differs from the separate YouTube social-connection callback `/api/social`.
 6. Redeploy Vercel. Test signup with an email code, returning-user login, Google signup/login, expired codes, invitation email matching, denied admin access, sign-out, and switching between two accounts.
 
