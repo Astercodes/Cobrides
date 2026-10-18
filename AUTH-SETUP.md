@@ -18,12 +18,22 @@
 5. Create a Google web OAuth client and enable the Google provider in Supabase. Put the Google client ID and secret in Supabase's provider settings. The Google Console authorized redirect URI is the callback shown by Supabase, normally `https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback`. This differs from the separate YouTube social-connection callback `/api/social`.
 6. Redeploy Vercel. Test signup with an email code, returning-user login, Google signup/login, expired codes, invitation email matching, denied admin access, sign-out, and switching between two accounts.
 
-The Supabase project and Google app are not configured yet, so real signup and Google authorization cannot be exercised here. The forms do not fabricate users or sessions. When unconfigured, workspaces redirect into account access and signup/login clearly report that access is unavailable.
+Supabase public configuration is connected. Email-code delivery needs a real-user verification test; Google authorization still requires its provider app setup. The forms do not fabricate users or sessions. When unconfigured, workspaces redirect into account access and signup/login clearly report that access is unavailable.
 
 ## Deployment scope and next backend work
 
-This is the mandatory account-entry foundation. The main bridal and professional planning records still require database persistence and account-bound migration; they are currently isolated by verified user ID in browser storage. This browser guard handles navigation and startup, not database authorization. Database permissions are enforced through Supabase RLS for profiles and the shared workspace.
+This is the mandatory account-entry foundation. The main bridal and professional planning records now use cloud snapshots after applying cloud-storage.sql, with an account-scoped local cache and durable outbox. This browser guard handles navigation and startup, not database authorization. Database permissions are enforced through Supabase RLS for profiles and the shared workspace.
 
 The subscription table is read-only to authenticated clients, and its entitlement check requires a paid active period covering the current time. No checkout, charge, verified renewal webhook, or full module-level paid-access enforcement is claimed. Connect the chosen payment provider and enforce these rules on protected data operations before selling subscriptions.
 
 References: [Supabase email OTP](https://supabase.com/docs/reference/javascript/auth-signinwithotp), [Google sign-in](https://supabase.com/docs/guides/auth/social-login/auth-google), [PKCE](https://supabase.com/docs/guides/auth/sessions/pkce-flow), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security).
+
+## Cross-device storage
+
+Run `supabase/cloud-storage.sql` once after the account migrations. Bridal and professional workspaces fetch the authenticated account's cloud snapshot before rendering, and save complete planning state through an atomic revision-checked RPC. Table reads use owner-only RLS; direct client writes are revoked. No service-role key is needed.
+
+Edits are saved automatically after a short delay, with an account-scoped local outbox for failed saves. A login/reload on another device loads the saved cloud version. Concurrent stale edits raise a conflict rather than overwrite newer cloud records; the user can download their unsynced changes before explicitly loading the cloud version. Unsynced changes trigger a browser leave-page warning. This is snapshot synchronization, not simultaneous multi-user field merging or live cursor collaboration.
+
+The verified owner account receives the populated Amara and Tobi journey on its first bridal workspace initialization when no cloud or account-local record exists. Existing temporary visitor records and legacy records are preserved separately; they are not automatically uploaded into unrelated accounts. Inline media saved inside the journey is included in its JSON snapshot (20 MB limit); a separate media/object-storage pipeline and general browser-file attachment migration are not included.
+
+A live two-device sign-in test requires running the cloud migration and configuring email delivery. Automated tests cover cross-device rehydration, account isolation, persisted outbox recovery, and stale-revision conflicts; SQL permission checks also need exercising in the deployed Supabase project.
