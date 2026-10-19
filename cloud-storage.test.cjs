@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),vm=require(
 function device(server,user='u',storage=new Map(),search=''){
 const identity={user:{id:user}},cache='furbrides-v1:'+user,elements=[];
 const node=()=>({style:{},append(){},replaceChildren(){},setAttribute(){},hidden:false});
-const A={current:async()=>identity,request:async(path,body)=>{
+const A={current:async()=>identity,accountContext:async()=>({defaultDemo:server.demoOwner===user}),request:async(path,body)=>{
  if(server.offline)throw Error('Network unavailable');
  const key=user+':'+(body?.p_workspace||'bride');
  if(path.includes('cb_can_seed_demo'))return false;
@@ -36,6 +36,11 @@ test('the explicit demo journey preserves personal plans and is available from a
  const demo=device(server,'u',new Map(),'?demo=amara-tobi');await demo.cloud.open(demo.identity);assert(demo.cloud.seedDemo);assert(demo.cloud.demoMode);demo.cloud.save({profile:{name:'Amara',partner:'Tobi'},tasks:[{title:'Reception tasting'}]});await demo.cloud.flush();
  const phone=device(server,'u',new Map(),'?demo=amara-tobi');await phone.cloud.open(phone.identity);assert.equal(JSON.parse(phone.storage.get(phone.cloud.cacheKey)).profile.name,'Amara');assert.equal(phone.cloud.seedDemo,false);
  const own=device(server);await own.cloud.open(own.identity);const ownData=JSON.parse(own.storage.get(own.cloud.cacheKey));assert.equal(ownData.profile.name,'Ayomide');assert.equal(ownData.tasks[0].title,'My own task');own.cloud.save({...ownData,updated:true});await own.cloud.flush();assert.equal(server.get('u:bride').payload.demo.profile.partner,'Tobi');
+});
+test('the designated account opens its demo after a normal login and retains a personal-workspace override',async()=>{
+ const server=new Map();server.demoOwner='owner';server.set('owner:bride',{revision:1,payload:{profile:{name:'Ayomide'},tasks:[]}});const login=device(server,'owner');await login.cloud.open(login.identity);assert(login.cloud.demoMode);assert(login.cloud.seedDemo);login.cloud.save({profile:{name:'Amara',partner:'Tobi'},tasks:[{title:'Confirm photographer'}]});await login.cloud.flush();
+ const phone=device(server,'owner');await phone.cloud.open(phone.identity);assert.equal(JSON.parse(phone.storage.get(phone.cloud.cacheKey)).profile.name,'Amara');
+ const personal=device(server,'owner',new Map(),'?workspace=personal');await personal.cloud.open(personal.identity);assert(!personal.cloud.demoMode);assert.equal(JSON.parse(personal.storage.get(personal.cloud.cacheKey)).profile.name,'Ayomide');const other=device(server,'other');await other.cloud.open(other.identity);assert(!other.cloud.demoMode);
 });
 test('schema restricts reads by owner and exposes writes only through revision-checked RPC',()=>{
  const sql=fs.readFileSync('supabase/cloud-storage.sql','utf8');assert(sql.includes('using(user_id=auth.uid())'));assert(sql.includes('revoke all on public.cb_workspace_states from anon,authenticated'));assert(sql.includes('revision=p_revision'));assert(sql.includes("raise exception 'CB_SYNC_CONFLICT'"));assert(sql.includes('email_confirmed_at is not null'));
