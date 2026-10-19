@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
-function device(server,user='u',storage=new Map()){
+function device(server,user='u',storage=new Map(),search=''){
 const identity={user:{id:user}},cache='furbrides-v1:'+user,elements=[];
 const node=()=>({style:{},append(){},replaceChildren(){},setAttribute(){},hidden:false});
 const A={current:async()=>identity,request:async(path,body)=>{
@@ -9,7 +9,7 @@ const A={current:async()=>identity,request:async(path,body)=>{
  if(path.includes('cb_save_workspace')){const old=server.get(key);if((old?.revision||0)!==body.p_revision)throw Error('CB_SYNC_CONFLICT');const revision=(old?.revision||0)+1;server.set(key,{revision,payload:structuredClone(body.p_payload)});return revision;}
  const row=server.get(key);return row?[structuredClone(row)]:[];
 }};
-const context=vm.createContext({window:{CoBridesAuth:A,addEventListener(){}},document:{body:{dataset:{},append(x){elements.push(x);}},createElement:node,createTextNode:x=>x,addEventListener(){}},location:{pathname:'/journey.html'},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},setTimeout:()=>1,clearTimeout(){},Blob,URL,confirm:()=>false});
+const context=vm.createContext({window:{CoBridesAuth:A,addEventListener(){}},document:{body:{dataset:{},append(x){elements.push(x);}},createElement:node,createTextNode:x=>x,addEventListener(){}},location:{pathname:'/journey.html',search},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},setTimeout:()=>1,clearTimeout(){},Blob,URL,URLSearchParams,confirm:()=>false});
 vm.runInContext(fs.readFileSync('cloud-storage.js','utf8'),context);
 return {cloud:context.window.CoBridesCloud,identity,storage,cache,elements};
 }
@@ -30,6 +30,12 @@ test('an interrupted unsynced edit resumes from its stored revision',async()=>{
 });
 test('failed saves remain recoverable and retry after the connection returns',async()=>{
  const server=new Map(),a=device(server);await a.cloud.open(a.identity);server.offline=true;a.cloud.save({title:'Offline edit'});await a.cloud.flush();assert(a.storage.has('cb-outbox:u:bride'));assert(!server.has('u:bride'));server.offline=false;await a.cloud.flush();assert.equal(server.get('u:bride').payload.title,'Offline edit');assert(!a.storage.has('cb-outbox:u:bride'));
+});
+test('the explicit demo journey preserves personal plans and is available from another device',async()=>{
+ const server=new Map(),personal=device(server);await personal.cloud.open(personal.identity);personal.cloud.save({profile:{name:'Ayomide'},tasks:[{title:'My own task'}]});await personal.cloud.flush();
+ const demo=device(server,'u',new Map(),'?demo=amara-tobi');await demo.cloud.open(demo.identity);assert(demo.cloud.seedDemo);assert(demo.cloud.demoMode);demo.cloud.save({profile:{name:'Amara',partner:'Tobi'},tasks:[{title:'Reception tasting'}]});await demo.cloud.flush();
+ const phone=device(server,'u',new Map(),'?demo=amara-tobi');await phone.cloud.open(phone.identity);assert.equal(JSON.parse(phone.storage.get(phone.cloud.cacheKey)).profile.name,'Amara');assert.equal(phone.cloud.seedDemo,false);
+ const own=device(server);await own.cloud.open(own.identity);const ownData=JSON.parse(own.storage.get(own.cloud.cacheKey));assert.equal(ownData.profile.name,'Ayomide');assert.equal(ownData.tasks[0].title,'My own task');own.cloud.save({...ownData,updated:true});await own.cloud.flush();assert.equal(server.get('u:bride').payload.demo.profile.partner,'Tobi');
 });
 test('schema restricts reads by owner and exposes writes only through revision-checked RPC',()=>{
  const sql=fs.readFileSync('supabase/cloud-storage.sql','utf8');assert(sql.includes('using(user_id=auth.uid())'));assert(sql.includes('revoke all on public.cb_workspace_states from anon,authenticated'));assert(sql.includes('revision=p_revision'));assert(sql.includes("raise exception 'CB_SYNC_CONFLICT'"));assert(sql.includes('email_confirmed_at is not null'));
