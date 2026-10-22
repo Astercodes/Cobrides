@@ -6,7 +6,7 @@ const A={current:async()=>identity,accountContext:async()=>({defaultDemo:server.
  if(server.offline)throw Error('Network unavailable');
  const key=user+':'+(body?.p_workspace||'bride');
  if(path.includes('cb_can_seed_demo'))return false;
- if(path.includes('cb_save_workspace')){const old=server.get(key);if((old?.revision||0)!==body.p_revision)throw Error('CB_SYNC_CONFLICT');const revision=(old?.revision||0)+1;server.set(key,{revision,payload:structuredClone(body.p_payload)});return revision;}
+ if(path.includes('cb_save_workspace')){if(server.beforeSave)await server.beforeSave(body);const old=server.get(key);if((old?.revision||0)!==body.p_revision)throw Error('CB_SYNC_CONFLICT');const revision=(old?.revision||0)+1;server.set(key,{revision,payload:structuredClone(body.p_payload)});return revision;}
  const row=server.get(key);return row?[structuredClone(row)]:[];
 }};
 const context=vm.createContext({window:{CoBridesAuth:A,addEventListener(){}},document:{body:{dataset:{},append(x){elements.push(x);}},createElement:node,createTextNode:x=>x,addEventListener(){}},location:{pathname:'/journey.html',search},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},setTimeout:()=>1,clearTimeout(){},Blob,URL,URLSearchParams,confirm:()=>false});
@@ -44,4 +44,22 @@ test('the designated account opens its demo after a normal login and retains a p
 });
 test('schema restricts reads by owner and exposes writes only through revision-checked RPC',()=>{
  const sql=fs.readFileSync('supabase/cloud-storage.sql','utf8');assert(sql.includes('using(user_id=auth.uid())'));assert(sql.includes('revoke all on public.cb_workspace_states from anon,authenticated'));assert(sql.includes('revision=p_revision'));assert(sql.includes("raise exception 'CB_SYNC_CONFLICT'"));assert(sql.includes('email_confirmed_at is not null'));
+});
+
+test('saving states distinguish queued, saved, failed and conflicting changes',async()=>{
+ const server=new Map(),a=device(server);await a.cloud.open(a.identity);assert.equal(a.cloud.status().state,'saved');a.cloud.save({title:'Saved edit'});assert.equal(a.cloud.status().state,'pending');await a.cloud.flush();assert.equal(a.cloud.status().state,'saved');assert.equal(a.cloud.status().pending,false);
+ server.offline=true;a.cloud.save({title:'Interrupted'});await a.cloud.flush();assert.equal(a.cloud.status().state,'error');assert.equal(a.cloud.status().pending,true);server.offline=false;await a.cloud.flush();assert.equal(a.cloud.status().state,'saved');
+ const b=device(server);await b.cloud.open(b.identity);a.cloud.save({title:'New version'});await a.cloud.flush();b.cloud.save({title:'Old version'});await b.cloud.flush();assert.equal(b.cloud.status().state,'conflict');assert.equal(b.cloud.status().pending,true);
+});
+test('attachment contents survive a confirmed save and load on another device',async()=>{
+ const server=new Map(),a=device(server);await a.cloud.open(a.identity);const file={name:'ceremony.pdf',type:'application/pdf',url:'data:application/pdf;base64,JVBERi0xLjcK'};await a.cloud.commit({documents:[file]});const b=device(server);await b.cloud.open(b.identity);assert.deepEqual(JSON.parse(b.storage.get(b.cache)).documents,[file]);assert.equal(a.cloud.status().pending,false);
+});
+test('edits made during a save remain queued and use the newly confirmed revision',async()=>{
+ const server=new Map(),a=device(server);await a.cloud.open(a.identity);let release;server.beforeSave=()=>new Promise(resolve=>{release=resolve;});a.cloud.save({title:'First'});const flushing=a.cloud.flush();await new Promise(resolve=>setImmediate(resolve));assert.equal(a.cloud.status().state,'saving');a.cloud.save({title:'Latest'});release();await flushing;assert(a.cloud.status().pending);assert.equal(JSON.parse(a.storage.get('cb-outbox:u:bride')).revision,1);server.beforeSave=null;await a.cloud.flush();assert.equal(server.get('u:bride').payload.title,'Latest');assert.equal(server.get('u:bride').revision,2);
+});
+test('commit rejects connection failures without discarding the recoverable draft',async()=>{
+ const server=new Map(),a=device(server);await a.cloud.open(a.identity);server.offline=true;await assert.rejects(a.cloud.commit({title:'Keep me'}),/Network unavailable/);assert(a.storage.has('cb-outbox:u:bride'));assert(a.cloud.status().pending);
+});
+test('oversized uploads are retained for recovery and never reported as saved',async()=>{
+ const server=new Map(),a=device(server);await a.cloud.open(a.identity);a.cloud.save({image:'x'.repeat(19000001)});await a.cloud.flush();assert.equal(a.cloud.status().state,'error');assert.match(a.cloud.status().error,/too many attachments/);assert(!server.has('u:bride'));assert(a.storage.has('cb-outbox:u:bride'));
 });
