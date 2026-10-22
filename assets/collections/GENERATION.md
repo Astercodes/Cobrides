@@ -1,0 +1,1 @@
+Original CoBrides collection illustrations generated with the built-in image generation tool. Prompt: 4x4 cut-paper editorial wedding illustration atlas, magenta/orange/teal/violet/ivory, sixteen distinct bridal subjects, no text. Cropped into individual 400px WebP tiles. No photographic covers.
