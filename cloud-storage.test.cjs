@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
-function device(server,user='u',storage=new Map(),search=''){
+function device(server,user='u',storage=new Map(),search='',files=null){
 const identity={user:{id:user}},cache='furbrides-v1:'+user,elements=[];
 const node=()=>({style:{},append(){},replaceChildren(){},setAttribute(){},hidden:false});
 const A={current:async()=>identity,accountContext:async()=>({defaultDemo:server.demoOwner===user}),request:async(path,body)=>{
@@ -9,7 +9,7 @@ const A={current:async()=>identity,accountContext:async()=>({defaultDemo:server.
  if(path.includes('cb_save_workspace')){if(server.beforeSave)await server.beforeSave(body);const old=server.get(key);if((old?.revision||0)!==body.p_revision)throw Error('CB_SYNC_CONFLICT');const revision=(old?.revision||0)+1;server.set(key,{revision,payload:structuredClone(body.p_payload)});return revision;}
  const row=server.get(key);return row?[structuredClone(row)]:[];
 }};
-const context=vm.createContext({window:{CoBridesAuth:A,addEventListener(){}},document:{body:{dataset:{},append(x){elements.push(x);}},createElement:node,createTextNode:x=>x,addEventListener(){}},location:{pathname:'/journey.html',search},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},setTimeout:()=>1,clearTimeout(){},Blob,URL,URLSearchParams,confirm:()=>false});
+const context=vm.createContext({window:{CoBridesAuth:A,CoBridesFiles:files,addEventListener(){}},document:{body:{dataset:{},append(x){elements.push(x);}},createElement:node,createTextNode:x=>x,addEventListener(){}},location:{pathname:'/journey.html',search},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},setTimeout:()=>1,clearTimeout(){},Blob,URL,URLSearchParams,confirm:()=>false});
 vm.runInContext(fs.readFileSync('cloud-storage.js','utf8'),context);
 return {cloud:context.window.CoBridesCloud,identity,storage,cache,elements};
 }
@@ -62,4 +62,9 @@ test('commit rejects connection failures without discarding the recoverable draf
 });
 test('oversized uploads are retained for recovery and never reported as saved',async()=>{
  const server=new Map(),a=device(server);await a.cloud.open(a.identity);a.cloud.save({image:'x'.repeat(19000001)});await a.cloud.flush();assert.equal(a.cloud.status().state,'error');assert.match(a.cloud.status().error,/too many attachments/);assert(!server.has('u:bride'));assert(a.storage.has('cb-outbox:u:bride'));
+});
+
+test('file migration commits references only after verification; failed migration retains originals',async()=>{
+ const source='data:image/jpeg;base64,aGVsbG8=',ref='cb-file:v1:cb-inspiration/u/hash',files={dehydrate:x=>x,hydrate:async x=>x,prepare:async x=>({image:ref})},server=new Map(),a=device(server,'u',new Map(),'',files);await a.cloud.open(a.identity);a.cloud.save({image:source});await a.cloud.flush();assert.equal(server.get('u:bride').payload.image,ref);assert(!a.storage.has('cb-outbox:u:bride'));
+ files.prepare=async()=>{throw Error('Verification failed');};a.cloud.save({image:source});await a.cloud.flush();assert.equal(server.get('u:bride').payload.image,ref);assert.equal(JSON.parse(a.storage.get('cb-outbox:u:bride')).payload.image,source);assert.equal(a.cloud.status().state,'error');
 });
