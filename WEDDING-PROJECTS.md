@@ -48,9 +48,20 @@ The main Celebrations page projects permitted shared events alongside personal d
 
 Private records are managed separately. A user can retain their own event budget, guest/vendor/purchase/expense links in their account without publishing them. Missing shared financial data is not presented as a zero wedding budget. Source drafts remain stored when shared access is removed. New private record handles contain only their own private values and the shared event reference.
 
-Date edits here do not bulk-reschedule shared task deadlines. Shared timeline change previews and rescheduling remain a later step. Local relative schedules continue to use projected event dates. No hard-delete workflow is introduced.
+Shared date changes now use the timeline rescheduling preview described below. Local relative schedules continue to use projected event dates. No hard-delete workflow is introduced.
 
 Validation: SQL integration cases cover stale updates, invalid dates/times, metadata whitelisting, restricted event assignment and revocation. Projection tests verify source-ID preservation, account isolation and private fields. Browser testing with actual UI and a local API fixture covers creating/sharing without duplicates, main-page edits, team edits reflected on the main page, private-budget editing and guest-link preservation at 390px without JS errors or horizontal overflow. Production account-to-account acceptance testing remains separate.
 
 
 Wedding Team now contains only People & invitations and Activity. Its summary covers roles, membership and pending invitations. Shared project editing opens from Wedding Projects in a focused dialog; tasks stay on the main planning board. Celebration-specific permissions open from Manage access within the celebration, preserving existing grant/revoke RPCs. Browser checks cover the two-tab team view, shared-project editor and event access changes without navigating away. No additional SQL is required for this navigation cleanup.
+
+
+## Shared timeline rescheduling
+
+Apply `supabase/shared-timeline.sql` after the shared planning, task board and celebration migrations. It is rerunnable. Timeline & countdowns offers Reschedule timeline and Manage date links. Project and celebration date editors open the same preview flow.
+
+Celebrations can follow the wedding date; tasks can follow the wedding or one celebration by a signed day offset. Saving a rule does not change dates. A server-generated preview lists the proposed dates, completed records retained, dependency conflicts and approvals that will reset. Unlinked fixed dates move only when selected. Completed tasks and celebrations remain unchanged.
+
+Previews expire after 15 minutes. Application checks current membership, write access and a fingerprint of project, events, tasks and rules, then commits all dates in one transaction. Concurrent edits require a fresh preview. Applied requests can be retried without applying the shift twice. Linked dates cannot bypass this flow through legacy editors. Private account records are excluded. Vendor availability and notification delivery are not inferred.
+
+Visible timelines refresh shared metadata, celebrations and tasks every 30 seconds while no dialog is open. Validation covers real SQL permissions, stale/expired previews, dependency conflicts, idempotency, protected fixed/completed dates and approval resets. A mobile browser fixture verifies preview, apply and rule editing at 390px without overflow or JavaScript errors. Production testing with two signed-in accounts remains a separate acceptance check.
