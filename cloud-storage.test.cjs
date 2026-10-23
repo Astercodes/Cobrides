@@ -60,8 +60,8 @@ test('edits made during a save remain queued and use the newly confirmed revisio
 test('commit rejects connection failures without discarding the recoverable draft',async()=>{
  const server=new Map(),a=device(server);await a.cloud.open(a.identity);server.offline=true;await assert.rejects(a.cloud.commit({title:'Keep me'}),/Network unavailable/);assert(a.storage.has('cb-outbox:u:bride'));assert(a.cloud.status().pending);
 });
-test('oversized uploads are retained for recovery and never reported as saved',async()=>{
- const server=new Map(),a=device(server);await a.cloud.open(a.identity);a.cloud.save({image:'x'.repeat(19000001)});await a.cloud.flush();assert.equal(a.cloud.status().state,'error');assert.match(a.cloud.status().error,/too many attachments/);assert(!server.has('u:bride'));assert(a.storage.has('cb-outbox:u:bride'));
+test('server-rejected items are retained for recovery and never reported as saved',async()=>{
+ const server=new Map(),a=device(server);await a.cloud.open(a.identity);server.beforeSave=async()=>{throw Error('One planning item is too large');};a.cloud.save({image:'unavailable attachment'});await a.cloud.flush();assert.equal(a.cloud.status().state,'error');assert.match(a.cloud.status().error,/too large/);assert(!server.has('u:bride'));assert(a.storage.has('cb-outbox:u:bride'));
 });
 
 test('file migration commits references only after verification; failed migration retains originals',async()=>{
