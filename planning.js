@@ -1,7 +1,7 @@
 /* Local wedding project workspace. Records share canonical IDs across celebrations. */
 const PC=PlanningCore;
 let planningEditId='',selectedEventId='',planningTaskFilter='All',planningEventFilter='',planningOwnerFilter='',planningQuery='',scenarioDate='',planningProgressGroup='Workstream',planningProgressOpen=false,planningTaskView='board';
-const eventTypes=['Introduction','Traditional wedding','Civil ceremony','Religious ceremony','Reception','Destination celebration','After-party','Bridal shower','Fitting','Payment deadline','Thanksgiving','Other'];
+const eventTypes=['Pre-wedding shoot','Introduction','Traditional wedding','Civil ceremony','Religious ceremony','Reception','Destination celebration','After-party','Bridal shower','Fitting','Payment deadline','Thanksgiving','Other'];
 const planningKinds=['projects','events','tasks','decisions'];
 const activeProject=()=>state.projects.find(p=>p.id===state.activeProjectId)||state.projects[0];
 const projectTasks=()=>state.tasks.filter(t=>t.projectId===activeProject().id);
