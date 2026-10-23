@@ -6,7 +6,7 @@ function timelineStudioDigits(date,time='',mode='Confirmed'){
 }
 function timelineStudioEntries(date){
   const schedule=taskSchedule(date),critical=new Set(PC.criticalPath(projectTasks()).ids);
-  return [...projectEvents().map(e=>({id:e.id,date:e.scheduleMode==='Relative'?(date?PC.addDays(date,e.daysOffset||0):''):e.date,title:e.title,kind:'celebration',eventType:e.type,owner:e.owner||'Unassigned',time:e.time||'',status:e.status||'Draft',done:e.status==='Complete',venue:e.venue||'',source:e})),...projectTasks().map(t=>({id:t.id,date:schedule.get(t.id)?.date||'',title:t.title,kind:t.type==='Milestone'?'milestone':'task',eventType:eventTitle(t.eventId),owner:t.owner||'Unassigned',status:t.done?'Complete':t.status,done:t.done,critical:critical.has(t.id)&&!t.done,conflict:schedule.get(t.id)?.conflict,source:t}))].sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999')||(a.time||'').localeCompare(b.time||''));
+  return [...projectEvents().map(e=>({id:e.id,date:e.scheduleMode==='Relative'?(date?PC.addDays(date,e.daysOffset||0):''):e.date,title:e.title,kind:'celebration',eventType:e.type,owner:e.owner||'Unassigned',time:e.time||'',status:e.status||'Draft',done:['Complete','Completed'].includes(e.status),venue:e.venue||'',source:e})),...projectTasks().map(t=>({id:t.id,date:schedule.get(t.id)?.date||'',title:t.title,kind:t.type==='Milestone'?'milestone':'task',eventType:eventTitle(t.eventId),owner:t.owner||'Unassigned',status:t.done?'Complete':t.status,done:t.done,critical:critical.has(t.id)&&!t.done,conflict:schedule.get(t.id)?.conflict,source:t}))].sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999')||(a.time||'').localeCompare(b.time||''));
 }
 function timelineStudioEventCards(entries){
   const events=entries.filter(e=>e.kind==='celebration');

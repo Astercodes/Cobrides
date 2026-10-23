@@ -38,3 +38,16 @@ Shared prerequisites reject cycles and incomplete dependencies. Completion also 
 Visible planning boards poll every 30 seconds when no dialog/search editing is active. Unchanged results do not redraw the board; Refresh team updates fetches immediately. Server permission checks remain authoritative for every mutation. Reassignment/removal blocks subsequent reads and new download links. Already downloaded files cannot be recalled.
 
 Validation includes SQL integration tests with actual migrations and storage RLS, account-scoped projection tests, and an actual mobile browser flow against a local API fixture for combined board display, creation, completion, subtasks and discussion. Real production account-to-account acceptance testing remains separate.
+
+
+## Shared Celebrations workspace
+
+Apply `supabase/celebration-workspace.sql` after wedding-projects.sql. The rerunnable transaction extends the existing event mutation with shared status, program and menu overview, validates date/time/status fields, preserves revision checks and uses the existing event access policies. No personal guest list, expense, purchase or private note fields are accepted.
+
+The main Celebrations page projects permitted shared events alongside personal drafts. Explicit source IDs preserve existing private record links without copying server updates into private drafts. Share with team opens a review form; new celebrations in connected projects use the shared editor. Shared edits from Wedding Team are fetched back into the main workspace; visible pages poll every 30 seconds and have a manual refresh. Project counts and timeline entries use the same event projection. Completed events are recognized by the timeline.
+
+Private records are managed separately. A user can retain their own event budget, guest/vendor/purchase/expense links in their account without publishing them. Missing shared financial data is not presented as a zero wedding budget. Source drafts remain stored when shared access is removed. New private record handles contain only their own private values and the shared event reference.
+
+Date edits here do not bulk-reschedule shared task deadlines. Shared timeline change previews and rescheduling remain a later step. Local relative schedules continue to use projected event dates. No hard-delete workflow is introduced.
+
+Validation: SQL integration cases cover stale updates, invalid dates/times, metadata whitelisting, restricted event assignment and revocation. Projection tests verify source-ID preservation, account isolation and private fields. Browser testing with actual UI and a local API fixture covers creating/sharing without duplicates, main-page edits, team edits reflected on the main page, private-budget editing and guest-link preservation at 390px without JS errors or horizontal overflow. Production account-to-account acceptance testing remains separate.
