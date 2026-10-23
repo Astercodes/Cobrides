@@ -9,5 +9,5 @@ wpReloadDialog=async function(){if(location.hash==='#team')return wtLoad(wpDialo
 const wtRenderBase=wpRenderDialog;
 wpRenderDialog=async function(){await wtRenderBase();wtPolish();};
 document.addEventListener('change',event=>{if(event.target.id!=='wt-project')return;wpDialogProject=event.target.value;state.activeProjectId=wpDialogProject;CoBridesCloud.save(state);wptEdit='';wptPublish='';render();});
-document.addEventListener('click',async event=>{const button=event.target.closest('[data-wt-invite],[data-wt-retry]');if(!button)return;if(button.hasAttribute('data-wt-retry')){render();return;}wpTab='team';try{await wpRenderDialog();document.querySelector('#wp-invite-form input[name="email"]')?.focus();}catch(error){toast(error.message);}});
+document.addEventListener('click',async event=>{const button=event.target.closest('[data-wt-invite],[data-wt-retry]');if(!button)return;if(button.hasAttribute('data-wt-retry')){render();return;}wpTab='team';try{await wpRenderDialog();tiOpenInvitation();}catch(error){toast(error.message);}});
 if(location.hash==='#team')render();
