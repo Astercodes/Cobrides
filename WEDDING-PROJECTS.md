@@ -17,7 +17,7 @@ Apply `supabase/shared-planning.sql` after wedding-projects.sql. It upgrades the
 
 Planning & Tasks opens Shared tasks & milestones; the Wedding team dialog also has this tab. Owners, brides, partners and planners manage assignments. Other members see and complete only their own tasks. Assignment requires an accepted member or project owner email. Personal checklist sharing is explicit, with title/date/type reviewed first; attachments, subtasks, private notes and discussions are excluded. Shared instructions must be entered separately.
 
-Task saves and completion use revisions. Stale writes fail with a refresh message. Archived projects reject edits, and removed members lose reads and completion access. Use Refresh updates or reopen the tab to fetch current team records. Shared assignments do not yet reschedule automatically or generate email/push reminders.
+Task saves and completion use revisions. Stale writes fail with a refresh message. Archived projects reject edits, and removed members lose reads and completion access. Use Refresh updates or reopen the tab to fetch current team records. Shared date links and rescheduling are implemented below. Shared planning now generates the in-app notifications described below; email and push reminders are not sent.
 
 Mobile browser validation used a local API fixture and the actual application UI: created a milestone and completed it at 390px without page overflow or JavaScript errors. SQL integration tests verify real database permission rules separately. A real two-account invitation acceptance test remains a production acceptance step.
 
@@ -65,3 +65,16 @@ Celebrations can follow the wedding date; tasks can follow the wedding or one ce
 Previews expire after 15 minutes. Application checks current membership, write access and a fingerprint of project, events, tasks and rules, then commits all dates in one transaction. Concurrent edits require a fresh preview. Applied requests can be retried without applying the shift twice. Linked dates cannot bypass this flow through legacy editors. Private account records are excluded. Vendor availability and notification delivery are not inferred.
 
 Visible timelines refresh shared metadata, celebrations and tasks every 30 seconds while no dialog is open. Validation covers real SQL permissions, stale/expired previews, dependency conflicts, idempotency, protected fixed/completed dates and approval resets. A mobile browser fixture verifies preview, apply and rule editing at 390px without overflow or JavaScript errors. Production testing with two signed-in accounts remains a separate acceptance check.
+
+
+## Shared planning notifications
+
+Apply supabase/planning-notifications.sql after shared-timeline.sql. The rerunnable migration adds account-owned notification and preference tables, database triggers, protected inbox/read/preference functions, and an hourly Supabase Cron job named cb-planning-reminders (minute 15). On platforms without pg_cron the inbox still evaluates reminders on refresh; Supabase production has the job installed and verified active.
+
+Notifications cover assignment, task completion, approval requests/results, task deadline changes and project/celebration date changes. Actors do not receive their own event notices. Assignees, approvers and managers receive only records their current permissions allow. Membership removal, reassignment, restricted-event access changes and archive are checked at read time. Old approval requests disappear when approved or reassigned. Completed tasks and changed deadlines hide obsolete deadline reminders. No private personal records or financial fields are copied.
+
+The server calculates reminder dates using each recipient's saved time zone (UTC by default). Upcoming tasks and milestones have one reminder in the three-day window, one due-today reminder and one overdue reminder per deadline; celebrations have upcoming and day-of reminders. Unique recipient/deduplication keys protect against simultaneous browser refreshes and scheduler retries. Preferences control assignments, approvals, deadlines and schedule categories. Read state and preferences persist per account across devices.
+
+The header bell is available in the bridal workspace, collaboration workspace and participant/business portals. It offers Unread, All updates, Preferences, mark read/all read, current source details and authorized task approval. The inbox shows the latest 100 updates with a full unread count. Visible pages refresh once per minute; no polling overwrites an open preferences or detail view. The inbox links to the existing shared wedding workspace rather than duplicating project editing.
+
+These are in-app notifications only. Email and push delivery are not enabled by this migration and do not consume Resend's allowance. Real cross-account acceptance testing remains separate from the SQL integration and local browser fixture checks.
