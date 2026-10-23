@@ -29,3 +29,5 @@
 .sp-celebration-styling [hidden]{display:none!important}.sp-celebration-styling .styling-personal-grid{grid-template-columns:minmax(0,1fr);margin-top:24px}.sp-celebration-styling .styling-personal-grid>article{width:100%;box-sizing:border-box}.sp-celebration-styling .styling-personal-grid .field{max-width:460px}.sp-celebration-styling .styling-bridal-canvas svg,.sp-celebration-styling .styling-stationery-canvas svg{height:450px;max-height:60vh}
 
 .styling-decor-canvas{margin:20px 0}.styling-decor-canvas svg{width:100%;height:auto;max-height:520px;display:block}
+
+.sp-color-search{margin:18px 0;max-width:420px}.sp-color-chip[hidden],.sp-slot-library-colors button[hidden]{display:none!important}
