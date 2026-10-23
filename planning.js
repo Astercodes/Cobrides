@@ -4,7 +4,7 @@ let planningEditId='',selectedEventId='',planningTaskFilter='All',planningEventF
 const eventTypes=['Proposal','Pre-wedding shoot','Introduction','Traditional wedding','Civil ceremony','Religious ceremony','Reception','Destination celebration','After-party','Bridal shower','Fitting','Payment deadline','Thanksgiving','Other'];
 const planningKinds=['projects','events','tasks','decisions'];
 const activeProject=()=>state.projects.find(p=>p.id===state.activeProjectId)||state.projects[0];
-const projectTasks=()=>state.tasks.filter(t=>t.projectId===activeProject().id);
+const projectTasks=()=>{const personal=state.tasks.filter(t=>t.projectId===activeProject().id);return typeof stbMerged==='function'?stbMerged(personal):personal;};
 const projectEvents=()=>state.events.filter(e=>e.projectId===activeProject().id);
 const projectDecisions=()=>state.decisions.filter(d=>d.projectId===activeProject().id);
 const projectExpenses=()=>state.expenses.filter(e=>e.projectId===activeProject().id);

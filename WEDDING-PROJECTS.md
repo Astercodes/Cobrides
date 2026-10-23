@@ -25,3 +25,16 @@ Mobile browser validation used a local API fixture and the actual application UI
 ## Standalone Wedding Team
 
 `journey.html#team` is a first-class navigation route under Wedding Project Planning. It replaces the project team modal with a responsive page, project selector, live summary counts and section navigation. Opening team actions routes here; editing a shared project selects its Project details tab. Shared task entry points select Tasks & milestones. People and invitation controls retain the same server authorization. No database migration is needed for this presentation change.
+
+
+## Main planning board
+
+Apply `supabase/task-board.sql` after shared-planning.sql and the existing storage/record migrations. The transaction preserves the installed file cleanup checker and adds shared attachment protection. It is rerunnable.
+
+The main task board projects permitted shared rows alongside personal tasks without storing those shared rows in account snapshots. A published personal task retains its private source record and no longer appears twice. Sharing requires explicit review; private instructions, conversations, dependencies and files are not automatically published. New team tasks, assignment editing, subtasks, prerequisites, designated approval, discussions and private shared-file downloads use permission-checked server functions.
+
+Shared prerequisites reject cycles and incomplete dependencies. Completion also requires finished subtasks and any designated approval. Only the named approver can approve. Edits invalidate approval; completed tasks must be reopened before edits, and completed downstream tasks block reopening prerequisites. CAS revisions protect concurrent changes. Comments and attachment additions are independent append operations. File ownership is verified before sharing, attachment RLS follows task access, downloads use 60-second signed URLs, and linked files are excluded from unused-file cleanup.
+
+Visible planning boards poll every 30 seconds when no dialog/search editing is active. Unchanged results do not redraw the board; Refresh team updates fetches immediately. Server permission checks remain authoritative for every mutation. Reassignment/removal blocks subsequent reads and new download links. Already downloaded files cannot be recalled.
+
+Validation includes SQL integration tests with actual migrations and storage RLS, account-scoped projection tests, and an actual mobile browser flow against a local API fixture for combined board display, creation, completion, subtasks and discussion. Real production account-to-account acceptance testing remains separate.
