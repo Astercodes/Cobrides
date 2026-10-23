@@ -1,6 +1,6 @@
 (function(root){'use strict';
 const stages=['Aspiring','Expecting','Engaged'];
-const celebrations=[['Pre-wedding shoot','Pre-wedding shoot'],['Introduction','Family introduction'],['Traditional wedding','Traditional wedding'],['Civil ceremony','Civil ceremony'],['Religious ceremony','Religious ceremony'],['Reception','Reception'],['After-party','After-party'],['Destination celebration','Destination celebration']];
+const celebrations=[['Proposal','Proposal'],['Pre-wedding shoot','Pre-wedding shoot'],['Introduction','Family introduction'],['Traditional wedding','Traditional wedding'],['Civil ceremony','Civil ceremony'],['Religious ceremony','Religious ceremony'],['Reception','Reception'],['After-party','After-party'],['Destination celebration','Destination celebration']];
 const currencies=['NGN','USD','GBP','EUR','CAD','AUD','GHS','ZAR','KES','INR','AED'];
 function needsSetup(state){return !state?.onboarding?.completedAt;}
 function defaults(state,identity,regional={}){const p=state?.profile||{},project=state?.projects?.find(x=>x.id===state.activeProjectId)||state?.projects?.[0]||{};return {stage:p.stage||'',title:project.title||'My wedding journey',partner:p.partner||'',location:project.location||p.location||'',date:project.date||p.date||'',dateStatus:project.date?'Confirmed':'Not set',budget:project.budget||p.budget||'',currency:project.finance?.baseCurrency||regional.currency||'NGN',guestCount:p.guestCount||'',celebrations:[],starterTasks:false,...state?.onboarding?.draft};}
