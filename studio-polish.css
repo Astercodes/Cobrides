@@ -43,3 +43,5 @@
 .workspace-app nav.sp-looks-nav>button strong{font:600 13px/1.35 system-ui;overflow-wrap:normal;word-break:normal}
 .workspace-app nav.sp-looks-nav>button span{font:400 11px/1.35 system-ui}
 @media(max-width:760px){.workspace-app nav.sp-looks-nav>button{min-height:68px;padding:12px 9px}.workspace-app nav.sp-looks-nav>button strong{font-size:11px}.workspace-app nav.sp-looks-nav>button span{font-size:10px}}
+
+#sp-look-export [hidden]{display:none!important}.sp-look-export-actions{justify-content:flex-end;margin:0 0 18px}#sp-look-export{width:min(520px,calc(100vw - 24px));max-height:85dvh;overflow:auto;color:#000}#sp-look-export .section-head{gap:15px;align-items:center}#sp-look-export h2{font-size:25px;margin:0}
