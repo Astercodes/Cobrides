@@ -9,3 +9,14 @@ Server permissions and row-level security control every shared read and mutation
 Only whitelisted project and celebration metadata is shared. Personal tasks, conversations, guest lists, journals, purchase records, and detailed financial ledgers are not automatically published. Shared responsibility/message records in collaborate.html retain their existing collaboration model. Connect those individual modules deliberately in later work.
 
 Validation: wedding-projects.test.cjs covers client metadata selection, namespaces, imported permissions, and revoked access. wedding-projects.sql.test.cjs runs real migrations twice against PGlite when CB_PGLITE_PATH points to its runtime, checking row isolation, invitations, finances, event assignments, conflicts, archive/restore, and revocation. Production acceptance still requires two real accounts to test invite delivery/acceptance and cross-device updates.
+
+
+## Shared planning
+
+Apply `supabase/shared-planning.sql` after wedding-projects.sql. It upgrades the existing shared task table, backfills legacy task references, removes direct browser inserts, and preserves the older completion endpoint with current authorization checks.
+
+Planning & Tasks opens Shared tasks & milestones; the Wedding team dialog also has this tab. Owners, brides, partners and planners manage assignments. Other members see and complete only their own tasks. Assignment requires an accepted member or project owner email. Personal checklist sharing is explicit, with title/date/type reviewed first; attachments, subtasks, private notes and discussions are excluded. Shared instructions must be entered separately.
+
+Task saves and completion use revisions. Stale writes fail with a refresh message. Archived projects reject edits, and removed members lose reads and completion access. Use Refresh updates or reopen the tab to fetch current team records. Shared assignments do not yet reschedule automatically or generate email/push reminders.
+
+Mobile browser validation used a local API fixture and the actual application UI: created a milestone and completed it at 390px without page overflow or JavaScript errors. SQL integration tests verify real database permission rules separately. A real two-account invitation acceptance test remains a production acceptance step.
