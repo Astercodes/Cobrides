@@ -1,7 +1,7 @@
 /* Account-scoped recovery and Storage API cleanup; no service credentials. */
 (()=>{'use strict';
 const A=window.CoBridesAuth,buckets=['cb-inspiration','cb-documents','cb-memories'];
-let mounted=false,dialog,launcher,generation=0;
+let mounted=false,dialog,generation=0;
 async function identity(){const s=await A.current();if(!s)throw Error('Sign in again to manage your saved files.');return s;}
 async function usage(){return A.request('/rest/v1/rpc/cb_storage_status',{},await identity());}
 async function cleanup(){const s=await identity(),files=await A.request('/rest/v1/rpc/cb_claim_unused_files',{},s);let removed=0;
@@ -26,10 +26,11 @@ async function open(){if(dialog?.open)return;dialog=document.createElement('dial
   const clean=button('Clean unused files',async()=>{clean.disabled=true;try{const count=await cleanup();status.textContent=count+' unused files removed. Current files and recovery files are protected.';}catch(e){status.textContent='Cleanup could not finish. '+e.message;}finally{clean.disabled=false;}});list.append(clean);
  }catch(e){status.textContent='Storage & recovery could not load. '+e.message;}
 }
-async function mount(){if(mounted||!window.CoBridesCloud?.workspace)return;const epoch=generation;try{await usage();if(epoch!==generation||!A.read?.())return;mounted=true;launcher=button('Storage & recovery',open);launcher.style.cssText+=';position:fixed;right:18px;bottom:68px;z-index:9998';document.body.append(launcher);
+async function mount(){if(mounted||!window.CoBridesCloud?.workspace)return;const epoch=generation;try{await usage();if(epoch!==generation||!A.read?.())return;mounted=true;
  // Opportunistic maintenance once per signed-in page, in batches of at most 50.
  void cleanup().catch(()=>{});
  }catch{/* Existing accounts keep loading while the migration is being activated. */}}
-function reset(){generation++;mounted=false;dialog?.remove();launcher?.remove();dialog=null;launcher=null;}
+function reset(){generation++;mounted=false;dialog?.remove();dialog=null;}
+document.addEventListener('click',event=>{if(event.target.closest('[data-open-storage-recovery]'))void open();});
 window.CoBridesRecovery={usage,cleanup,backups,restore,open,mount,reset};
 })();
