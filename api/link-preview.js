@@ -21,8 +21,8 @@ function createHandler({guard=importGuard,retrievePage=retrieve,amazonProduct,pu
   const u=sourceUrl(String(body.url||'').slice(0,2000)),product=body.purpose==='product';let page;
   try{page=await retrievePage(u.href,{fullPage:product});}catch(error){if(product&&amazonItem(u.href)){const details=await amazonProduct(u.href);if(details)return send(200,details);throw unavailable();}throw error;}
   const details=metadata(page.html,page.url,{product});
-  if(product&&amazonItem(page.url)&&(amazonChallenge(page.html)||!details.image)){
-   const external=await amazonProduct(page.url);if(external)return send(200,{...external,url:u.href});throw unavailable();
+  if(product&&amazonItem(page.url)&&(amazonChallenge(page.html)||!details.image||details.price===undefined)){
+   const external=await amazonProduct(page.url);if(external)return send(200,{...details,...external,url:u.href});if(amazonChallenge(page.html)||!details.image)throw unavailable();
   }
   return send(200,details);
  }catch(e){if(e.retryAfter)res.setHeader('Retry-After',String(e.retryAfter));return send(e.status||422,{error:e.status?e.message:'This website could not be previewed. You can still save its link.',...(e.reason?{reason:e.reason}:{})});}
