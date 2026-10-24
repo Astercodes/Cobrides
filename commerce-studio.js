@@ -4,6 +4,7 @@ const commerceProductImages={'Wedding gown':'gown','Traditional attire':'traditi
 function commerceStudioPrimary(action,label,id=''){return sb(action,label,id).replace('class="button"','class="button primary"');}
 function commerceStudioPhotoSource(record={}){
   const uploaded=(record.attachments||[]).find(a=>/^data:image\/(png|jpeg|webp|gif);base64,/i.test(a.url||'')||typeof window!=='undefined'&&window.CoBridesFiles?.isUrl(a.url));if(uploaded)return {url:uploaded.url,uploaded:true};
+  if(record.id&&record.url&&!record.sample&&!record.retailerCurrency&&typeof window!=='undefined')commerceResolveRetailerPhoto(record);
   if(record.image){try{const image=new URL(record.image);if(image.protocol==='https:'&&!image.username&&!image.password)return {url:image.href,uploaded:false,retailer:true};}catch{}}
   if(record.id&&record.url&&!record.sample&&typeof window!=='undefined'){commerceResolveRetailerPhoto(record);return {url:'',retailer:true,pending:!commerceRetailPhotoFailures.has(commerceRetailPhotoKey(record))};}
   let key=commerceProductImages[record.category]||({traditional:'traditional',gown:'gown',shoes:'shoes',jewelry:'jewelry',robe:'robe',honeymoon:'honeymoon'}[record.art]||'clutch');
@@ -33,8 +34,10 @@ function commerceResolveRetailerPhoto(record){
   if(activeProject().id!==pid||window.CoBridesIdentity?.user?.id!==owner)return;
   try{let preview;if(typeof registryProductPreview==='function')preview=await registryProductPreview(url);else{const response=await CoBridesImports.fetch('/api/link-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,purpose:'product'})});if(!response.ok)throw Error('Product preview unavailable');preview=await response.json();}
    if(activeProject().id!==pid||window.CoBridesIdentity?.user?.id!==owner)return;const item=state.purchases.find(i=>i.id===id&&i.url===url&&!i.archived);if(!item)return;
-   if(preview.image&&!item.image){item.image=preview.image;save();}else if(!preview.image)commerceRetailPhotoFailures.add(key);
+   let changed=false;if(preview.image&&!item.image){item.image=preview.image;changed=true;}else if(!preview.image)commerceRetailPhotoFailures.add(key);if(Number.isFinite(preview.price)&&preview.price>=0&&preview.currency){Object.assign(item,{retailerPrice:preview.price,retailerCurrency:preview.currency,priceSource:preview.priceSource,priceCheckedAt:preview.priceCheckedAt});changed=true;}if(changed)save();
   }catch{commerceRetailPhotoFailures.add(key);}
   if(activeProject().id===pid&&window.CoBridesIdentity?.user?.id===owner&&['#shopping','#wardrobe'].includes(location.hash)&&!document.querySelector('#editor')?.open)render();
  });
 }
+
+function commerceRetailPrice(item){return Number.isFinite(item.retailerPrice)&&/^[A-Z]{3}$/.test(item.retailerCurrency||'')?'<p class="ss-retailer-price"><strong>'+se(fm(item.retailerPrice,item.retailerCurrency))+'</strong> - Price snapshot; confirm at retailer</p>':'';}

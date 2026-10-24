@@ -9,3 +9,5 @@ body .rs-product-copy{position:relative;min-width:0;flex:1;overflow-wrap:anywher
 body .rs-product-copy :is(h3,p,small){position:static;white-space:normal;overflow-wrap:anywhere;max-width:100%}
 body .commerce-studio .shop-product-art{flex-shrink:0}
 @media(max-width:600px){body .rs-product-photo{--rs-photo-inset:13px}}
+
+.rs-price{display:flex;flex-direction:column;gap:5px;margin:12px 0 16px}.rs-price strong{font:600 19px/1.4 system-ui;color:#000}.rs-price small{font:10px/1.5 system-ui;color:#000}
