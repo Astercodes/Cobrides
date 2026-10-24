@@ -18,11 +18,11 @@ registryPublicMarkup=function(){const items=RC.publicItems(state,activeProject()
 document.addEventListener('error',e=>{if(e.target.matches?.('.rs-product-photo img,.rs-import-review img')){e.target.hidden=true;e.target.parentElement.classList.add('rs-photo-unavailable');}},true);
 
 /* Retailer photos are resolved for both entry paths, without replacing chosen uploads. */
-const registryPhotoRequests=new Map(),registryPhotoAttempts=new Set();let registryPhotoRepairRunning=false;
+const registryPhotoRequests=new Map(),registryPhotoAttempts=new Set();let registryPhotoRepairRunning=false,registryRepairTimer=null,registryRepairAfter=0;
 async function registryProductPreview(url){
  const key=(window.CoBridesIdentity?.user?.id||'')+':'+url;if(registryPhotoRequests.has(key))return registryPhotoRequests.get(key);
- const job=(async()=>{const response=await CoBridesImports.fetch('/api/link-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,purpose:'product'}),cache:'no-store'}),data=await response.json();if(!response.ok){if([422,504].includes(response.status))return {};throw Error(data.error||'Could not read this product link.');}return data;})();
- registryPhotoRequests.set(key,job);try{return await job;}catch(error){registryPhotoRequests.delete(key);throw error;}finally{if(registryPhotoRequests.size>50)registryPhotoRequests.delete(registryPhotoRequests.keys().next().value);}
+ const job=(async()=>{const response=await CoBridesImports.fetch('/api/link-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,purpose:'product'}),cache:'no-store'}),data=await response.json();if(!response.ok){if([422,504].includes(response.status))return {};throw Object.assign(Error(data.error||'Could not read this product link.'),{status:response.status,retryAfter:Number(response.headers?.get?.('Retry-After'))||60});}return data;})();
+ registryPhotoRequests.set(key,job);try{const data=await job;if(!registryHasPrice({retailerPrice:data.price,retailerCurrency:data.currency}))registryPhotoRequests.delete(key);return data;}catch(error){registryPhotoRequests.delete(key);throw error;}finally{if(registryPhotoRequests.size>50)registryPhotoRequests.delete(registryPhotoRequests.keys().next().value);}
 }
 async function registryFindFormPhoto(form){
  const url=RC.safeUrl(form.elements.url?.value),pid=activeProject().id,owner=window.CoBridesIdentity?.user?.id;
@@ -38,12 +38,35 @@ async function registryFindFormPhoto(form){
 const registryPhotoSubmit=handleRegistrySubmit;
 handleRegistrySubmit=function(event){const form=event.target;if(form.dataset.regForm==='item'&&!form.dataset.photoResolved&&form.elements.kind.value==='Retail gift'&&RC.safeUrl(form.elements.url.value)&&(!form.elements.image.value.trim()||!registryHasPrice({retailerPrice:form.elements.retailerPrice?.value,retailerCurrency:form.elements.retailerCurrency?.value}))&&!form.querySelector('[name=registryPhoto]')?.files.length){event.preventDefault();const pid=activeProject().id,owner=window.CoBridesIdentity?.user?.id,url=form.elements.url.value,button=form.querySelector('[type=submit]');button.disabled=true;void registryFindFormPhoto(form).then(()=>{if(!form.isConnected||activeProject().id!==pid||window.CoBridesIdentity?.user?.id!==owner||form.elements.url.value!==url)return;form.dataset.photoResolved='1';registryPhotoSubmit(event);}).finally(()=>{if(button.isConnected)button.disabled=false;});return true;}return registryPhotoSubmit(event);};
 document.addEventListener('change',event=>{const form=event.target.closest('[data-reg-form="item"]');if(!form)return;if(event.target.name==='url'){delete form.dataset.photoResolved;void registryFindFormPhoto(form);}});
+function registryScheduleRepair(delay=1000){
+ if(registryRepairTimer!==null||location.hash!=='#registry')return;
+ registryRepairTimer=setTimeout(()=>{registryRepairTimer=null;void registryRepairMissingPhotos();},delay);
+}
 async function registryRepairMissingPhotos(){
- if(registryPhotoRepairRunning||registryEditor)return;const pid=activeProject().id,owner=window.CoBridesIdentity?.user?.id;
- const items=registryItems().filter(i=>!i.sample&&i.kind==='Retail gift'&&RC.safeUrl(i.url)&&((!i.image&&!i.uploadedImage)||!registryHasPrice(i))&&!registryPhotoAttempts.has(owner+':'+i.id+':'+i.url)).slice(0,20);if(!items.length)return;
- registryPhotoRepairRunning=true;let changed=false;
- try{for(const item of items){if(activeProject().id!==pid||window.CoBridesIdentity?.user?.id!==owner)break;registryPhotoAttempts.add(owner+':'+item.id+':'+item.url);try{const preview=await registryProductPreview(item.url);if(activeProject().id!==pid||window.CoBridesIdentity?.user?.id!==owner)break;const current=state.registryItems.find(i=>i.id===item.id&&i.url===item.url&&!i.archived);if(current){if(!current.image&&!current.uploadedImage&&preview.image){current.image=preview.image;changed=true;}if(!registryHasPrice(current)&&Number.isFinite(preview.price)&&preview.price>=0&&preview.currency){Object.assign(current,{retailerPrice:preview.price,retailerCurrency:preview.currency,priceSource:preview.priceSource,priceCheckedAt:preview.priceCheckedAt});changed=true;}}}catch{break;}}if(changed){save();if(location.hash==='#registry'&&!registryEditor)render();}}
- finally{registryPhotoRepairRunning=false;}
+ if(registryPhotoRepairRunning||registryEditor)return;
+ const pid=activeProject().id,owner=window.CoBridesIdentity?.user?.id;
+ if(Date.now()<registryRepairAfter){registryScheduleRepair(registryRepairAfter-Date.now());return;}
+ const key=i=>owner+':'+pid+':'+i.id+':'+i.url;
+ const candidates=()=>registryItems().filter(i=>i.kind==='Retail gift'&&RC.safeUrl(i.url)&&((!i.image&&!i.uploadedImage)||!registryHasPrice(i))&&!registryPhotoAttempts.has(key(i)));
+ const items=candidates().slice(0,4);if(!items.length)return;
+ registryPhotoRepairRunning=true;
+ try{for(const item of items){
+  if(activeProject().id!==pid||window.CoBridesIdentity?.user?.id!==owner)break;
+  registryPhotoAttempts.add(key(item));
+  try{
+   const preview=await registryProductPreview(item.url);
+   if(activeProject().id!==pid||window.CoBridesIdentity?.user?.id!==owner)break;
+   const current=state.registryItems.find(i=>i.id===item.id&&i.projectId===pid&&i.url===item.url&&!i.archived);let changed=false;
+   if(current){
+    if(!current.image&&!current.uploadedImage&&preview.image){current.image=preview.image;changed=true;}
+    if(!registryHasPrice(current)&&registryHasPrice({retailerPrice:preview.price,retailerCurrency:preview.currency})){Object.assign(current,{retailerPrice:Number(preview.price),retailerCurrency:preview.currency.trim().toUpperCase(),priceSource:preview.priceSource,priceCheckedAt:preview.priceCheckedAt});changed=true;}
+    if(changed){save();if(location.hash==='#registry'&&!registryEditor)render();}
+   }
+  }catch(error){
+   if([401,403,429,503].includes(error.status)){registryPhotoAttempts.delete(key(item));registryRepairAfter=Date.now()+Math.max(60,Math.min(86400,error.retryAfter||60))*1000;break;}
+   // One unreadable retailer must not prevent the remaining gifts from updating.
+  }
+ }}finally{registryPhotoRepairRunning=false;if(activeProject().id===pid&&window.CoBridesIdentity?.user?.id===owner&&candidates().length)registryScheduleRepair(Math.max(1000,registryRepairAfter-Date.now()));}
 }
 const registryPhotoPage=registryPage;
 registryPage=function(){setTimeout(registryRepairMissingPhotos,0);return registryPhotoPage();};
