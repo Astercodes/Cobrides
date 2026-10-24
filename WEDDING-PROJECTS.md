@@ -78,3 +78,16 @@ The server calculates reminder dates using each recipient's saved time zone (UTC
 The header bell is available in the bridal workspace, collaboration workspace and participant/business portals. It offers Unread, All updates, Preferences, mark read/all read, current source details and authorized task approval. The inbox shows the latest 100 updates with a full unread count. Visible pages refresh once per minute; no polling overwrites an open preferences or detail view. The inbox links to the existing shared wedding workspace rather than duplicating project editing.
 
 These are in-app notifications only. Email and push delivery are not enabled by this migration and do not consume Resend's allowance. Real cross-account acceptance testing remains separate from the SQL integration and local browser fixture checks.
+
+
+## Optional daily planning emails
+
+Apply supabase/planning-email.sql after planning-notifications.sql. It installs private delivery settings and jobs, opt-in preferences, digest visibility checks, a pg_net sender and a minute-based Supabase Cron processor. The sender is hello@mail.cobridey.com. Add a sending-only Resend key to Supabase Vault with the exact secret name cobridey_resend_api_key; no Vercel environment variable or service-role key is needed. Credentials remain in Vault and are not returned by any browser RPC.
+
+Each account starts opted out. The inbox preferences can enable one summary per local calendar day after 09:00, only when new unread permitted updates exist since opt-in or the last summary. Emails contain a count and authenticated inbox/preferences links rather than private task or celebration details. Reading updates, revoking access or opting out cancels unsent work. An HTTP request already submitted cannot be recalled.
+
+The processor serializes work, rechecks current account/email/access/preferences, freezes each request payload and retries with the same Resend idempotency key. Attempts stop after five tries or twenty hours, before Resend's twenty-four-hour deduplication window closes. It submits at most one message per minute. Provider rejection is recorded; authentication failures pause sending, and throttling backs off. Accepted means the provider accepted the message, not confirmed inbox delivery. Delivery/bounce webhook processing remains separate.
+
+Default application allowances are 50 new summaries per UTC day and 1,500 per UTC month, counted pessimistically at first submission. These are only planning-email limits: they do not measure Supabase authentication email traffic, and both types still consume the same Resend account allowance. Adjust limits in the private settings table after a provider-plan change.
+
+SQL tests cover opt-in isolation, credential protection, daily/monthly caps, frozen retries, throttling, local-time scheduling, access revocation and opt-out. Local mobile UI testing verifies saving the email preference without layout overflow. Real provider delivery testing requires the Vault key and an explicitly selected recipient.
