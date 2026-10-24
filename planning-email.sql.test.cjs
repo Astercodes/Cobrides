@@ -20,7 +20,7 @@ test('planning email opt-in queue and safe delivery',{skip:!process.env.CB_PGLIT
 
  await db.exec('reset role');
  await db.exec("create schema vault;create table vault.decrypted_secrets(name text,decrypted_secret text);create schema net;create table net._http_response(id bigint,status_code int,content text,timed_out boolean,error_msg text);create table net.test_requests(id bigint generated always as identity,body jsonb,headers jsonb);create function net.http_post(url text,body jsonb default '{}',params jsonb default '{}',headers jsonb default '{}',timeout_milliseconds int default 1000) returns bigint language plpgsql as $$declare n bigint;begin if url<>'https://api.resend.com/emails' then raise exception 'Wrong endpoint';end if;insert into net.test_requests(body,headers) values(body,headers) returning id into n;return n;end;$$;");
- const mailSQL=fs.readFileSync('supabase/planning-email.sql','utf8');await db.exec(mailSQL);await db.exec(mailSQL);let task,job,request;
+ const mailSQL=fs.readFileSync('supabase/planning-email.sql','utf8');await db.exec(mailSQL);await db.exec(mailSQL);for(const file of ['collaboration-access','shared-decisions','decision-notifications'])await db.exec(fs.readFileSync('supabase/'+file+'.sql','utf8'));let task,job,request;
  const zone=(await one("select case when extract(hour from now() at time zone 'UTC')>=9 then 'UTC' else 'Etc/GMT-12' end as zone")).zone;
  await t.test('disabled by default and worker credentials cannot be read by ordinary accounts',async()=>{
   await as(2);assert.equal((await one('select public.cb_planning_email_status() as s')).s.enabled,false);
