@@ -91,3 +91,14 @@ The processor serializes work, rechecks current account/email/access/preferences
 Default application allowances are 50 new summaries per UTC day and 1,500 per UTC month, counted pessimistically at first submission. These are only planning-email limits: they do not measure Supabase authentication email traffic, and both types still consume the same Resend account allowance. Adjust limits in the private settings table after a provider-plan change.
 
 SQL tests cover opt-in isolation, credential protection, daily/monthly caps, frozen retries, throttling, local-time scheduling, access revocation and opt-out. Local mobile UI testing verifies saving the email preference without layout overflow. Real provider delivery testing requires the Vault key and an explicitly selected recipient.
+
+
+## Resend delivery events and suppression
+
+Apply supabase/planning-delivery.sql after planning-email.sql. The rerunnable migration adds private delivery event metadata, account/address suppression and provider status. Delivery status is separate from request acceptance. Provider email IDs connect callbacks to planning jobs; unmatched callbacks wait for reconciliation so callbacks arriving before the send response are not lost. A minute-based reconciliation job catches busy rows and delayed provider-ID links.
+
+Configure a Resend webhook at https://www.cobridey.com/api/resend-webhook for email.delivered, email.bounced, email.complained, email.failed, email.delivery_delayed and email.suppressed. Save its signing secret as RESEND_WEBHOOK_SECRET in Vercel production and as cobridey_resend_webhook_secret in Supabase Vault, then redeploy. This dedicated shared secret authorizes only event ingestion; no service-role key is needed. Do not reuse the sending API key.
+
+The API verifies the untouched request body using Svix HMAC-SHA256, timing-safe comparisons and a five-minute timestamp tolerance. It rejects oversized/forged events and forwards only event ID, provider email ID, type and timestamp. The database separately checks the secret, validates events, deduplicates retries and prevents historical delivered events overriding bounces/complaints. Public callers cannot read event/job tables or apply events without the secret.
+
+Hard bounces, complaints and provider suppression turn off planning emails for that address and cancel unsent work. Opting back into the same suppressed address requires support review; a different verified address can opt in separately. Unknown callbacks, including authentication emails without a matching planning job, do not change any account preference. A provider-delivered event means acceptance by the recipient mail server, not proof that a person opened the message.
