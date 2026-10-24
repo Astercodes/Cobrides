@@ -16,6 +16,7 @@ test('shared conversations enforce participant privacy and persistent delivery',
 
 
  await db.exec('reset role');const chatSQL=fs.readFileSync('supabase/communication-hub.sql','utf8');await db.exec(chatSQL);await db.exec(chatSQL);
+ await db.exec(fs.readFileSync('supabase/collaboration-access.sql','utf8'));
  await as(0);project=await one("select * from public.cb_create_wedding_project('chat:wedding','Our wedding','{}',0,'USD')");
  for(const [i,role] of [[1,'planner'],[2,'friend']]){const invite=await one("insert into public.cb_invites(project_id,email,role,created_by) values($1,$2,$3,$4) returning token",[project.id,['bride','planner','vendor'][i]+'@example.com',role,ids[0]]);await as(i);await q('select public.cb_accept_invite($1)',[invite.token]);await as(0);}
  let thread,mid;
@@ -41,6 +42,12 @@ test('shared conversations enforce participant privacy and persistent delivery',
   await q("select public.cb_send_chat_message($1,gen_random_uuid(),'Our agreement',$2)",[thread,[{bucket:'cb-documents',path:ids[0]+'/own.pdf',name:'Agreement.pdf'}]]);
   let history=(await one('select public.cb_chat_history($1,null) result',[thread])).result,file=history.messages.at(-1).files[0];await as(2);assert.equal((await one('select public.cb_chat_file($1) result',[file.id])).result.path,ids[0]+'/own.pdf');assert.equal((await q('select * from storage.objects')).rows.length,1);
   await as(1);await assert.rejects(q('select public.cb_chat_file($1)',[file.id]),/access denied/);assert.equal((await q('select * from storage.objects')).rows.length,0);await as(0);assert.equal((await one("select public.cb_file_referenced('cb-documents',$1) result",[ids[0]+'/own.pdf'])).result,true);
+ });
+ await t.test('custom access expiry blocks private messages and shared files until restored',async()=>{
+  await as(0);const a=await one("select * from public.cb_assign_collab_role($1,$2,null,now()-interval '1 minute',0)",[project.id,ids[2]]);await as(2);
+  await assert.rejects(q('select public.cb_chat_history($1,null)',[thread]),/access denied/);assert.equal((await q('select * from storage.objects')).rows.length,0);
+  await assert.rejects(q("select public.cb_send_chat_message($1,gen_random_uuid(),'Expired','[]')",[thread]),/access denied/);
+  await as(0);await q('select * from public.cb_assign_collab_role($1,$2,null,null,$3)',[project.id,ids[2],a.revision]);await as(2);assert((await one('select public.cb_chat_history($1,null) result',[thread])).result.messages.length>0);await as(0);
  });
  await t.test('archive blocks sends but preserves history; removal immediately blocks history files and receipts',async()=>{
   await db.exec('reset role');await q('update public.cb_projects set archived_at=now() where id=$1',[project.id]);await as(0);assert((await one('select public.cb_chat_history($1,null) result',[thread])).result.messages.length>0);await assert.rejects(q("select public.cb_send_chat_message($1,gen_random_uuid(),'Archived','[]')",[thread]),/access denied/);await db.exec('reset role');await q('update public.cb_projects set archived_at=null where id=$1',[project.id]);await as(0);await q('select public.cb_remove_member($1,$2)',[project.id,ids[2]]);await as(2);await assert.rejects(q('select public.cb_chat_history($1,null)',[thread]),/access denied/);await assert.rejects(q('select public.cb_mark_chat_read($1,1)',[thread]),/access denied/);assert.equal((await q('select * from storage.objects')).rows.length,0);

@@ -30,7 +30,7 @@ test('direct invitation email permissions and delivery',{skip:!process.env.CB_PG
  await db.exec('reset role');job=(await q("insert into public.cb_planning_email_jobs(user_id,local_day,state,notice_through,payload) values($1,current_date,'accepted',now(),$2) returning *",[ids[2],{to:['vendor@example.com']}])).rows[0];
  const record=async(id,email,kind,time='2026-10-23T12:00:00Z',token=secret)=>q("select public.cb_record_planning_delivery($1,$2,$3,$4,$5)",[token,id,email,kind,time]);
 
- await db.exec('reset role');const inviteSQL=fs.readFileSync('supabase/invitation-email.sql','utf8');await db.exec(inviteSQL);await db.exec(inviteSQL);
+ await db.exec('reset role');const inviteSQL=fs.readFileSync('supabase/invitation-email.sql','utf8');await db.exec(inviteSQL);await db.exec(inviteSQL);await db.exec(fs.readFileSync('supabase/collaboration-access.sql','utf8'));await db.exec(fs.readFileSync('supabase/collaboration-access.sql','utf8'));
  let invite;
  await t.test('only verified wedding managers can request email; private jobs stay private',async()=>{
   await as(0);invite=await one("insert into public.cb_invites(project_id,email,role,created_by) values($1,'other@example.com','friend',$2) returning *",[project.id,ids[0]]);
@@ -54,6 +54,9 @@ test('direct invitation email permissions and delivery',{skip:!process.env.CB_PG
  });
  await t.test('temporary failure retries use exactly the same payload and idempotency key',async()=>{
   await as(0);let retry=await one("insert into public.cb_invites(project_id,email,role,created_by) values($1,'retry@example.com','friend',$2) returning *",[project.id,ids[0]]);await q('select public.cb_send_invitation_email($1)',[retry.id]);await db.exec('reset role');await db.exec("update public.cb_invitation_email_jobs set last_attempt_at=now()-interval '1 minute'");await q('select public.cb_process_invitation_email()');let first=await one('select * from net.test_requests order by id desc limit 1');await q("insert into net._http_response values($1,500,'{}',false,null)",[first.id]);await q('select public.cb_process_invitation_email()');await db.exec("update public.cb_invitation_email_jobs set next_attempt_at=now()-interval '1 minute',last_attempt_at=now()-interval '1 minute'");await q('select public.cb_process_invitation_email()');let second=await one('select * from net.test_requests order by id desc limit 1');assert.notEqual(first.id,second.id);assert.deepEqual(first.body,second.body);assert.equal(first.headers['Idempotency-Key'],second.headers['Idempotency-Key']);
+ });
+ await t.test('expired custom access cancels a previously queued invitation email',async()=>{
+ await db.exec('reset role');await q("insert into public.cb_members(project_id,user_id,role) values($1,$2,'planner') on conflict do nothing",[project.id,ids[1]]);await as(1);const pending=await one("insert into public.cb_invites(project_id,email,role,created_by) values($1,'no-access@example.com','friend',$2) returning *",[project.id,ids[1]]);await q('select public.cb_send_invitation_email($1)',[pending.id]);await as(0);await q("select * from public.cb_assign_collab_role($1,$2,null,now()-interval '1 minute',0)",[project.id,ids[1]]);await db.exec('reset role');await q('select public.cb_process_invitation_email()');assert.equal((await one('select state from public.cb_invitation_email_jobs where invite_id=$1',[pending.id])).state,'cancelled');
  });
  }finally{await db.close();}
 });
