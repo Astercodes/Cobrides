@@ -3,15 +3,18 @@ let commerceStylingEvent='';
 const commerceProductImages={'Wedding gown':'gown','Traditional attire':'traditional','Reception dress':'reception','Shoes':'shoes','Jewelry':'jewelry','Veil':'veil','Accessories':'clutch','Bridal robe':'robe','Bridesmaid dress':'bridesmaids','Beauty':'essentials','Stationery':'stationery','Favors':'favors','Decor':'decor','Ceremony accessories':'stationery','Honeymoon':'honeymoon','Groom & groomsmen':'groom','Parents & family':'traditional','Other':'garment'};
 function commerceStudioPrimary(action,label,id=''){return sb(action,label,id).replace('class="button"','class="button primary"');}
 function commerceStudioPhotoSource(record={}){
-  const uploaded=(record.attachments||[]).find(a=>/^data:image\/(png|jpeg|webp|gif);base64,/i.test(a.url||''));if(uploaded)return {url:uploaded.url,uploaded:true};
+  const uploaded=(record.attachments||[]).find(a=>/^data:image\/(png|jpeg|webp|gif);base64,/i.test(a.url||'')||typeof window!=='undefined'&&window.CoBridesFiles?.isUrl(a.url));if(uploaded)return {url:uploaded.url,uploaded:true};
+  if(record.image){try{const image=new URL(record.image);if(image.protocol==='https:'&&!image.username&&!image.password)return {url:image.href,uploaded:false,retailer:true};}catch{}}
+  if(record.id&&record.url&&!record.sample&&typeof window!=='undefined'){commerceResolveRetailerPhoto(record);return {url:'',retailer:true,pending:!commerceRetailPhotoFailures.has(commerceRetailPhotoKey(record))};}
   let key=commerceProductImages[record.category]||({traditional:'traditional',gown:'gown',shoes:'shoes',jewelry:'jewelry',robe:'robe',honeymoon:'honeymoon'}[record.art]||'clutch');
   if(/hair comb|earring|necklace/i.test(record.title||'')&&!record.category?.includes('gown'))key='jewelry';
   if(/garment.*bag|travel bags/i.test(record.title||''))key='garment';
   return {url:'assets/products/'+key+'.webp',uploaded:false};
 }
 function commerceStudioPhoto(record={},kind=''){
-  const source=commerceStudioPhotoSource(record),alt=source.uploaded?record.title||'Uploaded item photo':(record.category||kind||'Bridal accessory')+' inspiration photograph';
-  return `<img class="ss-product-photo" src="${se(source.url)}" alt="${se(alt)}" width="800" height="800" loading="lazy" decoding="async">`;
+  const source=commerceStudioPhotoSource(record),alt=source.uploaded||source.retailer?record.title||'Product photo':(record.category||kind||'Bridal accessory')+' inspiration photograph';
+  if(!source.url)return `<div class="ss-retailer-photo-status" role="status">${source.pending?'Getting the product photo…':'Product photo temporarily unavailable'}</div>`;
+  return `<img class="ss-product-photo" src="${se(source.url)}" alt="${se(alt)}" width="800" height="800" loading="lazy" decoding="async" referrerpolicy="no-referrer">`;
 }
 function commerceStudioStats(items){return `<div class="ss-summary">${items.map(([value,label])=>`<div><strong>${value}</strong><span>${label}</span></div>`).join('')}</div>`;}
 function commerceStudioSummary(){const summary=SC.summary(state,activeProject().id);return shopView==='orders'?commerceStudioStats([[summary.inTransit,'Orders in progress'],[summary.owned,'Delivered or owned'],[shopOrders().filter(o=>['Return requested','Exchange requested'].includes(o.status)).length,'Returns & exchanges'],[shopOrders().length,'Recorded orders']]):commerceStudioStats([[summary.items,'Saved pieces'],[summary.owned,'In your closet'],[summary.outstanding,'Still to purchase'],[shopLists().length,'Personal collections']]);}
@@ -20,4 +23,18 @@ function commerceStudioWardrobeSummary(looks,appointments){const relevant=new Se
 function commerceStudioLookCard(l){
   const pieces=shopItems().filter(i=>l.itemIds.includes(i.id)),clothing=['Wedding gown','Traditional attire','Reception dress','Bridesmaid dress','Groom & groomsmen','Parents & family','Bridal robe'],main=pieces.find(i=>clothing.includes(i.category))||pieces[0]||{category:'Wedding gown'},extras=pieces.filter(i=>i.id!==main.id).slice(0,2),uploaded=(l.attachments||[]).some(a=>/^data:image\/(png|jpeg|webp|gif);base64,/i.test(a.url||'')),collection=SC.deadline(state,{...l,anchorEventId:l.eventId},PC.addDays),designer=state.contacts.find(c=>c.id===l.designerId),owned=pieces.filter(i=>SC.inventory(state,i)).length;
   return `<article class="wardrobe-look ss-look"><div class="ss-look-media"><div class="ss-look-main-photo">${commerceStudioPhoto(uploaded?l:main)}<span class="ss-look-status">${se(l.status)}</span></div>${extras.length?`<div class="ss-look-extra-photos">${extras.map(i=>commerceStudioPhoto(i)).join('')}</div>`:''}</div><div class="ss-look-content"><span class="eyebrow">${se(l.eventId?eventTitle(l.eventId):'Whole wedding')}</span><h2>${se(l.title)}</h2><div class="ss-wearer"><span aria-hidden="true">${se(collaborationInitials(personName(l.personId)))}</span><strong>${se(personName(l.personId))}</strong><small>${owned}/${pieces.length} pieces in the closet</small></div><p class="ss-style-direction">${se(l.style||'Your styling vision')}</p><div class="wardrobe-piece-list">${pieces.map(i=>`<div><span>${se(i.title)}</span><b>${SC.inventory(state,i)?'In the closet':se(SC.itemStatus(state,i))}</b></div>`).join('')||'<p>Add clothes, shoes, and accessories from your shopping lists.</p>'}</div><div class="ss-look-deadline"><span>Collect by</span><strong>${collection?formatDate(collection):'Date to be decided'}</strong></div><p class="ss-designer">${designer?'Designer: '+se(designer.name):'Designer to be assigned'}</p><div class="card-actions">${commerceStudioPrimary('look-edit','Edit styling plan',l.id)}${sb('fitting-for-look','Add fitting',l.id)}</div><details class="ss-look-details"><summary>Accessories, garment care & photos</summary><p><strong>Accessories</strong> ${se(l.accessories||'To be coordinated')}</p><p><strong>Care & storage</strong> ${se(l.care||'Add your garment care instructions.')}</p>${l.notes?`<p>${se(l.sample?l.notes.replace(/^Simulated styling plan[^.]*\.\s*/i,''):l.notes)}</p>`:''}<div class="card-actions">${designer?cbutton('direct-channel','Designer conversation',designer.id):''}${l.taskId?`<button class="button" data-plan-edit="tasks:${l.taskId}">Collection task</button>`:''}</div>${messageAttachments(l.attachments)}${(l.attachments||[]).map(a=>sb('look-file-remove','Remove '+se(a.name),l.id+':'+a.id)).join('')}</details></div></article>`;
+}
+const commerceRetailPhotoAttempts=new Set(),commerceRetailPhotoFailures=new Set();let commerceRetailPhotoJobs=Promise.resolve();
+const commerceRetailPhotoKey=record=>(window.CoBridesIdentity?.user?.id||'')+':'+record.id+':'+record.url;
+function commerceResolveRetailerPhoto(record){
+ const key=commerceRetailPhotoKey(record);if(commerceRetailPhotoAttempts.has(key)||commerceRetailPhotoAttempts.size>=60)return;commerceRetailPhotoAttempts.add(key);
+ const pid=activeProject().id,owner=window.CoBridesIdentity?.user?.id,url=record.url,id=record.id;
+ commerceRetailPhotoJobs=commerceRetailPhotoJobs.catch(()=>{}).then(async()=>{
+  if(activeProject().id!==pid||window.CoBridesIdentity?.user?.id!==owner)return;
+  try{let preview;if(typeof registryProductPreview==='function')preview=await registryProductPreview(url);else{const response=await CoBridesImports.fetch('/api/link-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,purpose:'product'})});if(!response.ok)throw Error('Product preview unavailable');preview=await response.json();}
+   if(activeProject().id!==pid||window.CoBridesIdentity?.user?.id!==owner)return;const item=state.purchases.find(i=>i.id===id&&i.url===url&&!i.archived);if(!item)return;
+   if(preview.image&&!item.image){item.image=preview.image;save();}else if(!preview.image)commerceRetailPhotoFailures.add(key);
+  }catch{commerceRetailPhotoFailures.add(key);}
+  if(activeProject().id===pid&&window.CoBridesIdentity?.user?.id===owner&&['#shopping','#wardrobe'].includes(location.hash)&&!document.querySelector('#editor')?.open)render();
+ });
 }

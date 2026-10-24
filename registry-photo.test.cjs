@@ -4,6 +4,13 @@ test('retailer product schema overrides a generic store logo and supports image 
  const html='<meta property="og:image" content="/store-logo.png"><script type="application/ld+json">'+JSON.stringify({'@graph':[{'@type':'Organization',image:'/logo.png'},{'@type':'Product',name:'Le Creuset Signature Round Casserole',image:[{'@type':'ImageObject',contentUrl:'https://cdn.retailer.com/casserole.jpg'}]}]})+'</script>';
  assert.equal(metadata(html,'https://retailer.com/casserole',{product:true}).image,'https://cdn.retailer.com/casserole.jpg');assert.equal(metadata(html,'https://retailer.com/casserole',{product:true}).title,'Le Creuset Signature Round Casserole');assert.equal(metadata(html,'https://retailer.com/casserole').image,'https://retailer.com/store-logo.png');
 });
+test('Amazon landing images use the largest gallery image rather than a placeholder',()=>{
+ const data='{&quot;https://m.media-amazon.com/images/I/small.jpg&quot;:[300,300],&quot;https://m.media-amazon.com/images/I/large.jpg&quot;:[1500,1500]}';
+ const html='<img id="landingImage" src="data:image/gif;base64,blank" data-a-dynamic-image="'+data+'">';
+ assert.equal(metadata(html,'https://www.amazon.com/dp/B000000001',{product:true}).image,'https://m.media-amazon.com/images/I/large.jpg');
+ const gallery='<script>var product={"colorImages":{"initial":[{"hiRes":"https://m.media-amazon.com/images/I/main.jpg","large":"https://m.media-amazon.com/images/I/low.jpg"}]}};</script>';
+ assert.equal(metadata(gallery,'https://www.amazon.co.uk/dp/B000000001',{product:true}).image,'https://m.media-amazon.com/images/I/main.jpg');
+});
 test('product image extraction handles relative images and rejects unsafe image URLs',()=>{
  const page=image=>'<script type="application/ld+json">'+JSON.stringify({'@type':'Product',image})+'</script>';
  assert.equal(metadata(page('/images/kettle.jpg'),'https://shop.example.com/kettle',{product:true}).image,'https://shop.example.com/images/kettle.jpg');
@@ -18,4 +25,9 @@ test('chosen images and uploads are preserved; changing projects discards late p
 test('the importer recognizes the current Cobridey domains while preserving authentication',async()=>{
  const {createHandler}=require('./api/link-preview'),handler=createHandler({origin:'https://old.example.com',guard:async()=>{throw Object.assign(Error('Sign in first'),{status:401});}});
  for(const origin of ['https://www.cobridey.com','https://cobridey.com','https://evil.example.com']){let result;const req={method:'POST',headers:{origin},body:{url:'https://shop.example.com/product',purpose:'product'}},res={setHeader(){},end(body){result=JSON.parse(body);}};await handler(req,res);assert.equal(res.statusCode,origin.includes('evil')?403:401);assert(result.error);}
+});
+test('shopping cards resolve and save their actual retailer image instead of category artwork',async()=>{
+ const project={id:'w'},item={id:'cart-item',projectId:'w',url:'https://www.amazon.com/dp/B000000001',title:'My kettle',category:'Other'},calls=[];let saves=0;
+ const c=vm.createContext({URL,window:{CoBridesIdentity:{user:{id:'owner'}}},activeProject:()=>project,state:{purchases:[item]},CoBridesImports:{fetch:async(path,options)=>{calls.push(JSON.parse(options.body));return {ok:true,json:async()=>({image:'https://m.media-amazon.com/images/I/kettle.jpg'})};}},document:{querySelector:()=>null},location:{hash:'#shopping'},save:()=>saves++,render(){}});
+ vm.runInContext(fs.readFileSync('commerce-studio.js','utf8'),c);assert.equal(c.commerceStudioPhotoSource(item).pending,true);await vm.runInContext('commerceRetailPhotoJobs',c);assert.equal(item.image,'https://m.media-amazon.com/images/I/kettle.jpg');assert.equal(c.commerceStudioPhotoSource(item).url,item.image);assert.equal(saves,1);assert.equal(calls[0].purpose,'product');
 });
