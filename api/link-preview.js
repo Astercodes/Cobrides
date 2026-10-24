@@ -1,7 +1,8 @@
 'use strict';
 const {guard:importGuard}=require('../lib/import-guard');
 const {productMetadata}=require('../lib/product-metadata');
-const {amazonItem,amazonChallenge,lookup:amazonLookup}=require('../lib/amazon-products');
+const {amazonItem,amazonChallenge}=require('../lib/amazon-products');
+const {createPublicLookup}=require('../lib/amazon-public-products');
 const https=require('node:https'),dns=require('node:dns/promises'),net=require('node:net');
 const fail=(status,message)=>Object.assign(new Error(message),{status});
 function publicIPv4(ip){const p=ip.split('.').map(Number);if(net.isIP(ip)!==4)return false;const [a,b,c]=p;return !(a===0||a===10||a===127||a>=224||a===100&&b>=64&&b<=127||a===169&&b===254||a===172&&b>=16&&b<=31||a===192&&(b===168||b===0||b===88&&c===99)||a===198&&(b===18||b===19||b===51&&c===100)||a===203&&b===0&&c===113);}
@@ -11,7 +12,7 @@ async function retrieve(url,{resolve:lookup=dns.lookup,request=https.get,fullPag
 function decode(value){return String(value||'').replace(/&#(x[0-9a-f]+|\d+);/gi,(_,n)=>{const v=n[0].toLowerCase()==='x'?parseInt(n.slice(1),16):Number(n);return v>0&&v<=0x10ffff?String.fromCodePoint(v):'';}).replace(/&quot;/gi,'"').replace(/&#39;|&apos;/gi,"'").replace(/&amp;/gi,'&').replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();}
 function metadata(html,url,options={}){const product=options.product?productMetadata(html,url):{};const meta={};for(const tag of html.match(/<meta\b[^>]{0,4000}>/gi)||[]){const attrs={};for(const m of tag.matchAll(/([a-z_:][a-z0-9_:-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi))attrs[m[1].toLowerCase()]=m[2]??m[3]??m[4];const key=attrs.property||attrs.name;if(key&&attrs.content)meta[key.toLowerCase()]=decode(attrs.content);}let image='';try{const candidate=new URL(meta['og:image']||meta['twitter:image']||'',url);if((meta['og:image']||meta['twitter:image'])&&candidate.protocol==='https:'&&!candidate.username&&!candidate.password&&!net.isIP(candidate.hostname)&&candidate.hostname.includes('.')&&!/(^|\.)(local|localhost|internal|test|invalid)$/.test(candidate.hostname))image=candidate.href;}catch{}
 const pin=url.match(/^https:\/\/(?:[a-z]+\.)?pinterest\.[^/]+\/pin\/(\d+)/i);if(pin)url=new URL('/pin/'+pin[1]+'/',url).href;return {url,title:(product.title||meta['og:title']||meta['twitter:title']||decode(html.match(/<title\b[^>]*>([\s\S]{0,1000}?)<\/title>/i)?.[1])||new URL(url).hostname).slice(0,120),description:(meta['og:description']||meta.description||meta['twitter:description']||'').slice(0,800),creator:(meta.author||meta['article:author']||meta['og:site_name']||new URL(url).hostname).slice(0,200),image:product.image||image,provider:new URL(url).hostname};}
-function createHandler({guard=importGuard,retrievePage=retrieve,amazonProduct=amazonLookup,origin=process.env.APP_ORIGIN||'https://www.cobridey.com'}={}){return async(req,res)=>{
+function createHandler({guard=importGuard,retrievePage=retrieve,amazonProduct,publicRetrievePage,origin=process.env.APP_ORIGIN||'https://www.cobridey.com'}={}){amazonProduct=amazonProduct||createPublicLookup({retrievePage:publicRetrievePage});return async(req,res)=>{
  res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type','application/json');res.setHeader('X-Content-Type-Options','nosniff');const send=(status,data)=>{res.statusCode=status;res.end(JSON.stringify(data));};
  const unavailable=()=>Object.assign(fail(422,'Amazon product details are temporarily unavailable. Your product link can still be saved.'),{reason:'amazon_access_required'});
  try{

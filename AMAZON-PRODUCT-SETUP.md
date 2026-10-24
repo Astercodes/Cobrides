@@ -1,16 +1,13 @@
-# Amazon product photos
+# Amazon product photos - free retrieval
 
-Amazon can return a CAPTCHA page to the public link reader. That page is not a product preview. The importer now rejects it and can use an optional Rainforest API product lookup instead.
+No API key, affiliate tag, paid provider or database migration is required by the active importer.
 
-## Activate the connection
+The importer first reads the public retailer page. For Amazon.com product links that return a CAPTCHA or omit their image, it checks BigBangPrice's publicly accessible exact-ASIN product page. It requires an exact canonical URL, the same ASIN in the document title, structured product metadata and an Amazon-hosted HTTPS image. The original Amazon purchase link is preserved. It never substitutes search-result images or another product.
 
-1. Create a Rainforest API account at https://trajectdata.com/discover-rainforest-api/ and obtain its API key. Review the provider's terms and current allowance before enabling paid usage.
-2. In Vercel, open the Cobridey project's Settings > Environment Variables. Add `RAINFOREST_API_KEY` for Production. This is server-only; never add it to frontend code or share it in chat.
-3. Redeploy the production project.
-4. While signed in, add https://www.amazon.com/dp/B09HR6MV21 to the registry or shopping list and verify its actual product photo.
+The public fallback supports Amazon.com only; another marketplace's product is not silently substituted. Unindexed or unavailable products retain their link without a fabricated image. This is best-effort public-page coverage, not an unlimited or guaranteed catalog API. Successful results are cached for one hour per server instance; misses for one minute. Concurrent requests for the same product share one lookup. The cache is bounded to 200 entries.
 
-No database migration is required. Until the key is configured, blocked Amazon pages cannot provide a photo. Existing product links remain usable. Approved Amazon Creators API access is a separate potential integration, not a prerequisite for this adapter.
+The fallback fetches only a fixed host and ASIN-only path, rejects redirects, applies a 12-second timeout and 1 MB response ceiling, and remains behind the existing authenticated import guard. It does not bypass CAPTCHA or sign in to Amazon. The dormant Rainforest helper is not called by the importer, even if a Rainforest key is present.
 
-The adapter requests only the ASIN and Amazon marketplace from a fixed provider endpoint. It validates the returned ASIN and Amazon-hosted HTTPS image, keeps credentials out of responses, coalesces simultaneous requests, and caches successful lookups for one hour per running server instance (up to 200 products). Cache entries are not a persistent global spending cap; monitor provider usage and configure its billing controls. Existing authenticated import limits still apply.
+Verified live before deployment with B09HR6MV21 and B00FLYWNYQ. Both returned matching product metadata and Amazon image URLs that responded with HTTP 200 image/jpeg. The full importer also returned HTTP 200 for the user's original B09HR6MV21 link with its tracking parameters preserved.
 
-Provider documentation: https://docs.trajectdata.com/rainforestapi/product-data-api/parameters/product
+Existing registry and shopping items without product images are already repaired automatically when those pages load. Reload the page after deployment to clear a previous in-memory failed lookup.
