@@ -98,7 +98,7 @@ begin
  if draft.applied_at is not null then return draft.payload;end if;
  if not public.cb_project_access(pid,'write') then raise exception 'Timeline editing access denied';end if;
  if draft.expires_at<now() then raise exception 'This preview expired. Create a fresh preview';end if;
- if draft.fingerprint<>public.cb_schedule_fingerprint(pid) then raise exception 'CB_SCHEDULE_CONFLICT: Plans changed after this preview. Review a fresh preview' using errcode='40001';end if;
+ if draft.fingerprint<>public.cb_schedule_fingerprint(pid) then raise exception 'CB_SCHEDULE_CONFLICT: Plans changed after this preview. Review a fresh preview' using errcode='PT409';end if;
  if jsonb_array_length(draft.payload->'conflicts')>0 then raise exception 'Resolve the prerequisite conflicts before applying';end if;
  if jsonb_array_length(draft.payload->'changes')=0 then raise exception 'No dates need to change';end if;
  perform set_config('cb.schedule.apply','1',true);

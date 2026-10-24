@@ -18,7 +18,7 @@ begin
  end loop;
  if coalesce(safe->>'time','')<>'' and coalesce(safe->>'endTime','')<>'' and (safe->>'endTime')::time<=(safe->>'time')::time then raise exception 'End time must be after start time on the same day';end if;
  select * into event from public.cb_project_events where project_id=p_project and local_ref=p_local_ref for update;
- if coalesce(event.revision,0)<>p_revision then raise exception 'CB_PROJECT_CONFLICT: Refresh this celebration before saving.' using errcode='40001';end if;
+ if coalesce(event.revision,0)<>p_revision then raise exception 'CB_PROJECT_CONFLICT: Refresh this celebration before saving.' using errcode='PT409';end if;
  if event.id is null then insert into public.cb_project_events(project_id,local_ref,title,details,visibility) values(p_project,p_local_ref,trim(p_title),safe,p_visibility) returning * into event;
  else update public.cb_project_events set title=trim(p_title),details=safe,visibility=p_visibility,revision=revision+1,updated_at=now() where id=event.id returning * into event;end if;
  update public.cb_projects set revision=revision+1,updated_at=now() where id=p_project;

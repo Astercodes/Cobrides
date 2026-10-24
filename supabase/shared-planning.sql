@@ -24,7 +24,7 @@ begin
  if recipient is null then raise exception 'Assign this to an accepted wedding team member'; end if;
  select * into result from public.cb_tasks where project_id=p_project and local_ref=p_ref for update;
  if found then
-  if result.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: This task changed. Refresh before saving.' using errcode='40001'; end if;
+  if result.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: This task changed. Refresh before saving.' using errcode='PT409'; end if;
   update public.cb_tasks set title=trim(p_title),assignee_email=lower(trim(p_assignee)),due_date=p_due,kind=p_kind,description=coalesce(p_description,''),revision=revision+1,updated_at=now() where id=result.id returning * into result;
  else
   if p_revision<>0 then raise exception 'Task no longer exists'; end if;
@@ -41,7 +41,7 @@ begin
  select * into result from public.cb_tasks where id=p_task for update;
  if not found or not public.cb_project_access(pid,'read') or not (public.cb_task_manager(pid) or lower(result.assignee_email)=lower(coalesce(auth.jwt()->>'email',''))) then raise exception 'Task access denied'; end if;
  if exists(select 1 from public.cb_projects where id=pid and archived_at is not null) then raise exception 'Archived wedding: editing is paused'; end if;
- if result.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: This task changed. Refresh before saving.' using errcode='40001'; end if;
+ if result.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: This task changed. Refresh before saving.' using errcode='PT409'; end if;
  if p_done is null then raise exception 'Completion state is required'; end if;
  update public.cb_tasks set done=p_done,revision=revision+1,updated_at=now() where id=p_task returning * into result;
  insert into public.cb_project_activity(project_id,actor_id,action,changed_fields) values(pid,auth.uid(),case when p_done then 'Task completed' else 'Task reopened' end,array['task']);

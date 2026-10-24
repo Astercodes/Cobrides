@@ -107,7 +107,7 @@ declare project public.cb_projects; safe jsonb;
 begin
  select * into project from public.cb_projects where id=p_project for update;
  if not found or not public.cb_project_access(p_project,'write') then raise exception 'Project edit access denied';end if;
- if project.revision<>p_revision then raise exception 'CB_PROJECT_CONFLICT: Another team member saved changes. Refresh before saving.' using errcode='40001';end if;
+ if project.revision<>p_revision then raise exception 'CB_PROJECT_CONFLICT: Another team member saved changes. Refresh before saving.' using errcode='PT409';end if;
  if length(trim(p_title)) not between 1 and 200 then raise exception 'Enter a project name';end if;
  safe:=public.cb_project_details(p_details);
  if p_budget is not null or p_currency is not null then
@@ -125,7 +125,7 @@ declare project public.cb_projects;
 begin
  select * into project from public.cb_projects where id=p_project for update;
  if not found or not public.cb_project_access(p_project,'owner') then raise exception 'Only the owner can archive or restore this project';end if;
- if project.revision<>p_revision then raise exception 'CB_PROJECT_CONFLICT: Refresh before changing the project.' using errcode='40001';end if;
+ if project.revision<>p_revision then raise exception 'CB_PROJECT_CONFLICT: Refresh before changing the project.' using errcode='PT409';end if;
  update public.cb_projects set archived_at=case when p_archived then now() else null end,revision=revision+1,updated_at=now() where id=p_project returning * into project;
  insert into public.cb_project_activity(project_id,actor_id,action) values(p_project,auth.uid(),case when p_archived then 'Project archived' else 'Project restored' end);
  return project;
@@ -152,7 +152,7 @@ begin
  select coalesce(jsonb_object_agg(key,val),'{}') into safe from jsonb_each(p_details) x(key,val) where key in ('type','date','dateStatus','time','endTime','venue','dressCode','owner','logistics');
  date_value:=safe->>'date';if coalesce(date_value,'')<>'' then if date_value !~ '^\d{4}-\d{2}-\d{2}$' then raise exception 'Use a valid celebration date';end if;perform date_value::date;end if;
  select * into event from public.cb_project_events where project_id=p_project and local_ref=p_local_ref for update;
- if coalesce(event.revision,0)<>p_revision then raise exception 'CB_PROJECT_CONFLICT: Refresh this celebration before saving.' using errcode='40001';end if;
+ if coalesce(event.revision,0)<>p_revision then raise exception 'CB_PROJECT_CONFLICT: Refresh this celebration before saving.' using errcode='PT409';end if;
  if event.id is null then insert into public.cb_project_events(project_id,local_ref,title,details,visibility) values(p_project,p_local_ref,trim(p_title),safe,p_visibility) returning * into event;
  else update public.cb_project_events set title=trim(p_title),details=safe,visibility=p_visibility,revision=revision+1,updated_at=now() where id=event.id returning * into event;end if;
  update public.cb_projects set revision=revision+1,updated_at=now() where id=p_project;

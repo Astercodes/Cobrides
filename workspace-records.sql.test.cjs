@@ -29,7 +29,7 @@ test('record migration, atomic staged saves, ownership, recovery and large works
  await t.test('changes and deletions update only affected records and stale commits fail atomically',async()=>{
   const nextValue=structuredClone(legacy);nextValue.personal.guests.push({id:'g2',name:'Tunde'});nextValue.demo.visions=[];
   const next=C.encode(nextValue),changes=C.diff(current,next),id=await begin(changes,revision),stale=await begin(changes,revision);await stage(id,changes);await stage(stale,changes);
-  revision=await commit(id);await assert.rejects(commit(stale),/CB_SYNC_CONFLICT/);assert.deepEqual(await read(revision),nextValue);assert.deepEqual(await read(2),legacy);current=next;
+  revision=await commit(id);await assert.rejects(commit(stale),error=>error.code==='PT409'&&/CB_SYNC_CONFLICT/.test(error.message));assert.deepEqual(await read(revision),nextValue);assert.deepEqual(await read(2),legacy);current=next;
  });
  await t.test('another account cannot read records, stage someone else’s save or access internal functions',async()=>{
   const changes=[{key:'example',deleted:true}],id=await begin(changes,revision);await as(b);

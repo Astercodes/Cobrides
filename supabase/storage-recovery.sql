@@ -145,7 +145,7 @@ begin
  else
   update public.cb_workspace_states set payload=p_payload,revision=revision+1,updated_at=now() where user_id=auth.uid() and workspace=p_workspace and revision=p_revision returning revision into next_revision;
  end if;
- if next_revision is null then raise exception 'CB_SYNC_CONFLICT' using errcode='40001'; end if;
+ if next_revision is null then raise exception 'CB_SYNC_CONFLICT' using errcode='PT409'; end if;
  return next_revision;
 end; $$;
 create or replace function public.cb_restore_workspace(p_workspace text,p_backup_revision bigint,p_revision bigint) returns bigint

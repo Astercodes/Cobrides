@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 function device(server,user='u',storage=new Map(),search='',files=null){
-const identity={user:{id:user}},cache='furbrides-v1:'+user,elements=[];
-const node=()=>({style:{},append(){},replaceChildren(){},setAttribute(){},hidden:false});
+const identity={user:{id:user}},cache='furbrides-v1:'+user,elements=[],timers=[];
+const node=()=>({style:{},children:[],attributes:{},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},setAttribute(k,v){this.attributes[k]=v;},hidden:false});
 const A={current:async()=>identity,accountContext:async()=>({defaultDemo:server.demoOwner===user}),request:async(path,body)=>{
  if(server.offline)throw Error('Network unavailable');
  const key=user+':'+(body?.p_workspace||'bride');
@@ -9,9 +9,9 @@ const A={current:async()=>identity,accountContext:async()=>({defaultDemo:server.
  if(path.includes('cb_save_workspace')){if(server.beforeSave)await server.beforeSave(body);const old=server.get(key);if((old?.revision||0)!==body.p_revision)throw Error('CB_SYNC_CONFLICT');const revision=(old?.revision||0)+1;server.set(key,{revision,payload:structuredClone(body.p_payload)});return revision;}
  const row=server.get(key);return row?[structuredClone(row)]:[];
 }};
-const context=vm.createContext({window:{CoBridesAuth:A,CoBridesFiles:files,addEventListener(){}},document:{body:{dataset:{},append(x){elements.push(x);}},createElement:node,createTextNode:x=>x,addEventListener(){}},location:{pathname:'/journey.html',search},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},setTimeout:()=>1,clearTimeout(){},Blob,URL,URLSearchParams,confirm:()=>false});
+const context=vm.createContext({window:{CoBridesAuth:A,CoBridesFiles:files,addEventListener(){}},document:{body:{dataset:{},append(x){elements.push(x);}},createElement:node,createTextNode:x=>x,addEventListener(){}},location:{pathname:'/journey.html',search},localStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},setTimeout:(fn,delay)=>{timers.push({fn,delay});return timers.length;},clearTimeout(){},Blob,URL,URLSearchParams,confirm:()=>false});
 vm.runInContext(fs.readFileSync('cloud-storage.js','utf8'),context);
-return {cloud:context.window.CoBridesCloud,identity,storage,cache,elements};
+return {cloud:context.window.CoBridesCloud,identity,storage,cache,elements,timers};
 }
 test('a second device loads the same account journey and another account remains separate',async()=>{
  const server=new Map(),first=device(server);await first.cloud.open(first.identity);first.cloud.save({profile:{name:'Amara'},tasks:[{title:'Book venue'}]});await first.cloud.flush();
@@ -70,3 +70,10 @@ test('file migration commits references only after verification; failed migratio
 });
 
 test('Vision Studio boards palettes themes and categorized looks sync together and stay account-owned',async()=>{const server=new Map(),a=device(server,'bride-a');await a.cloud.open(a.identity);const vision={visionBoards:[{id:'board',projectId:'w',title:'Outfits'}],visions:[{id:'idea',projectId:'w',boardIds:['board'],title:'My dress'}],visionPalettes:[{id:'palette',colors:['#ED007E','#00AF9D']}],visionThemes:[{id:'theme',eventId:'reception',title:'My reception'}],wardrobeLooks:[{id:'look',components:{outfit:{visionId:'idea'},hair:{media:{data:'cb-file:v1:cb-inspiration/bride-a/image'}}}}]};await a.cloud.commit(vision);const phone=device(server,'bride-a');await phone.cloud.open(phone.identity);assert.deepEqual(JSON.parse(phone.storage.get(phone.cache)),vision);const other=device(server,'bride-b');await other.cloud.open(other.identity);assert.equal(other.storage.get(other.cache),undefined);a.cloud.save({...vision,visions:[{...vision.visions[0],archived:true}]});await a.cloud.flush();phone.cloud.save(vision);await phone.cloud.flush();assert.equal(phone.cloud.status().state,'conflict');assert.equal(server.get('bride-a:bride').payload.visions[0].archived,true);});
+
+test('schema-cache failure retries automatically with a compact status and clears only after confirmation',async()=>{
+ const server=new Map(),a=device(server);await a.cloud.open(a.identity);server.beforeSave=async()=>{throw Object.assign(Error('Could not query the database for the schema cache. Retrying.'),{status:503,code:'PGRST002'});};a.cloud.save({title:'Keep this wedding edit'});await a.cloud.flush();assert(a.storage.has('cb-outbox:u:bride'));const notice=a.elements[0];assert.deepEqual(notice.children,['Reconnecting · autosave will retry']);const retry=a.timers.at(-1);assert.equal(retry.delay,2000);server.beforeSave=null;await retry.fn();assert.equal(server.get('u:bride').payload.title,'Keep this wedding edit');assert.equal(a.cloud.status().state,'saved');assert.equal(a.storage.has('cb-outbox:u:bride'),false);a.timers.at(-1).fn();assert.equal(notice.hidden,true);
+});
+test('revision-conflict migrations never use serialization errors for application conflicts',()=>{
+ for(const file of fs.readdirSync('supabase').filter(f=>f.endsWith('.sql')&&f!=='save-conflict-repair.sql'))assert(!/errcode\s*=\s*'40001'/i.test(fs.readFileSync('supabase/'+file,'utf8')),file);
+});

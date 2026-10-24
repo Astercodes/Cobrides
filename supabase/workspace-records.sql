@@ -61,7 +61,7 @@ begin
   return true;
  end if;
  select revision into current_revision from public.cb_workspace_states where user_id=auth.uid() and workspace=p_workspace;
- if coalesce(current_revision,0)<>p_revision then raise exception 'CB_SYNC_CONFLICT' using errcode='40001'; end if;
+ if coalesce(current_revision,0)<>p_revision then raise exception 'CB_SYNC_CONFLICT' using errcode='PT409'; end if;
  -- Staging expires after seven days; committed retry tokens remain for 30 days.
  delete from public.cb_record_uploads where user_id=auth.uid() and created_at<now()-case when committed_revision is null then interval '7 days' else interval '30 days' end;
  insert into public.cb_record_uploads(user_id,batch,workspace,base_revision,expected_count,fingerprint,replace_all) values(auth.uid(),p_batch,p_workspace,p_revision,p_count,p_fingerprint,p_replace);
@@ -115,7 +115,7 @@ begin
  if not found then raise exception 'Save session expired. Retry saving.'; end if;
  if upload.committed_revision is not null then return upload.committed_revision; end if;
  select * into head from public.cb_workspace_states where user_id=auth.uid() and workspace=upload.workspace for update;
- if coalesce(head.revision,0)<>upload.base_revision then raise exception 'CB_SYNC_CONFLICT' using errcode='40001'; end if;
+ if coalesce(head.revision,0)<>upload.base_revision then raise exception 'CB_SYNC_CONFLICT' using errcode='PT409'; end if;
  if (select count(*) from public.cb_record_changes where user_id=auth.uid() and batch=p_batch)<>upload.expected_count then raise exception 'Save is incomplete. Retry saving.'; end if;
  if coalesce(head.payload->>'cbRecordStore','0')<>'1' and not upload.replace_all then raise exception 'A complete first save is required'; end if;
  next_revision:=upload.base_revision+1;
@@ -165,7 +165,7 @@ begin
  perform pg_advisory_xact_lock(hashtextextended(auth.uid()::text||':files',0));
  select payload into saved from public.cb_workspace_backups where user_id=auth.uid() and workspace=p_workspace and revision=p_backup_revision and created_at>=now()-interval '30 days';
  if saved is null then raise exception 'Recovery version not found'; end if;
- if coalesce((select revision from public.cb_workspace_states where user_id=auth.uid() and workspace=p_workspace),0)<>p_revision then raise exception 'CB_SYNC_CONFLICT' using errcode='40001'; end if;
+ if coalesce((select revision from public.cb_workspace_states where user_id=auth.uid() and workspace=p_workspace),0)<>p_revision then raise exception 'CB_SYNC_CONFLICT' using errcode='PT409'; end if;
  if saved->>'cbRecordStore'='1' then
   select count(*) into total from public.cb_workspace_records where user_id=auth.uid() and workspace=p_workspace and from_revision<=p_backup_revision and (to_revision is null or to_revision>p_backup_revision);
  else select count(*) into total from public.cb_flatten_workspace(saved); end if;

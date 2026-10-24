@@ -27,7 +27,7 @@ begin
   where user_id=auth.uid() and workspace=p_workspace and revision=p_revision
   returning revision into next_revision;
  end if;
- if next_revision is null then raise exception 'CB_SYNC_CONFLICT' using errcode='40001'; end if;
+ if next_revision is null then raise exception 'CB_SYNC_CONFLICT' using errcode='PT409'; end if;
  return next_revision;
 end; $$;
 revoke all on function public.cb_save_workspace(text,jsonb,bigint) from public,anon;

@@ -22,7 +22,7 @@ begin
  perform 1 from public.cb_projects where id=pid for update;
  select * into t from public.cb_tasks where id=p_task for update;
  if not public.cb_project_access(pid,'write') then raise exception 'Task editing access denied';end if;
- if t.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: Refresh this task before saving.' using errcode='40001';end if;
+ if t.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: Refresh this task before saving.' using errcode='PT409';end if;
  if t.done then raise exception 'Reopen this task before changing its plan';end if;
  if jsonb_typeof(p_plan) is distinct from 'object' or octet_length(p_plan::text)>30000 then raise exception 'Enter a valid task plan';end if;
  dependencies=coalesce(p_plan->'dependencies','[]');
@@ -49,7 +49,7 @@ begin
  perform 1 from public.cb_projects where id=pid for update;
  select * into t from public.cb_tasks where id=p_task for update;
  if not public.cb_task_visible(p_task) or exists(select 1 from public.cb_projects where id=pid and archived_at is not null) then raise exception 'Task access denied';end if;
- if t.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: Refresh this task before saving.' using errcode='40001';end if;
+ if t.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: Refresh this task before saving.' using errcode='PT409';end if;
  if t.done then raise exception 'Reopen this task before changing it';end if;
  if p_approve then
   if not t.approval_required or lower(t.approver_email)<>lower(coalesce(auth.jwt()->>'email','')) then raise exception 'Only the designated approver can approve';end if;
@@ -78,7 +78,7 @@ begin
  select * into t from public.cb_tasks where id=p_task for update;
  if not found or not public.cb_project_access(pid,'read') or not (public.cb_task_manager(pid) or lower(t.assignee_email)=lower(coalesce(auth.jwt()->>'email',''))) then raise exception 'Task access denied';end if;
  if exists(select 1 from public.cb_projects where id=pid and archived_at is not null) then raise exception 'Archived wedding: editing is paused';end if;
- if t.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: This task changed. Refresh before saving.' using errcode='40001';end if;
+ if t.revision<>p_revision then raise exception 'CB_TASK_CONFLICT: This task changed. Refresh before saving.' using errcode='PT409';end if;
  if p_done is null then raise exception 'Completion state is required';end if;
  if p_done then
   if exists(select 1 from jsonb_array_elements_text(coalesce(t.plan->'dependencies','[]')) d left join public.cb_tasks x on x.id=d.value::uuid where x.id is null or not x.done) then raise exception 'Complete the prerequisite tasks first';end if;
