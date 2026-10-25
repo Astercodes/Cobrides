@@ -3,8 +3,8 @@
 const effective=e=>Number(e.settlement_total??e.agreed_total);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),money=(n,c)=>new Intl.NumberFormat(undefined,{style:'currency',currency:c,currencyDisplay:'code'}).format(Number(n));
 async function rpc(ctx,name,body){const s=await CoBridesAuth.current();if(!s||s.user.id!==ctx.user.id||ctx.current&&!ctx.current())throw Error('Your account or wedding changed.');const result=await CoBridesAuth.request('/rest/v1/rpc/'+name,body,s);if(CoBridesAuth.read()?.user?.id!==ctx.user.id||ctx.current&&!ctx.current())throw Error('Your account or wedding changed.');return result;}
-async function open(ctx,booking=null){
-const d=document.createElement('dialog');d.className='sv-dialog vc-dialog ledger-dialog';document.body.append(d);d.addEventListener('close',()=>d.remove());d.showModal();let data,busy=false,editor=null,focusId='',filter='All';
+async function open(ctx,booking=null,requestedExpense=''){
+const d=document.createElement('dialog');d.className='sv-dialog vc-dialog ledger-dialog';document.body.append(d);d.addEventListener('close',()=>d.remove());d.showModal();let data,busy=false,editor=null,focusId=requestedExpense,filter='All';
 const head=()=>'<header><div><small>YOUR TEAM FINANCES</small><h2>Shared expense ledger</h2></div><button class="button" data-ledger-close>Close</button></header>';
 const status=text=>{const el=d.querySelector('[role=alert]');if(el)el.textContent=text;};
 const field=(name,label,type='text',value='')=>'<label>'+label+'<input name="'+name+'" type="'+type+'" value="'+esc(value)+'" '+(type==='number'?'min="0.01" step="0.01" required':'')+'></label>';
