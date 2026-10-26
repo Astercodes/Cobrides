@@ -1,6 +1,6 @@
 /* Private, immutable account files. Snapshots store references, never signed tokens. */
 (()=>{'use strict';
-const buckets=['cb-inspiration','cb-documents','cb-memories'],prefix='cb-file:v1:',urls=new Map(),signed=new Map(),jobs=new Map();
+const buckets=['cb-inspiration','cb-documents','cb-memories','cb-vendor-deliverables'],prefix='cb-file:v1:',urls=new Map(),signed=new Map(),jobs=new Map();
 const types=new Set(['image/jpeg','image/png','image/webp','image/gif','application/pdf','text/plain','text/csv','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','audio/mpeg','audio/ogg','audio/wav','audio/webm','audio/x-wav','video/mp4','video/webm']);
 let owner='',progressNode;
 function progress(message){if(!progressNode){progressNode=document.createElement('aside');progressNode.setAttribute('role','status');progressNode.style.cssText='position:fixed;bottom:90px;right:18px;z-index:10001;max-width:calc(100vw - 36px);padding:12px 16px;background:#fff;color:#000;border:1px solid #850ac1;border-radius:12px;font:14px system-ui';document.body.append(progressNode);}progressNode.textContent=message;progressNode.hidden=!message;}
