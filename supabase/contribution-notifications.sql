@@ -1,7 +1,7 @@
 -- Private pledge, receipt and deadline notices. Existing email consent is preserved.
 begin;
 alter table public.cb_planning_notifications drop constraint if exists cb_planning_notifications_source_kind_check;
-alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision','chat','expense','contribution'));
+alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision','chat','expense','contribution','vendor_work'));
 create or replace function public.cb_contribution_user_access(p_user uuid,p_project uuid,p_contribution uuid) returns boolean language sql stable security definer set search_path='' as $$
  select coalesce(public.cb_collab_user_access(p_user,p_project,'read'),false) and exists(select 1 from public.cb_shared_contributions c join public.cb_projects p on p.id=c.project_id where c.id=p_contribution and c.project_id=p_project and p.archived_at is null and (public.cb_collab_user_access(p_user,p_project,'finance') or c.contributor=p_user));
 $$;
