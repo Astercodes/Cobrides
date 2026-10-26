@@ -1,0 +1,11 @@
+# Shared vendor coordination
+
+Apply `supabase/vendor-coordination.sql` after shared-vendors.sql and collaboration-access.sql. It is repeatable, RLS-protected, and does not publish personal vendor boards or commercial terms. Open Vendors & venues → Team directory → a professional → Coordination. The private vendor coordination page also has a Shared vendor coordination entry leading to the team directory. Invited collaborators use Team vendors in their shared workspace.
+
+Planning writers can create/review deliverables, setup windows, rehearsals, logistics and issues, with an optional accepted assignee who can already access that vendor. Financial access is not required. An assigned non-manager sees only their own work for that vendor, can update progress, and cannot rewrite instructions or reassign the work. No new access is inferred from an assignment. Reassignment or loss of vendor/project access revokes visibility and updates immediately.
+
+Statuses: To do, In progress, Blocked, Ready, Complete; planning writers may also cancel work. Blocked/completed work requires a note, and cancelled work requires a note in the manager editor. Non-managers cannot reopen completed/cancelled work. Vendor/project archival disables mutations. Project locks, optimistic revisions and exact-request UUID journals protect conflicting edits and uncertain retries. Snapshots retain each work version; visible history includes operational progress metadata only. Generic activity messages omit commercial terms and work-note content.
+
+The dialog refreshes visible idle boards every twenty seconds and offers manual Refresh. An in-flight refresh does not overwrite an editor opened while it was loading. These are operational planning records, not live vendor location tracking, automated external dispatch, file deliverable storage or hardware control. No email/messages are sent by installing the migration. Existing task-board and financial permissions remain separate.
+
+SQL/mobile tests cover planners without finance access, selected vendors, assignment isolation, progress validation, retry idempotency, version conflicts, reassignment and mobile form behavior. Live account testing remains deferred at the user's request.
