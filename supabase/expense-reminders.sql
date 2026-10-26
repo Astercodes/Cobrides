@@ -1,7 +1,7 @@
 -- Financially restricted payment deadlines; no payment is initiated.
 begin;
 alter table public.cb_planning_notifications drop constraint if exists cb_planning_notifications_source_kind_check;
-alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision','chat','expense'));
+alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision','chat','expense','contribution'));
 create or replace function public.cb_expense_deadlines(p_expense uuid) returns table(milestone text,title text,due date,remaining numeric) language sql stable security definer set search_path='' as $$
  with expense as (
  select e.*,coalesce((select sum(case when p.kind='Payment' then p.amount else -p.amount end) from public.cb_shared_payments p where p.expense_id=e.id),0) as paid
