@@ -1,5 +1,9 @@
 # Shared vendor coordination
 
+## Connected regression checks
+
+Run `npm run test:shared-vendors` with `CB_PGLITE_PATH` and `CB_PLAYWRIGHT_PATH` set to installed dependency paths. The runner requires both dependencies and executes eleven SQL, browser and storage suites with concurrency limited to two. The current run passes 46 tests with no failures or skipped checks, covering directory audiences, commercial privacy, assignment permissions, conflicting/retried saves, upload quotas, immutable reviews, reminders and authorized notification navigation. A removed-member regression verifies that work, submissions and notification targets all deny former teammates. Mobile browser flows run at a 390-pixel viewport. These automated checks do not replace the live device/account testing deferred by the user. No additional migration is required for this validation step.
+
 Apply `supabase/vendor-coordination.sql` after shared-vendors.sql and collaboration-access.sql. It is repeatable, RLS-protected, and does not publish personal vendor boards or commercial terms. Open Vendors & venues → Team directory → a professional → Coordination. The private vendor coordination page also has a Shared vendor coordination entry leading to the team directory. Invited collaborators use Team vendors in their shared workspace.
 
 Planning writers can create/review deliverables, setup windows, rehearsals, logistics and issues, with an optional accepted assignee who can already access that vendor. Financial access is not required. An assigned non-manager sees only their own work for that vendor, can update progress, and cannot rewrite instructions or reassign the work. No new access is inferred from an assignment. Reassignment or loss of vendor/project access revokes visibility and updates immediately.
