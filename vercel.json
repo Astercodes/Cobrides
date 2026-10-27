@@ -45,6 +45,10 @@
     {
       "source": "/wedding/:slug",
       "destination": "/celebrate.html"
+    },
+    {
+      "source": "/:slug([a-z0-9]+(?:-[a-z0-9]+)*)",
+      "destination": "/celebrate.html"
     }
   ]
 }
