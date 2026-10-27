@@ -11,7 +11,7 @@ create policy chat_signals_own on public.cb_chat_signals for select to authentic
 alter table public.cb_planning_notifications drop constraint if exists cb_planning_notifications_category_check;
 alter table public.cb_planning_notifications add constraint cb_planning_notifications_category_check check(category in ('assignments','approvals','deadlines','schedule','messages'));
 alter table public.cb_planning_notifications drop constraint if exists cb_planning_notifications_source_kind_check;
-alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision','chat'));
+alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision','chat','expense','contribution','vendor_work','shopping'));
 alter table public.cb_planning_preferences alter column categories set default array['assignments','approvals','deadlines','schedule','messages'];
 -- A new category is enabled in-app; chat email requires a separate explicit opt-in.
 alter table public.cb_planning_preferences add column if not exists chat_category_initialized boolean not null default false;

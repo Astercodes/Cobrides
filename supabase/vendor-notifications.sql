@@ -1,7 +1,7 @@
 -- Scoped vendor assignment, readiness, deliverable and deadline notices.
 begin;
 alter table public.cb_planning_notifications drop constraint if exists cb_planning_notifications_source_kind_check;
-alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision','chat','expense','contribution','vendor_work'));
+alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision','chat','expense','contribution','vendor_work','shopping'));
 create or replace function public.cb_vendor_work_user_access(p_user uuid,p_project uuid,p_work uuid) returns boolean language sql stable security definer set search_path='' as $$
  select coalesce(public.cb_collab_user_access(p_user,p_project,'read'),false) and exists(select 1 from public.cb_vendor_work w join public.cb_shared_vendors v on v.id=w.vendor_id join public.cb_projects p on p.id=v.project_id where w.id=p_work and v.project_id=p_project and not v.archived and p.archived_at is null
  and (public.cb_collab_user_access(p_user,p_project,'owner') or public.cb_collab_user_access(p_user,p_project,'write') or w.assigned_to=p_user and p_user=any(v.readers)));

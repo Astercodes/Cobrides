@@ -1,7 +1,7 @@
 -- Decision notices extend the existing inbox, cron and opt-in daily email digest.
 begin;
 alter table public.cb_planning_notifications drop constraint if exists cb_planning_notifications_source_kind_check;
-alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision'));
+alter table public.cb_planning_notifications add constraint cb_planning_notifications_source_kind_check check(source_kind in ('project','event','task','decision','chat','expense','contribution','vendor_work','shopping'));
 create index if not exists cb_decisions_due on public.cb_decisions(due_date) where due_date is not null;
 create or replace function public.cb_decision_user_access(p_user uuid,p_project uuid,p_id uuid) returns boolean language sql stable security definer set search_path='' as $$
  select public.cb_collab_user_access(p_user,p_project,'read') and exists(select 1 from public.cb_projects p join public.cb_decisions d on d.project_id=p.id where p.id=p_project and d.id=p_id and p.archived_at is null and (d.created_by=p_user or public.cb_collab_user_access(p_user,p_project,'write') or p_user=any(d.approvers)));
