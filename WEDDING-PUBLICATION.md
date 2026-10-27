@@ -35,3 +35,9 @@ Run `supabase/wedding-name-links.sql` after wedding-publication.sql. Existing si
 The website's Download a copy control has been removed, and its Desktop/Mobile preview selector uses the brand gradient.
 
 Guest links now use the root name path (`/wisdom-and-levy`). Earlier `/wedding/wisdom-and-levy` links remain supported. The initial website view installs the current publication controls immediately, without exposing the legacy snapshot-sharing instructions.
+
+## Website palette and celebration design
+
+**Wedding website → Website colours** offers current-wedding Design Studio palettes and native colour pickers. Applying a palette updates the private website draft/preview; save the current website draft and publish to update the guest view at the same URL. The palette controls accents, gradients, celebration cards, tinted backgrounds and the footer. Darkened derivatives provide readable text and white-button contrast; original chosen shades are retained for decorative accents.
+
+Run `supabase/wedding-website-palette.sql` after existing website migrations. It adds optional, strictly validated arrays of two to eight six-digit HEX colours, retains all original content validation and public/private permissions, and supports safe replay. Public celebration cards use existing wedding imagery, date badges and conditional directions links; missing venues are clearly marked and have no empty map link.
