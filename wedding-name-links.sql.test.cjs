@@ -1,0 +1,38 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
+test('readable wedding names and link lifecycle',{skip:!process.env.CB_PGLITE_PATH},async t=>{
+ const {PGlite}=require(process.env.CB_PGLITE_PATH),db=new PGlite(),ids=['11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222','33333333-3333-4333-8333-333333333333','44444444-4444-4444-8444-444444444444'];let project,event;
+ const q=(sql,args)=>db.query(sql,args),one=async(sql,args)=>(await q(sql,args)).rows[0];
+ const as=async i=>{await db.exec('reset role');await q("select set_config('request.jwt.claims',$1,false)",[JSON.stringify({sub:ids[i],email:['bride','planner','vendor','other'][i]+'@example.com'})]);await db.exec('set role authenticated');};
+ try{await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz);
+ create function auth.jwt() returns jsonb language sql stable as $$select coalesce(nullif(current_setting('request.jwt.claims',true),''),'{}')::jsonb$$;
+ create function auth.uid() returns uuid language sql stable as $$select (auth.jwt()->>'sub')::uuid$$;grant usage on schema auth,public to authenticated;`);
+ for(let i=0;i<4;i++)await q('insert into auth.users values($1,$2,now())',[ids[i],['bride','planner','vendor','other'][i]+'@example.com']);
+ await db.exec(fs.readFileSync('supabase/collaboration.sql','utf8'));await db.exec(fs.readFileSync('supabase/accounts.sql','utf8'));
+ await q("insert into public.cb_profiles(user_id,full_name,account_type,business_name) values($1,'Planner','planner','Planner Studio')",[ids[1]]);
+ const sql=fs.readFileSync('supabase/wedding-projects.sql','utf8');await db.exec(sql);await db.exec(sql);const planningSQL=fs.readFileSync('supabase/shared-planning.sql','utf8');await db.exec(planningSQL);await db.exec(planningSQL);const rolesSQL=fs.readFileSync('supabase/team-invitation-roles.sql','utf8');await db.exec(rolesSQL);await db.exec(rolesSQL);
+ await db.exec(`create schema storage;create table storage.objects(bucket_id text,name text,metadata jsonb);alter table storage.objects enable row level security;grant usage on schema storage to authenticated;grant select on storage.objects to authenticated;create table public.cb_file_reservations(bucket text,path text,deleting boolean default false);create function public.cb_file_referenced(text,text) returns boolean language sql as $$select false$$;`);
+ const boardSQL=fs.readFileSync('supabase/task-board.sql','utf8');await db.exec(boardSQL);await db.exec(boardSQL);const celebrationSQL=fs.readFileSync('supabase/celebration-workspace.sql','utf8');await db.exec(celebrationSQL);await db.exec(celebrationSQL);const timelineSQL=fs.readFileSync('supabase/shared-timeline.sql','utf8');await db.exec(timelineSQL);await db.exec(timelineSQL);
+ await as(0);
+
+
+ await db.exec('reset role');const chatSQL=fs.readFileSync('supabase/communication-hub.sql','utf8');await db.exec(chatSQL);await db.exec(chatSQL);
+ await db.exec(fs.readFileSync('supabase/collaboration-access.sql','utf8'));
+ await as(0);project=await one("select * from public.cb_create_wedding_project('chat:wedding','Our wedding','{}',0,'USD')");
+ for(const [i,role] of [[1,'planner'],[2,'friend']]){const invite=await one("insert into public.cb_invites(project_id,email,role,created_by) values($1,$2,$3,$4) returning token",[project.id,['bride','planner','vendor'][i]+'@example.com',role,ids[0]]);await as(i);await q('select public.cb_accept_invite($1)',[invite.token]);await as(0);}
+
+
+
+ const baseSQL=fs.readFileSync('supabase/wedding-publication.sql','utf8'),migration=fs.readFileSync('supabase/wedding-name-links.sql','utf8'),uuid=()=>require('node:crypto').randomUUID(),content=require('./wedding-public.js').clean({names:'Wisdom & Levy'});await db.exec('reset role');await db.exec(baseSQL);await as(0);
+ const save=async(pid,rev=0,value=content)=>(await one('select public.cb_save_wedding_site($1,$2,$3,$4) data',[pid,rev,uuid(),value])).data;
+ const act=async(pid,rev,action)=>(await one('select public.cb_set_wedding_publication($1,$2,$3,$4) data',[pid,rev,uuid(),action])).data;
+ const read=async(slug)=>(await one('select public.cb_read_wedding_slug($1) data',[slug])).data;
+ let site=await save(project.id);site=await act(project.id,site.revision,'publish');const oldToken=site.token;await db.exec('reset role');await db.exec(migration);await db.exec(migration);await as(0);
+ await t.test('existing publications receive clean wedding-name links',async()=>{site=(await one('select public.cb_wedding_publication($1) data',[project.id])).data;assert.equal(site.slug,'wisdom-and-levy');assert.deepEqual(await read(site.slug),content);assert.deepEqual((await one('select public.cb_read_wedding_site($1) data',[oldToken])).data,content);});
+ await t.test('different couples with identical names receive distinct readable suffixes',async()=>{const second=await one("select * from public.cb_create_wedding_project('name:second','Second wedding','{}',0,'USD')");let copy=await save(second.id);copy=await act(second.id,copy.revision,'publish');assert.equal(copy.slug,'wisdom-and-levy-2');assert.deepEqual(await read(copy.slug),content);});
+ await t.test('anonymous access reveals only published content and private helpers remain blocked',async()=>{await db.exec('reset role;set role anon');assert.deepEqual(await read(site.slug),content);assert.equal(await read('unknown-wedding'),null);assert.equal(await read('../private'),null);await assert.rejects(q('select * from public.cb_wedding_slug_names'),/permission/);await assert.rejects(q('select public.cb_allocate_wedding_slug($1,true)',[project.id]),/permission/);await as(0);});
+ await t.test('editing names does not break invitations',async()=>{site=await save(project.id,site.revision,{...content,names:'Wisdom & Levy Forever'});site=await act(project.id,site.revision,'publish');assert.equal(site.slug,'wisdom-and-levy');assert.equal((await read(site.slug)).names,'Wisdom & Levy Forever');});
+ await t.test('rotating invalidates the previous short link and reserves it permanently',async()=>{const old=site.slug;site=await act(project.id,site.revision,'rotate');assert.equal(site.slug,'wisdom-and-levy-forever');assert.equal(await read(old),null);assert.equal((await read(site.slug)).names,'Wisdom & Levy Forever');const third=await one("select * from public.cb_create_wedding_project('name:third','Third wedding','{}',0,'USD')");let copy=await save(third.id);copy=await act(third.id,copy.revision,'publish');assert.equal(copy.slug,'wisdom-and-levy-3');});
+ await t.test('unpublished websites and archived weddings remain unavailable by name',async()=>{const slug=site.slug;site=await act(project.id,site.revision,'unpublish');assert.equal(await read(slug),null);site=await act(project.id,site.revision,'publish');assert.equal(site.slug,slug);await db.exec('reset role');await q('update public.cb_projects set archived_at=now() where id=$1',[project.id]);await as(0);assert.equal(await read(slug),null);await db.exec('reset role');await q('update public.cb_projects set archived_at=null where id=$1',[project.id]);await db.exec(migration);await as(0);assert.equal((await read(slug)).names,'Wisdom & Levy Forever');});
+ await t.test('accented and non-Latin names always produce valid readable routes',async()=>{for(const [name,expected] of [['Chloé & José','chloe-and-jose'],['愛','our-wedding']]){const p=await one("select * from public.cb_create_wedding_project($1,'Wedding','{}',0,'USD')",[uuid()]);let copy=await save(p.id,0,{...content,names:name});copy=await act(p.id,copy.revision,'publish');assert.equal(copy.slug,expected);}});
+ }finally{await db.close();}
+});

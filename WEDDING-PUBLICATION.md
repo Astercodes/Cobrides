@@ -27,3 +27,9 @@ Every write checks current role/project state, expected revision and exact retry
 This phase provides hosted publication. RSVP remains the configured external form/email flow; shared guest records and native invitation-bound responses are the next phase. No invitations or messages are automatically sent.
 
 Run `node --test wedding-publication.sql.test.cjs wedding-site.api.test.cjs wedding-publication.ui.test.cjs celebration-studio.test.cjs` with `CB_PGLITE_PATH` and `CB_PLAYWRIGHT_PATH` configured. Covers draft separation, owner approvals, schema/privacy validation, anonymous access, retries/conflicts, withdrawal/rotation, archive/revocation, mobile review, copied photos and existing snapshot behavior. Real-account cross-device tests remain deferred at the user's request.
+
+## Wedding-name links
+
+Run `supabase/wedding-name-links.sql` after wedding-publication.sql. Existing sites are backfilled with a wedding-name URL such as `/wedding/wisdom-and-levy`; subsequent couples with the same name receive `-2`, `-3`, and so on. The address remains unchanged when draft names change or updates are published. Replacing the guest link reserves the old name and invalidates its route, preventing it from being reused for another wedding. Original token links continue to work until replaced or unpublished. Name-based links are public and guessable; only deliberately published content is returned. No private guest response or planning data is exposed. Vercel and the local preview server route these URLs to the guest website with root-relative assets.
+
+The website's Download a copy control has been removed, and its Desktop/Mobile preview selector uses the brand gradient.

@@ -40,5 +40,11 @@
     "api/board-import.js": {
       "maxDuration": 60
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/wedding/:slug",
+      "destination": "/celebrate.html"
+    }
+  ]
 }
