@@ -1,0 +1,19 @@
+# Standalone retailer purchase expenses
+
+Apply `supabase/retail-expenses.sql` after the installed shared finance stack (through shared-budgets.sql) and shared-shopping.sql. The standalone setup copy is `C:/Users/ayeni/Downloads/cobridey-retail-expenses.sql`. It preserves existing agreements, payment journals, settlements, schedules, contributions and files. If older finance migrations are rerun, apply retail-expenses.sql last again. The migration patches the currently installed ledger/report/deadline/support projections transactionally and rejects unrecognized definitions rather than silently excluding retailer records.
+
+Entry points:
+
+- Shopping & commerce → a personal item → Connect purchase to shared ledger.
+- Team shopping → Link existing expense → Create retailer expense, when the item has no existing expense link.
+- Shared expense ledger → Add retail purchase expense.
+
+The review form requires the item, retailer, original currency, total commitment, quantity, budget category and explicit confirmation. Optional product URL, order reference, purchase date and financial notes are preserved. Personal order/item totals can prefill the form but are never silently published. Retailer commitments use their native currency and the existing two-decimal ledger precision. Purchase date is not a payment date; creating an expense does not infer a payment, refund, order status or received contribution.
+
+`cb_shared_expenses` accepts either a genuine vendor booking or a standalone retailer source; no synthetic vendor/booking is created. A constraint rejects records without either source. Original totals and retailer details are preserved; subsequent amount changes use the existing reviewed-settlement workflow. Null-booking-safe ledger, report, budget, deadline and support projections include these expenses alongside vendor agreements. An explicit budget category is created atomically. The same schedules, append-only payment/refund journal, overpayment protection, reconciliation locks, receipt access and support-allocation integrity checks apply.
+
+Creation requires accepted planning plus financial permission and an unarchived project. Team shopping sources also require same-project list access, an active list and the current item revision. Expense creation, source link, item revision and version history commit together. Existing cost links prevent creation of another expense for the same team item. Personal references are scoped by owner/project/item; a fresh dialog can recover an existing expense by its reference. Native currency amounts are never added across currencies. Financial source metadata is not copied into operational shopping records or general project activity.
+
+Project locks serialize writes with permission changes. Client UUID/payload journals return the original result after an uncertain retry; altered retries and stale item versions fail with PT409. No direct authenticated or anonymous table grants are added. Financial readers may list references; creating records still requires planning permission. Source/version history remains private to authorized financial users. Membership or finance revocation blocks new access immediately.
+
+Validation covers migration replay with existing records, source constraints, permissions, safe links/dates/amounts, native-currency reports, category forecasts, deadlines, received-support assignments, private receipts, payment/refund retries, settlement/reconciliation controls, cross-wedding shopping rejection and atomic team links. Browser checks cover a 390-pixel layout, explicit confirmation, exact retries, existing-reference recovery, permission denial and authenticated entry points. The complete shared-finance runner includes the new SQL/browser suites; focused shopping and ledger browser checks and the production build also pass. Live multi-account/device testing remains deferred by the user.
