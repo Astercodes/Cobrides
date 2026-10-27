@@ -1,0 +1,9 @@
+# Bring your own shopping links
+
+Shopping & commerce opens My lists & inventory and offers Orders & deliveries as its second tab. The retailer catalog, discovery/sample cards and Open wardrobe shortcut were removed. Existing user-saved items and the separate Wardrobe & styling feature are preserved.
+
+Add product link accepts a user-selected HTTPS URL, calls the existing authenticated product reader and opens the existing commerce editor for review. Available title, merchant, image and native price metadata carry into the saved record. Users choose their own lists, quantity, size and deadlines. When the store cannot return details, Continue with this link preserves the URL for manual completion; Add item without a link opens the ordinary editor. Account/project checks prevent an asynchronous response opening an editor in another workspace. Matching existing product URLs open their existing record rather than immediately duplicating them.
+
+The existing lists workflow supports marking items already owned or recording an external order. Orders & deliveries retains processing, shipping, delivery, return and exchange records and user-entered tracking links. These are recorded updates, not automatic carrier synchronization. Saving an item never infers an order, payment or refund. Foreign price snapshots require a valid conversion rate before becoming a wedding-currency estimate; a missing rate is not replaced with 1:1.
+
+No new database migration is needed. Existing account cloud saving and shared team shopping remain in place. Validation: shopping-links.test.cjs, commerce.test.cjs and link-preview.test.cjs pass (four reported tests), covering reviewed URL imports, price/image persistence, duplicate reuse, blocked-provider fallback, manual entry, mobile layout, navigation removal, existing order lifecycle and safe link retrieval. Syntax and production build checks pass.
