@@ -10,21 +10,21 @@ body.workspace-app .page-heading .subtext{font-size:13px;line-height:1.6;color:#
 body.workspace-app .eyebrow{font-size:10px!important;font-weight:750!important;letter-spacing:.11em;color:#17181d!important}
 body.workspace-app :is(h2,h3){font-weight:680;letter-spacing:-.035em}
 /* Always open desktop chapters; mobile remains a menu drawer. */
-body.workspace-app #mobile-navigation{background:linear-gradient(165deg,#075259 0%,#043c43 55%,#122b40 100%)!important;border-right:1px solid #083e45!important;padding:28px 18px 18px!important;box-shadow:8px 0 32px #1030390a}
-body.workspace-app #mobile-navigation:before{height:3px!important;background:linear-gradient(90deg,#ff7030,#ed087f,#9f56de,#00c3ab)!important}
+body.workspace-app #mobile-navigation{background:linear-gradient(165deg,#a00860 0%,#7a0e67 52%,#4e176f 100%)!important;border-right:1px solid #76105f!important;padding:28px 18px 18px!important;box-shadow:8px 0 32px #1030390a}
+body.workspace-app #mobile-navigation:before{height:3px!important;background:linear-gradient(90deg,#ff7030,#ed087f,#9f56de,#7619b2)!important}
 body.workspace-app #mobile-navigation :is(.brand,.brand span,.brand-sub,.sidebar-settings,.sidebar-settings span,.sidebar-settings svg,.mobile-menu-close){color:#fff!important;opacity:1!important;text-shadow:none}
 body.workspace-app #mobile-navigation .brand{font-size:29px!important;font-weight:750!important;letter-spacing:-1.2px!important;padding:5px 8px 10px;line-height:1.25}
 body.workspace-app #mobile-navigation .brand span{font-size:10.5px!important;font-weight:550!important;letter-spacing:.015em!important;margin-top:10px;white-space:normal}
 body.workspace-app #mobile-navigation .brand-mark{width:32px;height:32px;background:#fff;border-radius:10px;padding:3px;margin-right:7px;vertical-align:middle}
-body.workspace-app #mobile-navigation #nav{margin-top:20px;scrollbar-color:#89b9bb66 transparent;scrollbar-width:thin;padding-right:5px}
+body.workspace-app #mobile-navigation #nav{margin-top:20px;scrollbar-color:#ffd1e688 transparent;scrollbar-width:thin;padding-right:5px}
 body.workspace-app #mobile-navigation #nav :is(h2,a,span,small,strong,b,svg){color:#fff!important;opacity:1!important;-webkit-text-fill-color:#fff!important;text-shadow:none}
 body.workspace-app #mobile-navigation #nav .nav-group{border-top:1px solid #ffffff20!important;margin-top:16px;padding-top:14px}
 body.workspace-app #mobile-navigation #nav .nav-group h2{font-size:10.5px!important;font-weight:750!important;line-height:1.55!important;letter-spacing:.025em!important;border-left:2px solid #fa55a1!important;padding:0 10px!important;margin:0 0 8px 4px!important}
-body.workspace-app #mobile-navigation #nav .nav-group:nth-child(3n) h2{border-left-color:#53d8c5!important}
+body.workspace-app #mobile-navigation #nav .nav-group:nth-child(3n) h2{border-left-color:#d8a0ff!important}
 body.workspace-app #mobile-navigation #nav .nav-group:nth-child(3n+1) h2{border-left-color:#ffb052!important}
 body.workspace-app #mobile-navigation #nav .nav-group>div{border:0!important;margin:0!important;padding:0!important}
 body.workspace-app #mobile-navigation #nav a{font-size:12.5px!important;font-weight:500!important;line-height:1.4;min-height:37px;padding:9px 12px 9px 19px!important;border:1px solid transparent!important;border-radius:10px!important;background:transparent!important;margin:2px 0!important;box-shadow:none!important}
-body.workspace-app #mobile-navigation #nav a:before{background:#8ed5d1!important;width:3px;height:3px;left:8px}
+body.workspace-app #mobile-navigation #nav a:before{background:#ffbcdf!important;width:3px;height:3px;left:8px}
 body.workspace-app #mobile-navigation #nav a:hover:not(.active){background:#ffffff12!important;border-color:#ffffff1a!important;transform:none}
 body.workspace-app #mobile-navigation #nav a.active{background:linear-gradient(110deg,#c21177,#8c2ca3)!important;border-color:#f57cbe70!important;box-shadow:0 5px 14px #001b2a40,inset 3px 0 #ffb9dc!important;font-weight:700!important}
 body.workspace-app #mobile-navigation #nav a.active:before{background:#fff!important}
@@ -79,7 +79,7 @@ body.workspace-app .outgoing .message-bubble :is(p,span,strong,small,a,div),body
 body.workspace-app :is(.sv-dialog,.pn-dialog,.ca-dialog,.sn-collection-dialog){border-color:#cfd7e1;box-shadow:0 24px 90px #122c3b2b}
 /* The same finish follows authenticated professional/participant screens. */
 body[data-participant]{background:#f4f6f9}
-body[data-participant] aside{background:linear-gradient(165deg,#075259,#122b40)!important;border-color:#0a4048!important}
+body[data-participant] aside{background:linear-gradient(165deg,#a00860,#4e176f)!important;border-color:#76105f!important}
 body[data-participant] aside :is(h2,h3,p,span,small,a,button){color:#fff!important;opacity:1!important}
 body[data-participant] aside nav .selected{background:linear-gradient(110deg,#b40066,#832898)!important;border-color:#ca61aa!important;color:#fff!important}
 body:has(#sv-app){background:#f4f6f9}
