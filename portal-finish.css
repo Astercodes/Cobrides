@@ -1,3 +1,4 @@
+@font-face{font-family:"Outfit";src:url("assets/fonts/outfit-variable.ttf") format("truetype");font-style:normal;font-weight:100 900;font-display:swap}
 /* Cobridey portal finish: real content, crisp type, rich brand surfaces. */
 :root{--cb-ink:#101116;--cb-paper:#f4f6f9;--cb-line:#dce1e8;--cb-teal:#004f55;--cb-deep:#07383e;--cb-magenta:#b40066;--cb-violet:#70249b;--cb-orange:#f27424;--cb-shadow:0 2px 3px #17233303,0 12px 28px #17233307;--pink:#b40066;--teal:#006d70;--purple:#70249b;--ink:#101116;--muted:#17181d;--line:#dce1e8}
 body.workspace-app{background:var(--cb-paper)!important;color:var(--cb-ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:14px;text-rendering:optimizeLegibility}
@@ -108,3 +109,22 @@ body.workspace-app .ps-tabs{gap:6px;padding-bottom:8px;border-bottom-color:#dbe2
 
 body.workspace-app .page-heading{justify-content:flex-start;gap:12px}body.workspace-app .page-heading>div:first-child{margin-right:auto;min-width:0}body.workspace-app .outgoing .message-bubble time{color:#fff!important;opacity:1!important}@media(max-width:700px){body.workspace-app .page-heading>div:first-child{flex-basis:100%}}
 body[data-participant] aside button:not(.selected){background:#ffffff0d!important;border-color:#ffffff25!important;color:#fff!important}body:has(#sv-app) .sv-card{background:#fff;border-color:#dce1e8;border-radius:17px;box-shadow:var(--cb-shadow)}
+
+/* Geometric reference typography: real variable-font weights, never simulated strokes. */
+:root{--cb-font:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body.workspace-app,body[data-participant],body:has(#sv-app),body:has(#setup-content){font-family:var(--cb-font)!important;font-weight:400;font-kerning:normal;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:auto}
+:is(body.workspace-app,body[data-participant],body:has(#sv-app),body:has(#setup-content)) :is(h1,h2,h3,h4,h5,h6,p,a,button,input,textarea,select,label,small,span,strong,b,li,dt,dd,td,th,summary,time){font-family:var(--cb-font)!important;font-synthesis:none}
+body.workspace-app #app :is(p,label,small,li,dt,dd,td,time){font-weight:450!important;opacity:1!important;text-shadow:none;letter-spacing:0}
+body.workspace-app #app :is(label,th,summary){font-weight:550!important}
+body.workspace-app #app :is(input,select,textarea){font-weight:450!important}
+body.workspace-app .page-heading h1{font-weight:600!important;letter-spacing:-.035em;line-height:1.2}
+body.workspace-app #app :is(h2,h3,h4){font-weight:600!important;letter-spacing:-.025em}
+body.workspace-app #app :is(strong,b){font-weight:600}
+body.workspace-app #app .eyebrow{font-weight:600!important}
+body.workspace-app :is(.stat-value,.finance-card strong,.gs-metrics strong,.js-summary strong,.st-summary strong,.rf-metrics strong,.finance-overview h2,.finance-funding>strong,.sp-progress strong){font-weight:650!important;letter-spacing:-.035em}
+body.workspace-app #mobile-navigation{-webkit-font-smoothing:antialiased}
+body.workspace-app #mobile-navigation .brand{font-weight:650!important;letter-spacing:-.04em!important}
+body.workspace-app #mobile-navigation #nav .nav-group h2{font-weight:600!important}
+body.workspace-app #mobile-navigation #nav a{font-weight:450!important}
+body.workspace-app #mobile-navigation #nav a.active{font-weight:600!important}
+body.workspace-app :is(.subtext,.subtitle-note,.finance-stats small,.stat small,.gs-person small,.ps-card p,.vs-card-copy p){font-size:12px;line-height:1.65}
