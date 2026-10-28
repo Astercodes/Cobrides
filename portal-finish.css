@@ -1,0 +1,110 @@
+/* Cobridey portal finish: real content, crisp type, rich brand surfaces. */
+:root{--cb-ink:#101116;--cb-paper:#f4f6f9;--cb-line:#dce1e8;--cb-teal:#004f55;--cb-deep:#07383e;--cb-magenta:#b40066;--cb-violet:#70249b;--cb-orange:#f27424;--cb-shadow:0 2px 3px #17233303,0 12px 28px #17233307;--pink:#b40066;--teal:#006d70;--purple:#70249b;--ink:#101116;--muted:#17181d;--line:#dce1e8}
+body.workspace-app{background:var(--cb-paper)!important;color:var(--cb-ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:14px;text-rendering:optimizeLegibility}
+body.workspace-app #app{padding:30px 36px 44px;max-width:1600px}
+body.workspace-app main>header{background:#fff!important;background-image:none!important;border-bottom:1px solid var(--cb-line)!important;border-image:none!important;box-shadow:0 2px 10px #14252b03;min-height:76px}
+body.workspace-app main>header:after{display:none!important}
+body.workspace-app .page-heading{margin-bottom:24px;gap:20px}
+body.workspace-app .page-heading h1{font-size:32px!important;line-height:1.15;font-weight:730!important;letter-spacing:-1.15px;margin:7px 0 10px}
+body.workspace-app .page-heading .subtext{font-size:13px;line-height:1.6;color:#17181d!important}
+body.workspace-app .eyebrow{font-size:10px!important;font-weight:750!important;letter-spacing:.11em;color:#17181d!important}
+body.workspace-app :is(h2,h3){font-weight:680;letter-spacing:-.035em}
+/* Always open desktop chapters; mobile remains a menu drawer. */
+body.workspace-app #mobile-navigation{background:linear-gradient(165deg,#075259 0%,#043c43 55%,#122b40 100%)!important;border-right:1px solid #083e45!important;padding:28px 18px 18px!important;box-shadow:8px 0 32px #1030390a}
+body.workspace-app #mobile-navigation:before{height:3px!important;background:linear-gradient(90deg,#ff7030,#ed087f,#9f56de,#00c3ab)!important}
+body.workspace-app #mobile-navigation :is(.brand,.brand span,.brand-sub,.sidebar-settings,.sidebar-settings span,.sidebar-settings svg,.mobile-menu-close){color:#fff!important;opacity:1!important;text-shadow:none}
+body.workspace-app #mobile-navigation .brand{font-size:29px!important;font-weight:750!important;letter-spacing:-1.2px!important;padding:5px 8px 10px;line-height:1.25}
+body.workspace-app #mobile-navigation .brand span{font-size:10.5px!important;font-weight:550!important;letter-spacing:.015em!important;margin-top:10px;white-space:normal}
+body.workspace-app #mobile-navigation .brand-mark{width:32px;height:32px;background:#fff;border-radius:10px;padding:3px;margin-right:7px;vertical-align:middle}
+body.workspace-app #mobile-navigation #nav{margin-top:20px;scrollbar-color:#89b9bb66 transparent;scrollbar-width:thin;padding-right:5px}
+body.workspace-app #mobile-navigation #nav :is(h2,a,span,small,strong,b,svg){color:#fff!important;opacity:1!important;-webkit-text-fill-color:#fff!important;text-shadow:none}
+body.workspace-app #mobile-navigation #nav .nav-group{border-top:1px solid #ffffff20!important;margin-top:16px;padding-top:14px}
+body.workspace-app #mobile-navigation #nav .nav-group h2{font-size:10.5px!important;font-weight:750!important;line-height:1.55!important;letter-spacing:.025em!important;border-left:2px solid #fa55a1!important;padding:0 10px!important;margin:0 0 8px 4px!important}
+body.workspace-app #mobile-navigation #nav .nav-group:nth-child(3n) h2{border-left-color:#53d8c5!important}
+body.workspace-app #mobile-navigation #nav .nav-group:nth-child(3n+1) h2{border-left-color:#ffb052!important}
+body.workspace-app #mobile-navigation #nav .nav-group>div{border:0!important;margin:0!important;padding:0!important}
+body.workspace-app #mobile-navigation #nav a{font-size:12.5px!important;font-weight:500!important;line-height:1.4;min-height:37px;padding:9px 12px 9px 19px!important;border:1px solid transparent!important;border-radius:10px!important;background:transparent!important;margin:2px 0!important;box-shadow:none!important}
+body.workspace-app #mobile-navigation #nav a:before{background:#8ed5d1!important;width:3px;height:3px;left:8px}
+body.workspace-app #mobile-navigation #nav a:hover:not(.active){background:#ffffff12!important;border-color:#ffffff1a!important;transform:none}
+body.workspace-app #mobile-navigation #nav a.active{background:linear-gradient(110deg,#c21177,#8c2ca3)!important;border-color:#f57cbe70!important;box-shadow:0 5px 14px #001b2a40,inset 3px 0 #ffb9dc!important;font-weight:700!important}
+body.workspace-app #mobile-navigation #nav a.active:before{background:#fff!important}
+body.workspace-app #mobile-navigation #nav .nav-essentials a{min-height:42px;padding-left:14px!important;font-size:13px!important}
+body.workspace-app #mobile-navigation .sidebar-settings{background:#ffffff0b!important;border:1px solid #ffffff35!important;border-radius:12px!important;box-shadow:none!important;margin-top:14px!important;padding:13px 14px!important;font-weight:650!important}
+body.workspace-app #mobile-navigation .sidebar-settings:hover{background:#ffffff18!important}
+body.workspace-app #mobile-navigation .mobile-menu-close{background:#ffffff10!important;border-color:#ffffff40!important}
+/* Clear edges and measured depth throughout the workspace. */
+body.workspace-app :is(.panel,.module,.js-project-card,.js-event-card,.ps-card,.vendor-market-card,.vs-relationship,.shop-product,.rs-product,.gs-roster,.gs-households,.st-panel,.st-table-card,.rf-cards article,.rg-cards article,.sn-proof,.hm-card,.hst-card){border-color:var(--cb-line)!important;border-radius:17px;box-shadow:var(--cb-shadow)!important}
+body.workspace-app :is(.panel,.ps-card,.vendor-market-body,.shop-product-copy,.rs-product-copy){background:#fff}
+body.workspace-app :is(.panel,.js-project-card,.ps-card,.vendor-market-card,.shop-product,.rs-product):hover{border-color:#c9c3d5!important}
+body.workspace-app :is(.stats,.finance-cards,.planning-mini-stats,.finance-stats,.gx-stats,.gs-metrics,.vs-metrics,.ss-summary,.js-summary)>:is(div,article,.stat){border:1px solid var(--cb-line)!important;border-top:3px solid #b40066!important;background:#fff!important;border-radius:15px!important;box-shadow:var(--cb-shadow)!important;color:#101116!important}
+body.workspace-app :is(.stats,.finance-cards,.planning-mini-stats,.finance-stats,.gx-stats,.gs-metrics,.vs-metrics,.ss-summary,.js-summary)>:nth-child(4n+2){border-top-color:#d66213!important}
+body.workspace-app :is(.stats,.finance-cards,.planning-mini-stats,.finance-stats,.gx-stats,.gs-metrics,.vs-metrics,.ss-summary,.js-summary)>:nth-child(4n+3){border-top-color:#007b7b!important}
+body.workspace-app :is(.stats,.finance-cards,.planning-mini-stats,.finance-stats,.gx-stats,.gs-metrics,.vs-metrics,.ss-summary,.js-summary)>:nth-child(4n){border-top-color:#7838ac!important}
+body.workspace-app :is(.stat-value,.finance-card strong,.gs-metrics strong,.js-summary strong,.st-summary strong,.rf-metrics strong){font-variant-numeric:tabular-nums;font-weight:750!important;letter-spacing:-.045em;line-height:1.15}
+/* Saturated action colours with opaque white lettering. */
+body.workspace-app :is(.button.primary,button.primary,.action),:is(.sv-dialog,.pn-dialog,.ca-dialog) :is(.button.primary,button.primary,.pn-primary){background:linear-gradient(115deg,#b40066,#832898)!important;border:1px solid #99206f!important;color:#fff!important;box-shadow:0 3px 7px #82094c18,0 1px 0 #ffffff20 inset!important;font-weight:650!important;border-radius:11px!important;min-height:40px}
+body.workspace-app :is(.button.primary,button.primary,.action) :is(span,strong,b,small,svg),:is(.sv-dialog,.pn-dialog,.ca-dialog) :is(.primary,.pn-primary) :is(span,strong,b,small,svg){color:#fff!important;opacity:1!important}
+body.workspace-app :is(.button.primary,button.primary,.action):hover{background:linear-gradient(115deg,#c51276,#922ba9)!important;box-shadow:0 6px 16px #8e0c5c24!important;transform:translateY(-1px)}
+body.workspace-app .button:not(.primary){border:1px solid #cfd5df!important;background:#fff!important;color:#101116!important;border-radius:11px;font-weight:600;box-shadow:0 1px 2px #14202b04}
+body.workspace-app :is(input:not([type=checkbox]):not([type=radio]):not([type=color]),select,textarea){background:#fff;border-color:#cbd2dd!important;color:#101116!important;border-radius:10px;box-shadow:0 1px 2px #15233204 inset}
+body.workspace-app :is(input,textarea)::placeholder{color:#242832!important;opacity:.8!important}
+body.workspace-app :is(a,button,input,select,textarea):focus-visible{outline:3px solid #009f9d!important;outline-offset:3px}
+body.workspace-app :is(input[type=checkbox],input[type=radio]){accent-color:#b40066}
+body.workspace-app :is(.project-bar,.project-switcher){background:#fff!important;border:1px solid var(--cb-line)!important;border-left:3px solid #007b7b!important;box-shadow:0 2px 6px #17233304!important;border-radius:12px!important;padding:14px 18px!important}
+body.workspace-app :is(.project-bar,.project-switcher) select{background:#f7f8fb!important;border:1px solid #cfd6df!important;font-weight:600}
+body.workspace-app :is(.ps-tabs,.vendor-tabs,.rs-top-tabs,.st-tabs,.rf-tabs,.pn-tabs,.gs-chips,.experience-tabs,.vs-tabs,.ts-tabs,.hm-tabs,.home-tabs,.faith-tabs,.legal-tabs,.gs-view-tabs) :is(button.selected,button.active,a.active,button.primary,[aria-pressed=true],[aria-selected=true],[aria-current=page]){background:linear-gradient(110deg,#005d64,#087b7b)!important;border-color:#076b70!important;color:#fff!important;box-shadow:0 2px 6px #003c4918!important;font-weight:650!important}
+body.workspace-app :is(.ps-tabs,.vendor-tabs,.rs-top-tabs,.st-tabs,.rf-tabs,.pn-tabs,.gs-chips,.experience-tabs,.vs-tabs,.ts-tabs,.hm-tabs,.home-tabs,.faith-tabs,.legal-tabs,.gs-view-tabs) :is(.selected,.active,.primary,[aria-pressed=true],[aria-selected=true],[aria-current=page]) :is(span,strong,b,small){color:#fff!important;opacity:1!important}
+body.workspace-app :is(th,.table-head){background:#f0f3f7!important;color:#111!important;font-weight:700;letter-spacing:.035em}
+body.workspace-app :is(.progress,.js-progress,.js-budget-track){background:#e8edf2}
+body.workspace-app :is(.progress,.js-progress,.js-budget-track)>i{background:linear-gradient(90deg,#007b7b,#12b59f)}
+/* Central: a compact jewel-tone anchor, with truthful existing progress. */
+body.workspace-app .sp-central-intro.panel{background:radial-gradient(ellipse at 90% 0%,#0a7a7c70,transparent 65%),linear-gradient(115deg,#093b43,#122c42)!important;border:1px solid #1d5863!important;border-top:3px solid #0db5a7!important;padding:28px!important;box-shadow:0 10px 26px #10333d16!important;min-height:210px}
+body.workspace-app .sp-central-intro :is(h2,p,span,strong,.eyebrow,div){color:#fff!important;opacity:1!important}
+body.workspace-app .sp-central-intro h2{font-size:31px;line-height:1.13;letter-spacing:-1.1px}
+body.workspace-app .sp-central-intro .eyebrow{font-size:10px!important;font-weight:700!important}
+body.workspace-app .sp-central-intro .button{background:#ffffff12!important;border:1px solid #ffffff55!important;color:#fff!important;box-shadow:none!important}
+body.workspace-app .sp-progress{width:142px;height:142px;background:radial-gradient(closest-side,#103943 83%,transparent 84%),conic-gradient(#4ce1c7 var(--progress),#ffffff23 0);box-shadow:0 0 0 1px #ffffff10}
+body.workspace-app .sp-progress strong{font-size:35px;font-weight:750;font-variant-numeric:tabular-nums}
+body.workspace-app .sp-progress span{font-size:11px;font-weight:550}
+body.workspace-app .sp-up-next.panel{background:#fff!important;border-top:3px solid #7b329e!important}
+body.workspace-app .sp-next{padding:19px 0;border-bottom-color:#e2e7ee}
+body.workspace-app .sp-next>b{color:#a60061!important;font-size:21px;font-weight:750}
+body.workspace-app .sp-next strong{font-weight:650!important;font-size:14px}
+body.workspace-app .sp-next small{font-size:12px;line-height:1.65;margin-top:5px}
+body.workspace-app .sp-up-next .countdown>div{background:#f2f6f8!important;border:1px solid #d8e2e8!important;border-radius:12px}
+/* Keep white copy genuinely white on photographic and messaging surfaces. */
+body.workspace-app :is(.ts-hero-image,.memory-cover,.hm-destination-image) :is(span,strong,small,h2,h3,p){color:#fff!important;opacity:1!important;text-shadow:0 1px 3px #0008}
+body.workspace-app .outgoing .message-bubble{background:linear-gradient(125deg,#155bc0,#226dd3)!important;border-color:#185ebf!important}
+body.workspace-app .outgoing .message-bubble :is(p,span,strong,small,a,div),body.workspace-app .outgoing .message-bubble{color:#fff!important;opacity:1!important}
+body.workspace-app :is(.sv-dialog,.pn-dialog,.ca-dialog,.sn-collection-dialog){border-color:#cfd7e1;box-shadow:0 24px 90px #122c3b2b}
+/* The same finish follows authenticated professional/participant screens. */
+body[data-participant]{background:#f4f6f9}
+body[data-participant] aside{background:linear-gradient(165deg,#075259,#122b40)!important;border-color:#0a4048!important}
+body[data-participant] aside :is(h2,h3,p,span,small,a,button){color:#fff!important;opacity:1!important}
+body[data-participant] aside nav .selected{background:linear-gradient(110deg,#b40066,#832898)!important;border-color:#ca61aa!important;color:#fff!important}
+body:has(#sv-app){background:#f4f6f9}
+body:has(#sv-app)>header{background:#064b52;border-bottom:1px solid #155f66}
+body:has(#sv-app)>header :is(a,span){color:#fff!important;opacity:1!important}
+@media(min-width:1001px){body.workspace-app main>header{justify-content:flex-end;gap:16px}}
+@media(max-width:1000px){body.workspace-app #app{padding:24px 18px 36px}body.workspace-app #mobile-navigation{padding:26px 18px 16px!important}body.workspace-app #mobile-navigation .brand{margin-top:26px}body.workspace-app main>header{min-height:70px}body.workspace-app .page-heading h1{font-size:29px!important}}
+@media(max-width:600px){body.workspace-app #app{padding:22px 16px 32px}body.workspace-app .page-heading h1{font-size:28px!important}body.workspace-app .page-heading{gap:14px}body.workspace-app .sp-central-intro.panel{padding:22px!important;min-height:180px;gap:16px}body.workspace-app .sp-central-intro h2{font-size:25px}body.workspace-app .sp-progress{width:100px;height:100px}body.workspace-app .sp-progress strong{font-size:27px}body.workspace-app .sp-progress span{font-size:9px;text-align:center}body.workspace-app .sp-central-grid{gap:16px}}
+@media(prefers-reduced-motion:reduce){body.workspace-app *,body.workspace-app *:before,body.workspace-app *:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* A board label sits on a light surface, never on its thumbnail. */
+body.workspace-app .vs-collection-cover :is(span,strong,small,p){color:#101116!important;opacity:1!important;text-shadow:none!important}
+body.workspace-app .vision-refined .vs-tabs .button.primary{background:linear-gradient(110deg,#005d64,#087b7b)!important;border-color:#076b70!important;color:#fff!important}
+body.workspace-app .finance-overview{background:radial-gradient(ellipse at 90% 0%,#842b8a66,transparent 70%),linear-gradient(115deg,#3c153f,#261e46)!important;border:1px solid #63365e!important;border-top:3px solid #d6409c!important;box-shadow:0 12px 30px #38203b18!important;border-radius:18px;padding:27px!important;gap:24px!important;min-height:0!important}
+body.workspace-app .finance-overview :is(h2,p,span,strong,small,div,.eyebrow){color:#fff!important;opacity:1!important}
+body.workspace-app .finance-overview h2{font-family:inherit!important;font-size:45px!important;font-weight:730!important;letter-spacing:-1.5px;line-height:1.15;margin:19px 0}
+body.workspace-app .finance-funding{background:transparent!important;border:0!important;border-left:1px solid #ffffff35!important;padding:0 0 0 28px!important}
+body.workspace-app .finance-funding>strong{font-family:inherit!important;font-size:32px!important;font-weight:700!important;font-variant-numeric:tabular-nums;line-height:1.2}
+body.workspace-app .finance-overview .button:not(.primary){background:#fff!important;border-color:#ffffff80!important;color:#111!important}
+body.workspace-app .finance-overview .vc-actions{grid-column:1/-1;margin:0;padding:0}
+body.workspace-app .finance-overview .finance-meter{background:#ffffff2b;height:6px}
+body.workspace-app .finance-overview .finance-meter i{background:linear-gradient(90deg,#ff6eb8,#ffbc68)}
+@media(max-width:600px){body.workspace-app .finance-overview{padding:22px!important;gap:22px!important}body.workspace-app .finance-funding{border-left:0!important;border-top:1px solid #ffffff35!important;padding:20px 0 0!important}body.workspace-app .finance-overview h2{font-size:34px!important}body.workspace-app .button{min-height:44px}}
+
+body.workspace-app .ps-tabs{gap:6px;padding-bottom:8px;border-bottom-color:#dbe2e9}body.workspace-app .ps-tabs button{padding:10px 16px!important;border-radius:10px!important;border:1px solid transparent;min-height:40px;line-height:1.3;font-weight:600}body.workspace-app :is(.js-project-status,.js-project-index,.vendor-cover>span){color:#101116!important;text-shadow:none!important}
+
+body.workspace-app .page-heading{justify-content:flex-start;gap:12px}body.workspace-app .page-heading>div:first-child{margin-right:auto;min-width:0}body.workspace-app .outgoing .message-bubble time{color:#fff!important;opacity:1!important}@media(max-width:700px){body.workspace-app .page-heading>div:first-child{flex-basis:100%}}
+body[data-participant] aside button:not(.selected){background:#ffffff0d!important;border-color:#ffffff25!important;color:#fff!important}body:has(#sv-app) .sv-card{background:#fff;border-color:#dce1e8;border-radius:17px;box-shadow:var(--cb-shadow)}
