@@ -5,3 +5,5 @@ Central uses compact charcoal cards with crisp Outfit typography and warm brand 
 The dashboard summarizes actual task completion by workstream, one currency at a time for budgets, reception guest responses, upcoming tasks and celebrations, and a live wedding-day countdown. Empty accounts receive empty states rather than example figures. Shared reads are scoped to the signed-in account and active project; the dashboard does not write records.
 
 Validation: model tests cover empty states, category aggregation, overdue tasks and signed payments. Browser tests cover shared reads, task deduplication, currency separation and mobile layout. The portal preview checks 13 routes, mobile navigation and horizontal overflow. Real-account multi-device testing remains deferred by the user.
+
+Chart-led revision: readiness now uses vertical percentage columns; budget uses comparable amount columns; the eight-week area chart shows open tasks due each week (not historical completion); RSVP uses a larger ring. Values and tooltips derive from current records. Undated, overdue and completed tasks are excluded from the forward workload chart.
