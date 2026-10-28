@@ -11,7 +11,7 @@ body.workspace-app .page-heading .subtext{font-size:13px;line-height:1.6;color:#
 body.workspace-app .eyebrow{font-size:10px!important;font-weight:750!important;letter-spacing:.11em;color:#17181d!important}
 body.workspace-app :is(h2,h3){font-weight:680;letter-spacing:-.035em}
 /* Always open desktop chapters; mobile remains a menu drawer. */
-body.workspace-app #mobile-navigation{background:linear-gradient(165deg,#c4470e 0%,#ce3927 30%,#d12650 62%,#bf227e 90%,#943aa2 100%)!important;border-right:1px solid #c34337!important;padding:28px 18px 18px!important;box-shadow:8px 0 32px #1030390a}
+body.workspace-app #mobile-navigation{background:linear-gradient(165deg,#bf4514 0%,#c53b36 52%,#bf285e 100%)!important;border-right:1px solid #c34337!important;padding:28px 18px 18px!important;box-shadow:8px 0 32px #1030390a}
 body.workspace-app #mobile-navigation:before{height:3px!important;background:linear-gradient(90deg,#ff8b25 0%,#ff622d 40%,#ef287e 88%,#a655cf 100%)!important}
 body.workspace-app #mobile-navigation :is(.brand,.brand span,.brand-sub,.sidebar-settings,.sidebar-settings span,.sidebar-settings svg,.mobile-menu-close){color:#fff!important;opacity:1!important;text-shadow:none}
 body.workspace-app #mobile-navigation .brand{font-size:29px!important;font-weight:750!important;letter-spacing:-1.2px!important;padding:5px 8px 10px;line-height:1.25}
@@ -20,11 +20,11 @@ body.workspace-app #mobile-navigation .brand-mark{width:32px;height:32px;backgro
 body.workspace-app #mobile-navigation #nav{margin-top:20px;scrollbar-color:#ffd1e688 transparent;scrollbar-width:thin;padding-right:5px}
 body.workspace-app #mobile-navigation #nav :is(h2,a,span,small,strong,b,svg){color:#fff!important;opacity:1!important;-webkit-text-fill-color:#fff!important;text-shadow:none}
 body.workspace-app #mobile-navigation #nav .nav-group{border-top:1px solid #ffffff20!important;margin-top:16px;padding-top:14px}
-body.workspace-app #mobile-navigation #nav .nav-group h2{font-size:10.5px!important;font-weight:750!important;line-height:1.55!important;letter-spacing:.025em!important;border-left:2px solid #fa55a1!important;padding:0 10px!important;margin:0 0 8px 4px!important}
+body.workspace-app #mobile-navigation #nav .nav-group h2{font-size:13px!important;font-weight:750!important;line-height:1.55!important;letter-spacing:.025em!important;border-left:2px solid #fa55a1!important;padding:0 10px!important;margin:0 0 8px 4px!important}
 body.workspace-app #mobile-navigation #nav .nav-group:nth-child(3n) h2{border-left-color:#d8a0ff!important}
 body.workspace-app #mobile-navigation #nav .nav-group:nth-child(3n+1) h2{border-left-color:#ffb052!important}
 body.workspace-app #mobile-navigation #nav .nav-group>div{border:0!important;margin:0!important;padding:0!important}
-body.workspace-app #mobile-navigation #nav a{font-size:12.5px!important;font-weight:500!important;line-height:1.4;min-height:37px;padding:9px 12px 9px 19px!important;border:1px solid transparent!important;border-radius:10px!important;background:transparent!important;margin:2px 0!important;box-shadow:none!important}
+body.workspace-app #mobile-navigation #nav a{font-size:15px!important;font-weight:500!important;line-height:1.4;min-height:37px;padding:9px 12px 9px 19px!important;border:1px solid transparent!important;border-radius:10px!important;background:transparent!important;margin:2px 0!important;box-shadow:none!important}
 body.workspace-app #mobile-navigation #nav a:before{background:#ffbcdf!important;width:3px;height:3px;left:8px}
 body.workspace-app #mobile-navigation #nav a:hover:not(.active){background:#ffffff12!important;border-color:#ffffff1a!important;transform:none}
 body.workspace-app #mobile-navigation #nav a.active{background:linear-gradient(110deg,#ffffff27,#ffffff12)!important;border-color:#f57cbe70!important;box-shadow:0 5px 14px #001b2a40,inset 3px 0 #ffb9dc!important;font-weight:700!important}
@@ -43,9 +43,9 @@ body.workspace-app :is(.stats,.finance-cards,.planning-mini-stats,.finance-stats
 body.workspace-app :is(.stats,.finance-cards,.planning-mini-stats,.finance-stats,.gx-stats,.gs-metrics,.vs-metrics,.ss-summary,.js-summary)>:nth-child(4n){border-top-color:#7838ac!important}
 body.workspace-app :is(.stat-value,.finance-card strong,.gs-metrics strong,.js-summary strong,.st-summary strong,.rf-metrics strong){font-variant-numeric:tabular-nums;font-weight:750!important;letter-spacing:-.045em;line-height:1.15}
 /* Saturated action colours with opaque white lettering. */
-body.workspace-app :is(.button.primary,button.primary,.action),:is(.sv-dialog,.pn-dialog,.ca-dialog) :is(.button.primary,button.primary,.pn-primary){background:linear-gradient(115deg,#c4470e 0%,#ce3927 35%,#d12650 65%,#bf227e 90%,#943aa2 100%)!important;border:1px solid #99206f!important;color:#fff!important;box-shadow:0 3px 7px #82094c18,0 1px 0 #ffffff20 inset!important;font-weight:650!important;border-radius:11px!important;min-height:40px}
+body.workspace-app :is(.button.primary,button.primary,.action),:is(.sv-dialog,.pn-dialog,.ca-dialog) :is(.button.primary,button.primary,.pn-primary){background:linear-gradient(115deg,#c4471c 0%,#c63b3b 55%,#bf285e 100%)!important;border:1px solid #99206f!important;color:#fff!important;box-shadow:0 3px 7px #82094c18,0 1px 0 #ffffff20 inset!important;font-weight:650!important;border-radius:11px!important;min-height:40px}
 body.workspace-app :is(.button.primary,button.primary,.action) :is(span,strong,b,small,svg),:is(.sv-dialog,.pn-dialog,.ca-dialog) :is(.primary,.pn-primary) :is(span,strong,b,small,svg){color:#fff!important;opacity:1!important}
-body.workspace-app :is(.button.primary,button.primary,.action):hover{background:linear-gradient(115deg,#bd410c 0%,#ca3225 35%,#ca1d48 65%,#b91c75 90%,#8e329c 100%)!important;box-shadow:0 6px 16px #8e0c5c24!important;transform:translateY(-1px)}
+body.workspace-app :is(.button.primary,button.primary,.action):hover{background:linear-gradient(115deg,#b83e18 0%,#bb3237 55%,#b32355 100%)!important;box-shadow:0 6px 16px #8e0c5c24!important;transform:translateY(-1px)}
 body.workspace-app .button:not(.primary){border:1px solid #cfd5df!important;background:#fff!important;color:#101116!important;border-radius:11px;font-weight:600;box-shadow:0 1px 2px #14202b04}
 body.workspace-app :is(input:not([type=checkbox]):not([type=radio]):not([type=color]),select,textarea){background:#fff;border-color:#cbd2dd!important;color:#101116!important;border-radius:10px;box-shadow:0 1px 2px #15233204 inset}
 body.workspace-app :is(input,textarea)::placeholder{color:#242832!important;opacity:.8!important}
@@ -80,7 +80,7 @@ body.workspace-app .outgoing .message-bubble :is(p,span,strong,small,a,div),body
 body.workspace-app :is(.sv-dialog,.pn-dialog,.ca-dialog,.sn-collection-dialog){border-color:#cfd7e1;box-shadow:0 24px 90px #122c3b2b}
 /* The same finish follows authenticated professional/participant screens. */
 body[data-participant]{background:#f4f6f9}
-body[data-participant] aside{background:linear-gradient(165deg,#c4470e 0%,#ce3927 30%,#d12650 62%,#bf227e 90%,#943aa2 100%)!important;border-color:#76105f!important}
+body[data-participant] aside{background:linear-gradient(165deg,#bf4514 0%,#c53b36 52%,#bf285e 100%)!important;border-color:#76105f!important}
 body[data-participant] aside :is(h2,h3,p,span,small,a,button){color:#fff!important;opacity:1!important}
 body[data-participant] aside nav .selected{background:linear-gradient(110deg,#ffffff27,#ffffff12)!important;border-color:#ca61aa!important;color:#fff!important}
 body:has(#sv-app){background:#f4f6f9}
@@ -94,7 +94,7 @@ body:has(#sv-app)>header :is(a,span){color:#fff!important;opacity:1!important}
 /* A board label sits on a light surface, never on its thumbnail. */
 body.workspace-app .vs-collection-cover :is(span,strong,small,p){color:#101116!important;opacity:1!important;text-shadow:none!important}
 body.workspace-app .vision-refined .vs-tabs .button.primary{background:linear-gradient(110deg,#005d64,#087b7b)!important;border-color:#076b70!important;color:#fff!important}
-body.workspace-app .finance-overview{background:linear-gradient(115deg,#c4470e 0%,#ce3927 35%,#d12650 65%,#bf227e 90%,#943aa2 100%)!important;border:1px solid #c34337!important;border-top:3px solid #ffb664!important;box-shadow:0 12px 30px #38203b18!important;border-radius:18px;padding:27px!important;gap:24px!important;min-height:0!important}
+body.workspace-app .finance-overview{background:linear-gradient(115deg,#c4471c 0%,#c63b3b 55%,#bf285e 100%)!important;border:1px solid #c34337!important;border-top:3px solid #ffb664!important;box-shadow:0 12px 30px #38203b18!important;border-radius:18px;padding:27px!important;gap:24px!important;min-height:0!important}
 body.workspace-app .finance-overview :is(h2,p,span,strong,small,div,.eyebrow){color:#fff!important;opacity:1!important}
 body.workspace-app .finance-overview h2{font-family:inherit!important;font-size:45px!important;font-weight:730!important;letter-spacing:-1.5px;line-height:1.15;margin:19px 0}
 body.workspace-app .finance-funding{background:transparent!important;border:0!important;border-left:1px solid #ffffff35!important;padding:0 0 0 28px!important}

@@ -7,3 +7,5 @@ The dashboard summarizes actual task completion by workstream, one currency at a
 Validation: model tests cover empty states, category aggregation, overdue tasks and signed payments. Browser tests cover shared reads, task deduplication, currency separation and mobile layout. The portal preview checks 13 routes, mobile navigation and horizontal overflow. Real-account multi-device testing remains deferred by the user.
 
 Chart-led revision: readiness now uses vertical percentage columns; budget uses comparable amount columns; the eight-week area chart shows open tasks due each week (not historical completion); RSVP uses a larger ring. Values and tooltips derive from current records. Undated, overdue and completed tasks are excluded from the forward workload chart.
+
+Colour refinement: Central uses warm charcoal surfaces and gold, coral and rose chart accents, with no blue chart colours. Portal gradients use three restrained orange/coral/rose stops. Sidebar child links are 15px and parent labels 13px. Desktop/mobile portal preview passed after the type-size and palette adjustments.
