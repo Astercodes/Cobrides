@@ -1,0 +1,47 @@
+-- Manual, shared run-of-show cues. No clocks, equipment or external messages are controlled.
+begin;
+create table if not exists public.cb_experience_cues(item_id uuid primary key references public.cb_experience_items on delete cascade,event_id uuid not null references public.cb_project_events on delete cascade,item_revision bigint not null,event_revision bigint not null,snapshot jsonb not null,status text not null default 'Pending' check(status in ('Pending','Ready','Running','Complete','Skipped')),removed boolean not null default false,started_at timestamptz,finished_at timestamptz,last_reason text not null default '',revision bigint not null default 1,updated_at timestamptz not null default now());
+create table if not exists public.cb_experience_cue_writes(user_id uuid not null references auth.users on delete cascade,client uuid not null,payload jsonb not null,response jsonb not null,primary key(user_id,client));
+create table if not exists public.cb_experience_cue_history(item_id uuid not null references public.cb_experience_items on delete cascade,revision bigint not null,actor_id uuid not null references auth.users,action text not null,snapshot jsonb not null,at timestamptz not null default now(),primary key(item_id,revision));
+alter table public.cb_experience_cues enable row level security;alter table public.cb_experience_cue_writes enable row level security;alter table public.cb_experience_cue_history enable row level security;
+revoke all on public.cb_experience_cues,public.cb_experience_cue_writes,public.cb_experience_cue_history from public,anon,authenticated;
+create or replace function public.cb_experience_run_sheet(p_event uuid) returns jsonb language plpgsql stable security definer set search_path='' as $$
+declare e public.cb_project_events;can_write boolean;begin
+ select * into e from public.cb_project_events where id=p_event;if e.id is null or not coalesce(public.cb_experience_member(e.id,auth.uid()),false) then raise exception 'Celebration access required' using errcode='42501';end if;can_write=public.cb_project_access(e.project_id,'write');
+ return jsonb_build_object('event',e.id,'event_revision',e.revision,'title',e.title,'date',e.details->>'date','can_edit',can_write,'as_of',now(),'choices',case when can_write then (select coalesce(jsonb_agg(jsonb_build_object('id',i.id,'title',i.data->>'title','revision',i.revision,'time',i.data->>'time','order',i.data->'order') order by (i.data->>'order')::integer,i.data->>'time',i.data->>'title',i.id),'[]') from public.cb_experience_items i where i.event_id=e.id and i.data->>'status'<>'Cancelled' and not exists(select 1 from public.cb_experience_cues c where c.item_id=i.id and not c.removed)) else '[]'::jsonb end,'cues',(select coalesce(jsonb_agg(jsonb_build_object('id',c.item_id,'revision',c.revision,'item_revision',i.revision,'status',c.status,'removed',c.removed,'snapshot',c.snapshot,'source_changed',c.item_revision<>i.revision or c.event_revision<>e.revision,'source_cancelled',i.data->>'status'='Cancelled','started_at',c.started_at,'finished_at',c.finished_at,'reason',c.last_reason) order by (c.snapshot->>'order')::integer,c.snapshot->>'time',c.snapshot->>'title',c.item_id),'[]') from public.cb_experience_cues c join public.cb_experience_items i on i.id=c.item_id where c.event_id=e.id and (can_write or not c.removed)));
+end;$$;
+create or replace function public.cb_change_experience_cue(p_event uuid,p_event_revision bigint,p_item uuid,p_item_revision bigint,p_revision bigint,p_client uuid,p_action text,p_reason text,p_confirm boolean) returns jsonb language plpgsql security definer set search_path='' as $$
+declare e public.cb_project_events;i public.cb_experience_items;c public.cb_experience_cues;w public.cb_experience_cue_writes;payload jsonb;result jsonb;sn jsonb;begin
+ select * into e from public.cb_project_events where id=p_event;perform 1 from public.cb_projects where id=e.project_id for update;select * into e from public.cb_project_events where id=p_event for update;
+ if e.id is null or not coalesce(public.cb_project_access(e.project_id,'write') and public.cb_experience_member(e.id,auth.uid()),false) then raise exception 'Celebration planning access required' using errcode='42501';end if;
+ payload=jsonb_build_object('event',p_event,'event_revision',p_event_revision,'item',p_item,'item_revision',p_item_revision,'revision',p_revision,'action',p_action,'reason',p_reason,'confirm',p_confirm);
+ if p_client is null then raise exception 'Request ID required';end if;select * into w from public.cb_experience_cue_writes where user_id=auth.uid() and client=p_client;if found then if w.payload is distinct from payload then raise exception 'Retry the original cue action' using errcode='PT409';end if;return w.response;end if;
+ if p_action is null or p_action not in ('Queue','Review','Ready','Start','Complete','Skip','Reopen','Remove') or p_reason is null or length(p_reason)>500 or p_confirm is distinct from true then raise exception 'Review and confirm a valid cue action';end if;
+ select * into i from public.cb_experience_items where id=p_item and event_id=p_event for update;if i.id is null then raise exception 'Choose a service in this celebration' using errcode='42501';end if;
+ if e.revision is distinct from p_event_revision or i.revision is distinct from p_item_revision then raise exception 'The celebration or service changed. Refresh before updating this cue.' using errcode='PT409';end if;
+ select * into c from public.cb_experience_cues where item_id=p_item for update;if coalesce(c.revision,0) is distinct from p_revision then raise exception 'Another coordinator changed this cue. Refresh first.' using errcode='PT409';end if;
+ if p_action in ('Skip','Reopen','Remove') and length(btrim(p_reason))=0 then raise exception 'Add a reason for this cue change';end if;
+ if i.data->>'status'='Cancelled' and not (p_action='Remove' or c.status='Running' and p_action in ('Complete','Skip')) then raise exception 'This service is cancelled. Remove its cue, or finish an already running cue.';end if;
+ sn=jsonb_build_object('title',i.data->>'title','section',i.data->>'section','order',i.data->'order','time',i.data->>'time','date',e.details->>'date');
+ if p_action='Queue' then
+ if c.item_id is not null and not c.removed then raise exception 'This service is already in the run of show';end if;
+ if c.item_id is null then insert into public.cb_experience_cues(item_id,event_id,item_revision,event_revision,snapshot) values(i.id,e.id,i.revision,e.revision,sn) returning * into c;
+ else update public.cb_experience_cues set item_revision=i.revision,event_revision=e.revision,snapshot=sn,status='Pending',removed=false,started_at=null,finished_at=null,last_reason=p_reason,revision=revision+1,updated_at=now() where item_id=i.id returning * into c;end if;
+ else
+ if c.item_id is null or c.removed then raise exception 'Queue this service before reporting progress';end if;
+ if p_action in ('Ready','Start') then if c.item_revision<>i.revision or c.event_revision<>e.revision then raise exception 'Review the changed cue details before proceeding' using errcode='PT409';end if;if exists(select 1 from jsonb_array_elements(i.data->'checks') ck where not (ck.value->>'done')::boolean) then raise exception 'Finish the service readiness checks first';end if;end if;
+ if p_action='Review' then if c.status not in ('Pending','Ready') then raise exception 'Reopen a completed cue before changing its reviewed details';end if;c.snapshot=sn;c.item_revision=i.revision;c.event_revision=e.revision;c.status='Pending';
+ elsif p_action='Ready' then if c.status<>'Pending' then raise exception 'Only a pending cue can be marked ready';end if;c.status='Ready';
+ elsif p_action='Start' then if c.status<>'Ready' then raise exception 'Mark the cue ready before starting';end if;c.status='Running';c.started_at=now();
+ elsif p_action='Complete' then if c.status<>'Running' then raise exception 'Only a running cue can be completed';end if;c.status='Complete';c.finished_at=now();
+ elsif p_action='Skip' then if c.status not in ('Pending','Ready','Running') then raise exception 'This cue is already finished';end if;c.status='Skipped';c.finished_at=now();
+ elsif p_action='Reopen' then if c.status not in ('Complete','Skipped') then raise exception 'Only a finished cue can be reopened';end if;c.status='Pending';c.started_at=null;c.finished_at=null;
+ elsif p_action='Remove' then if c.status='Running' then raise exception 'Complete or skip a running cue before removing it';end if;c.removed=true;
+ end if;
+ update public.cb_experience_cues set snapshot=c.snapshot,item_revision=c.item_revision,event_revision=c.event_revision,status=c.status,removed=c.removed,started_at=c.started_at,finished_at=c.finished_at,last_reason=p_reason,revision=revision+1,updated_at=now() where item_id=i.id returning * into c;
+ end if;
+ insert into public.cb_experience_cue_history values(c.item_id,c.revision,auth.uid(),p_action,to_jsonb(c),now());result=jsonb_build_object('saved',true,'revision',c.revision,'status',c.status);insert into public.cb_experience_cue_writes values(auth.uid(),p_client,payload,result);return result;
+end;$$;
+revoke all on function public.cb_experience_run_sheet(uuid),public.cb_change_experience_cue(uuid,bigint,uuid,bigint,bigint,uuid,text,text,boolean) from public,anon,authenticated;
+grant execute on function public.cb_experience_run_sheet(uuid),public.cb_change_experience_cue(uuid,bigint,uuid,bigint,bigint,uuid,text,text,boolean) to authenticated;
+notify pgrst,'reload schema';commit;
