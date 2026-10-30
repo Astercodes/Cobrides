@@ -1,0 +1,13 @@
+# Shared Wedding Experience foundation
+
+Open Wedding Experience → Team experience plan, or Celebration experience from an invited collaborator's wedding workspace. Select a published shared celebration, then add menus, drinks, cakes, songs, cue orders, service briefs and readiness records under the existing 18 category names. Budget opens the canonical financial ledger when authorized; it never infers a charge.
+
+The celebration is the native parent. Current accepted membership, event permission grants, restricted-event assignments and expiry determine visibility. Only users with native planning write access can edit. Assignment choices must still have event access. Read-only users see no edit controls. Owners can review an archived celebration but cannot write to it. Revoked/expired/custom-restricted users lose access. Raw tables and internal membership helpers are not exposed to client roles.
+
+Every write checks the celebration revision and item revision, stores an immutable history snapshot and supports exact request replay. Cross-celebration updates are rejected. Stale saves preserve form text. Status is a team's readiness record, not externally verified approval; incomplete readiness checks prevent Ready/Complete. Cancelling retains the record in Archive. Quantities and times are planning instructions, not inventory transactions or equipment commands.
+
+Existing private experience records, images, menus and playlists remain unchanged. No automatic copy into shared records occurs. This foundation does not yet import selected personal records, link canonical vendor expenses, derive guest dietary/count aggregates, send alerts or run live AV control. Those are separate connectors to build on this event-scoped backend.
+
+Activation: run supabase/shared-experience.sql after wedding projects, accepted invitation roles, collaboration access and celebration workspace migrations. No emails or real user records are changed by tests. The migration is rerunnable.
+
+Validation: shared-experience.sql.test.cjs uses actual account/project/planning/role/access migrations in PGlite; verifies exact retries, stale item/event revisions, event isolation, restricted readers, expired/custom permissions, assignments, archived read-only behavior, readiness, input allowlists and direct table/anonymous denial. shared-experience.ui.test.cjs checks mobile forms, exact network retries, song order, readiness, celebration switching, read-only controls, conflicts and layout. Existing experience and options regressions pass. Live account/device validation remains deferred at the user's request.
