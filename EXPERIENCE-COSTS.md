@@ -1,0 +1,13 @@
+# Experience ledger references
+
+Team experience plan → Experience budget references existing canonical ledger expenses. Financial permission plus celebration access is required to see amounts or expense choices. Planning write permission is also required to create/remove references. Users without finance access receive no expense IDs, totals, choices or link details. Read-only financial collaborators can view the report without linking controls.
+
+Users explicitly review a whole expense rather than enter another amount. Several service records may reference the same expense; each expense ID is counted once per celebration/currency in the totals. Distinct expenses with equal amounts both count. These are whole-expense references, not partial category allocations. An expense referenced across celebrations is flagged; the project ledger remains the overall wedding total, and event reports must not be added together as if each reference were a new obligation. No FX conversion mixes original currencies.
+
+Payments/refunds and settlement adjustments are read from the live canonical journal. No financial totals or payment details are copied into the link/history tables. Source service changes and booking scope changes flag review. Cancelled-service obligations remain visible until the reference is explicitly removed or the ledger agreement changes. Removing a reference preserves the original expense and all its payments. No new expenses, bookings, refunds or transactions are created here.
+
+Every write checks the event, service, link and selected expense revisions and confirms same-wedding access. Bookings assigned to another event or cancelled bookings cannot be newly connected. Exact request replay prevents duplicate mutations. Raw links/history/writes are locked to clients. Dialog refresh pauses during review; sign-out removes financial views.
+
+Activation: run supabase/experience-costs.sql after shared-experience.sql and installed shared ledger, settlement and retail expense migrations. Additive and rerunnable.
+
+Validation: native SQL tests use actual financial functions to verify equal-amount expense deduplication by ID, shared references, separate currencies, live payments/refunds/settlement, no financial duplication or deletion, financial role boundaries, cross-wedding and stale link rejection, cancelled services, exact retries, privacy, history and raw/anonymous denial. Mobile UI tests cover exact retry, unlink, unavailable vs read-only financial access, conflicts, layout and reset. Authentication checks verify logout cleanup. Live account/device testing remains deferred at the user's request. No production money records or messages were created by verification.
