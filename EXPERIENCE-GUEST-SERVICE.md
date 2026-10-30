@@ -1,0 +1,13 @@
+# Guest-connected experience service planning
+
+Open Wedding Experience → Team experience plan → Guest service plan, or Guest quantities on a food/drinks/cake/hospitality card. Only users with current planning write access and access to the specific celebration can open it. Ordinary experience readers receive no guest statistics or planning controls.
+
+Current native invitation eligibility and RSVP answers supply invited, confirmed, declined and unanswered totals. Meal choices are grouped for confirmed guests. Dietary/accessibility fields are represented by counts of nonempty notes, not inferred dietary diagnoses or guaranteed service needs. Exact notes and names remain in Guest Management. Guests from another ceremony, removed event eligibility and declined responses do not inflate confirmed service counts. Revoking a reply link alone does not uninvite the household.
+
+A planner explicitly chooses Confirmed or Invited, units per guest and reserve percentage. The target rounds upward; the browser uses exact decimal rational arithmetic to match PostgreSQL numeric rounding. Targets recalculate on open/refresh using canonical RSVPs. The existing service quantity, supplier orders, readiness, money and payments remain unchanged. A shortfall is a planning comparison in the service item's own units. No automatic orders or alerts are sent.
+
+Save checks the event revision, service-item revision, settings revision and guest-count hash. Changed RSVPs reject a stale review; form values stay visible until the user refreshes. Exact request IDs replay safely. Configurations, aggregate-only reviewed count snapshots and immutable history are permission restricted. Meal labels are read live, not copied into configuration history. Sign-out removes the summary dialog.
+
+Activation: run supabase/experience-guest-service.sql after shared-experience.sql and guest-rsvp.sql. Rerunnable, additive and preserves existing guest, experience and financial records.
+
+Tests: experience-guest-service.sql.test.cjs uses actual account/project/access/RSVP migrations and native household/RSVP writes; covers event separation, confirmed/declined/pending counts, restricted readers, expired membership, privacy, exact retries, stale reviews, revisions, invitation revocation vs removal, recalculation, cancelled items, untouched quantities and raw/anonymous access denial. Mobile UI tests cover exact rounding, retries, switching service items, stale review refresh, read-only controls, closure and reset. Shared experience UI regressions and authentication cleanup tests also run. Real-device account validation remains deferred at the user's request.
