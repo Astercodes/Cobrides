@@ -1,0 +1,1 @@
+(()=>{'use strict';const root=document.querySelector('[data-document-library]'),user=CoBridesIdentity.user.id;void CobrideyDocuments.mount(root,{project:null,user,adminOnly:true,current:()=>CoBridesIdentity.user?.id===user&&root.isConnected,prefill:{}});})();
