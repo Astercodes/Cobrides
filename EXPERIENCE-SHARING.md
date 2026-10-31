@@ -1,0 +1,13 @@
+# Selective personal experience sharing
+
+Wedding Experience → a saved service card → Share with team. The owner previews and edits a selected record's title, category, quantity/unit, local time, specifications and public reference, then selects an accessible shared celebration and explicitly confirms. The personal source remains unchanged. Native team records start Planned with no assigned professional, assignee or completed checks.
+
+Private notes, costs, vendor/approver identities, original approval status, checklist states, tasks, media/uploads and separate playlists are not copied. This transfers only displayed service fields, not an entire personal project or automatic account synchronization. Once shared, the team version is managed in Team experience plan. Changed originals flag the existing connection rather than overwrite collaborative edits.
+
+The source helper reads only the signed-in account's current private workspace records. Scoped personal records override legacy records; demo scope is separate. The stored private project mapping must match the destination's native wedding, and current planning/event access is mandatory. Archived sources/projects cannot publish; cancelled services cannot create new shared records. Existing links remain duplicate-safe when the personal service changes.
+
+A unique account/scope/private project/record/destination key plus project/workspace locks prevents duplicates and conflicting copies. Source hash and destination revision protect stale previews. Creating the native record and storing its origin link commit atomically. Exact request replay does not produce a second item. Origin IDs and source hashes stay in locked mapping tables, not the shared record. No payments, bookings or messages are created by this connector.
+
+Activation: run supabase/experience-sharing.sql after workspace-records.sql and shared-experience.sql. Additive and rerunnable. Existing sources and team records are preserved.
+
+Validation: native SQL with actual project/access/experience functions covers ownership, scoped/legacy precedence, demo separation, selective projections, planned/empty-readiness enforcement, explicit confirmation, exact retries, duplicate prevention, team edit preservation, changed/cancelled originals and raw/helper/anonymous denial. Mobile browser tests cover displayed-field editing, destination selection, retry identity, stale-edit retention, unchanged personal source, layout and reset. Existing experience/authentication regressions pass; the full portal preview checks script integration and layout. Live account/device validation remains deferred at the user's request. Verification creates no production records or external communications.
