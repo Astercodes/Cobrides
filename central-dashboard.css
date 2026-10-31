@@ -36,3 +36,5 @@ body.workspace-app .cd-card h2{font-size:21px!important;font-weight:550!importan
 @media(max-width:700px){.cd-column-chart{padding-left:20px;height:235px}.cd-column-track{height:160px}.cd-column-track>i{width:75%}.cd-column-track i span{font-size:10px}.cd-column>small{font-size:8px!important}.cd-workload{display:block}.cd-chart-caption{padding:0;flex-direction:row;align-items:center;justify-content:flex-start;margin-bottom:15px}.cd-chart-caption strong{font-size:40px}.cd-chart-caption span{font-size:11px}.cd-area-chart{margin-top:10px}.cd-rsvp{grid-template-columns:140px 1fr}.cd-donut{width:140px;height:140px}}
 body.workspace-app:has(.cd-dashboard),body.workspace-app:has(.cd-dashboard) main,body.workspace-app:has(.cd-dashboard) #app{background:#f7f5f2!important}
 body.workspace-app:has(.cd-dashboard) .project-bar{border-left-color:#c86135!important}
+
+.cd-budget .cd-card-head{flex-wrap:wrap}.cd-budget .cd-card-head label{font-size:12px;display:grid;gap:5px}.cd-budget [data-cd-currency]{max-width:130px;color:#000;background:#fff;border:1px solid #eed4c4;border-radius:10px;padding:8px}.cd-connection{margin-top:20px}
