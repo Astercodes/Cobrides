@@ -15,3 +15,13 @@ All prompts requested wide 3:2 editorial compositions in warm ivory, coral, oran
 ## Visual hierarchy
 
 The landing page uses exactly three unique product snapshots: Central in the hero, Vision Studio beside inspiration, and Budget in the finance section. No product snapshot is repeated on the landing page. Professionals, bridal details, celebrations, stationery and travel use distinct editorial artwork. Coordination and anticipation use native accessible diagrams rather than additional screenshots. Features keeps its two unique hero screenshots and uses editorial imagery in selected categories. People uses the professionals composition.
+## Expanded launch-page artwork
+
+Additional original assets generated with the built-in image tool and inspected before use:
+
+- `assets/editorial/hero-ribbons.webp`: Vertical gallery-style satin ribbon sculpture in vivid orange and coral rose, intertwined above ivory silk, a cream flower and pearls. Warm ivory background, natural studio light, tactile materials; no people, words, UI or purple/teal accents.
+- `assets/editorial/preparation.webp`: Landscape editorial still life of a cream towel, unlabeled amber skincare bottle, blank journal, pen and coral flower. Quiet private preparation, soft daylight and natural textures; no writing, logos or religious assumptions.
+- `assets/editorial/home.webp`: An intimate first-home living-room corner with a cream sofa, coral linen cushion, oak side table, two ceramic mugs and orange flowers. Realistic materials and sunlit plaster; no people, screens or exaggerated luxury setting.
+- `assets/editorial/memories.webp`: An unmarked ivory linen photo album, blank-backed photo prints, coral ribbon, dried orange flowers and a keepsake box. Tactile paper, warm peach surface and natural directional light; no identifiable people or text.
+
+The current landing hero uses the original ribbon artwork beside its text. Only Vision Studio and Budget retain product snapshots, each appearing once. Documents uses custom CSS template-cover compositions; Wedding Experience, personal preparation and the next chapter are now visible sections. Each content section has one primary action; the journey and feature collections retain one action per individual card. Features now includes Documents, bringing the guide to 98 entries in 16 categories.
