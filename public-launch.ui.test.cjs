@@ -12,9 +12,9 @@ const {chromium}=require(process.env.CB_PLAYWRIGHT_PATH);
    if(!fs.existsSync(file))return route.abort();
    return route.fulfill({body:fs.readFileSync(file),contentType:{'.html':'text/html','.css':'text/css','.js':'text/javascript','.webp':'image/webp','.svg':'image/svg+xml','.ttf':'font/ttf'}[path.extname(file)]||'application/octet-stream'});
   });
-  for(const width of [1440,390])for(const file of ['index.html','features.html','pricing.html','welcome.html']){
+  for(const width of [1440,390])for(const file of ['index.html','features.html','pricing.html','welcome.html','help.html','privacy.html']){
    await page.setViewportSize({width,height:1000});await page.goto('https://public.test/'+file);await page.waitForTimeout(1000);
-   if(file==='index.html'){
+   const footer=page.locator('footer.launch-footer');assert.equal(await footer.count(),1,file+' has the shared footer');const links=await footer.locator('a').evaluateAll(as=>as.map(a=>a.getAttribute('href')));assert.deepEqual(links,['index.html','features.html','pricing.html','welcome.html','help.html','privacy.html','signup.html','login.html']);for(const href of links)assert(fs.existsSync(href),'Footer target exists: '+href);if(file==='index.html'){
     const product=await page.locator('img[src^="assets/product/"]').evaluateAll(imgs=>imgs.map(i=>i.getAttribute('src')));
     assert.equal(product.length,2);assert.equal(new Set(product).size,2,'Product views must not repeat');
     assert.equal(await page.locator('img[src^="assets/editorial/"]').count(),9);

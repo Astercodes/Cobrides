@@ -1,8 +1,3 @@
 const observer=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}},{threshold:.08});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 document.querySelectorAll('[data-chapter]').forEach(link=>link.addEventListener('click',()=>{sessionStorage.setItem('furbrides-entry-stage',link.dataset.chapter)}));
-const info={privacy:['Privacy','Private bridal planning records are separate from the shared team workspace. Choose which documents and records to share with accepted team members. Only tasks and messages explicitly added to the shared workspace are shared with its authorized participants. Keep your own copies of important documents.'],accessibility:['Accessibility','The landing page supports keyboard navigation, visible focus indicators, semantic headings, native FAQ controls, and reduced-motion preferences. The connected-planning cards link directly to the relevant workspace.']};
-const dialog=document.querySelector('#info-dialog');let opener;
-document.querySelectorAll('[data-info]').forEach(button=>button.addEventListener('click',()=>{opener=button;const [title,copy]=info[button.dataset.info];document.querySelector('#info-title').textContent=title;document.querySelector('#info-copy').textContent=copy;dialog.setAttribute('aria-labelledby','info-title');dialog.showModal()}));
-document.querySelector('.dialog-close').addEventListener('click',()=>dialog.close());dialog.addEventListener('close',()=>opener?.focus());
-document.querySelectorAll('footer a[href^="#roadmap-"]').forEach(link=>link.addEventListener('click',()=>{document.querySelector(link.getAttribute('href')).open=true}));
