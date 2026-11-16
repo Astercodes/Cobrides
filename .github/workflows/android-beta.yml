@@ -22,8 +22,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
-      - name: Install Android platform
-        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Check preinstalled Android platform
+        run: |
+          test -f "$ANDROID_HOME/platforms/android-36/android.jar"
+          test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"
       - name: Build test APK and check manifest
         working-directory: mobile/android
         run: gradle --no-daemon :app:assembleDebug :app:lintDebug
