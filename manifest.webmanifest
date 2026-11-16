@@ -1,0 +1,17 @@
+{
+  "id": "/journey.html",
+  "name": "Cobridey",
+  "short_name": "Cobridey",
+  "description": "Your Bridal Journey Companion",
+  "lang": "en",
+  "start_url": "/journey.html#home",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fff9f4",
+  "theme_color": "#c83044",
+  "icons": [
+    { "src": "/assets/app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

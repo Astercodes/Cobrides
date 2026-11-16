@@ -1,0 +1,41 @@
+name: Android beta
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['mobile/android/**', 'mobile/package-beta.cjs', '.github/workflows/android-beta.yml']
+permissions:
+  contents: read
+concurrency:
+  group: android-beta-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Install Android platform
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Build test APK and check manifest
+        working-directory: mobile/android
+        run: gradle --no-daemon :app:assembleDebug :app:lintDebug
+      - name: Verify signature and prepare test download
+        env:
+          CB_BUILD_COMMIT: ${{ github.sha }}
+        run: |
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs mobile/android/app/build/outputs/apk/debug/app-debug.apk > mobile/android/app/build/certificate.txt
+          node mobile/package-beta.cjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Cobridey-Android-Beta
+          path: mobile/artifacts/*
+          retention-days: 14
+          if-no-files-found: error

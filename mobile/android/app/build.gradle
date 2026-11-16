@@ -1,0 +1,31 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.cobridey.app'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'com.cobridey.app'
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName '0.1.0'
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix '.beta'
+            versionNameSuffix '-beta'
+            resValue 'string', 'app_name', 'Cobridey Beta'
+        }
+        release {
+            // Store signing is intentionally not configured until an owner-controlled key exists.
+            minifyEnabled false
+            resValue 'string', 'app_name', 'Cobridey'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies { implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4' }
