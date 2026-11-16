@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.cobridey.app.beta",
+      "sha256_cert_fingerprints": [
+        "F5:8F:69:17:BB:1D:4F:CE:19:6B:E0:FC:D4:0B:35:9F:CD:16:B6:ED:57:0F:E1:8B:AA:0B:CB:4C:5D:AD:13:08"
+      ]
+    }
+  }
+]

@@ -27,6 +27,12 @@ Full-screen trust requires the exact APK certificate at
 fingerprints. The website build copies `.well-known/assetlinks.json` when present.
 Until association succeeds the browser can show its address bar.
 
+The first successful internal build is GitHub Actions run `43806124730`, from
+commit `1d99b2de26a8105c6c659fda78a7c9db8fea6cd9`. Its verified APK SHA-256 is
+`4cb482f2231970606ea96fdb76ac26d90069d31ec4ba5b5e06a89fdab5ec1d63`.
+The checked-in asset link authorizes only that beta signing certificate. This
+does not authorize future CI debug keys or the eventual Play signing key.
+
 The CI debug key is temporary, so later test builds may need reinstalling. Do not
 uninstall with pending unsynced work. Before ongoing beta distribution, establish
 an owner-controlled protected signing key and backup; before Play release, use the
