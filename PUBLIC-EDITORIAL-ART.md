@@ -25,3 +25,11 @@ Additional original assets generated with the built-in image tool and inspected 
 - `assets/editorial/memories.webp`: An unmarked ivory linen photo album, blank-backed photo prints, coral ribbon, dried orange flowers and a keepsake box. Tactile paper, warm peach surface and natural directional light; no identifiable people or text.
 
 The current landing hero uses the original ribbon artwork beside its text. Only Vision Studio and Budget retain product snapshots, each appearing once. Documents uses custom CSS template-cover compositions; Wedding Experience, personal preparation and the next chapter are now visible sections. Each content section has one primary action; the journey and feature collections retain one action per individual card. Features now includes Documents, bringing the guide to 98 entries in 16 categories.
+## Distinct account-page artwork
+
+Generated with the built-in image tool and saved as optimized WebP assets:
+
+- `assets/editorial/auth-login.webp`: Original portrait 4:5 premium sculpture of offset translucent amber and coral glass arches on ivory stone, warm caustic light and one cream flower. Quiet cream lower quarter for copy. No ribbon loops, tables, stationery, people, logos or UI. Palette orange, amber, coral, rose and ivory.
+- `assets/editorial/auth-signup.webp`: Original portrait 4:5 handcrafted folded-paper botanical bloom, layered orange, coral red, raspberry rose and peach petals. Crisp paper grain, asymmetric opening composition and quiet cream lower quarter. No glass arches, satin ribbons, tables, cards, people, logos or UI.
+
+The login and signup pages now have separate exclusive compositions instead of reusing landing-page art. The short-lived authentication callback uses the login composition for continuity. Original generation files remain in the image-generation output directory.
